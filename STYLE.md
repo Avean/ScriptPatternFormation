@@ -1,4 +1,4 @@
-# Style guide and notation for the lecture notes
+# Style guide and notation for the script
 
 This file is binding for every chapter. Chapter 5
 (`chapters/05-turing-instability.tex`) is the reference chapter: when in doubt,

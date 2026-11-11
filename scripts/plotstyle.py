@@ -1,4 +1,4 @@
-"""Shared plotting style for all figures in the lecture notes.
+"""Shared plotting style for all figures in the script.
 
 Usage in a figure script:
 
