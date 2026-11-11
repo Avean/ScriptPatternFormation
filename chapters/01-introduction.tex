@@ -1,4 +1,182 @@
 % 01-introduction
 \chapter{Introduction: patterns and Turing's idea}\label{ch:introduction}
 
-% TODO: chapter content
+Many structures in nature are neither random nor uniform: they repeat some
+element---a spot, a stripe, a hair, a finger---at a fairly regular distance. In
+1952 Alan Turing proposed that such patterns can arise from chemical reactions and
+diffusion alone. This chapter describes the phenomenon and the mechanism, and asks
+the questions that these notes answer.
+
+\section{Patterns everywhere}\label{sec:intro-patterns}
+
+Think of the spots of a leopard, the stripes of a zebra, or the stripes and spots
+on the skin of many fish, which in some species even rearrange as the animal grows.
+Regularly spaced structures also appear in embryonic development: hair follicles and
+feather buds are laid out at nearly equal distances, and a limb forms a row of
+digits (see the survey \cite{KondoMiura2010}). The cleanest evidence for such
+patterns comes from chemistry. In 1990 Castets, Dulos, Boissonade and De Kepper ran
+the chlorite--iodide--malonic acid (CIMA) reaction in a thin layer of gel continuously fed with fresh reactants, and
+observed stationary spots and stripes whose spacing was chosen by the chemistry
+itself \cite{Castets1990}. Lengyel and Epstein derived a two-variable model of this
+reaction, in which binding in the gel makes the two key species diffuse at very
+different effective rates \cite{LengyelEpstein1991}; it is one of our running
+examples, \eqref{eq:lengyel-epstein}.
+
+In all these examples the pattern seems to come out of nothing. The early tissue or
+the fresh gel is nearly uniform, the laws that govern it treat all points alike, and
+yet the final state is not uniform: this is \emph{symmetry breaking}. Moreover, the
+distance between neighboring spots or stripes is roughly fixed, an \emph{intrinsic
+length scale}. A theory should explain both.
+
+\section{Turing's idea}\label{sec:intro-turing}
+
+In \emph{The chemical basis of morphogenesis} \cite{Turing1952}, Turing suggested
+that a few substances, which he called \emph{morphogens}, ``reacting together and
+diffusing through a tissue'' could account for the formation of biological
+structure. This contains a paradox. \emph{Diffusion alone} is the great equalizer:
+a solution of the diffusion equation with zero-flux boundary conditions converges to
+its spatial mean (\cref{thm:heat-decay}). \emph{Reactions alone} are often
+stabilizing, too: if a well-stirred chemical system has a stable equilibrium, the
+concentrations return to it after a small disturbance. One would expect the
+combination to be even more stable. Turing's discovery is that this intuition is
+wrong: if two species diffuse at sufficiently different rates, diffusion can make the
+uniform equilibrium \emph{unstable}, and the instability prefers certain
+wavelengths. This is called \emph{diffusion-driven instability (DDI)} or
+\emph{Turing instability} (\cref{def:ddi}).
+
+\section{Local activation, long-range inhibition}\label{sec:intro-activation}
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      species/.style={circle, very thick, minimum size=14mm, align=center},
+      lab/.style={font=\footnotesize, text=black!75}]
+    \node[species, draw=keycolor, fill=keycolor!8] (u) at (0,0)
+      {\color{keycolor}$u$\\[-3pt]\color{keycolor}\scriptsize activator};
+    \node[species, draw=red!70!black, fill=red!6] (v) at (5,0)
+      {\color{red!70!black}$v$\\[-3pt]\color{red!70!black}\scriptsize inhibitor};
+    \draw[-{Stealth[length=2.4mm]}, thick, keycolor]
+      (u.150) .. controls +(150:1.3) and +(210:1.3) .. (u.210)
+      node[lab, pos=0.5, left] {self-enhancement};
+    \draw[-{Stealth[length=2.4mm]}, thick, keycolor]
+      (u.25) to[bend left=18] node[lab, above] {activates} (v.155);
+    \draw[-{Bar[width=3mm]}, thick, red!70!black]
+      (v.205) to[bend left=18] node[lab, below] {inhibits} (u.335);
+    \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, keycolor]
+      (0.5,1.0) -- (-0.5,1.0) node[lab, left] {slow diffusion};
+    \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick, red!70!black]
+      (3.6,1.0) -- (6.4,1.0) node[lab, right] {fast diffusion};
+  \end{tikzpicture}
+  \caption{Local activation and long-range inhibition: the activator $u$ enhances
+  itself and the inhibitor $v$, which suppresses $u$. The double arrows indicate the
+  range of diffusion.}
+  \label{fig:ch01-activator-inhibitor}
+\end{figure}
+
+Why should diffusion destabilize? The best-known explanation is due to Gierer and
+Meinhardt \cite{GiererMeinhardt1972} (\cref{fig:ch01-activator-inhibitor}). An
+\emph{activator} $u$ promotes its own production and that of an \emph{inhibitor}
+$v$, which suppresses $u$. Suppose the activator is slightly elevated somewhere.
+Self-enhancement makes the excess grow, and more inhibitor is produced there as
+well. If the inhibitor stayed where it was produced, it would quench the peak. If
+it diffuses much faster than the activator, it leaks into the
+surroundings: at the peak the activator wins, around it the inhibitor keeps the
+activator low, and farther away the next peak can form. The result is a periodic
+arrangement of peaks whose spacing is set by the range of the inhibitor. A
+fast-diffusing \emph{substrate} that the activator consumes, and hence depletes
+around a peak, has the same effect (\cref{ch:ode-toolbox} has both variants).
+
+Think of plants in a dry landscape: they help each other locally by shading the
+ground, but their roots compete for water over a wide area, and clumps form.
+
+\begin{keyidea}
+\emph{Local activation and long-range inhibition}: a slowly diffusing,
+self-enhancing species coupled to a fast-diffusing antagonist can turn a uniform
+state into a regular pattern. \Cref{ch:turing} turns this slogan into theorems
+(\cref{thm:ddi-criterion,cor:turing-consequences}).
+\end{keyidea}
+
+\section{A first look at the equations}\label{sec:intro-model}
+
+For the concentrations $u(x,t)$, $v(x,t)$ of two species we study models of the
+form
+\begin{equation*}
+  u_t = d_u\,u_{xx} + f(u,v),\qquad
+  v_t = d_v\,v_{xx} + g(u,v),\qquad
+  x\in(0,L),\ t>0,
+\end{equation*}
+with $u_x=v_x=0$ at $x=0,L$: nothing leaves or enters. The concentrations change
+because molecules spread by diffusion, with diffusion coefficients $d_u,d_v>0$
+(\cref{ch:diffusion}), and are produced or destroyed by reactions, described by $f$
+and $g$. With initial data this is the system \eqref{eq:rd-system} of
+\cref{ch:turing}. Constants $(\ub,\vb)$ with $f(\ub,\vb)=g(\ub,\vb)=0$ solve it:
+a uniform state.
+
+\begin{keyidea}[Three questions]
+\begin{enumerate}[label=(Q\arabic*), leftmargin=3.2em]
+  \item When is a constant steady state stable without diffusion but unstable with it?
+  \item Which spatial wavelengths grow, and what is the role of the domain size $L$?
+  \item What happens after the instability? Does a stationary pattern form?
+\end{enumerate}
+\end{keyidea}
+
+(Q1) is answered in \cref{ch:one-equation,ch:turing}: one equation is never
+enough; for two, the answer is the Turing conditions \eqref{eq:turing-conditions}.
+(Q2) is answered in \cref{ch:turing} (\cref{cor:domain-size}) and illustrated in
+\cref{ch:examples}. (Q3) is nonlinear and answered only in part, by simulations in
+\cref{ch:examples} and a survey in \cref{ch:outlook}.
+
+\section{Road map and how to read these notes}\label{sec:roadmap}
+
+\Cref{ch:ode-toolbox} collects tools from ordinary differential equations and
+introduces the running examples (Schnakenberg, Gierer--Meinhardt and
+Lengyel--Epstein kinetics). \Cref{ch:diffusion} treats diffusion alone and solves
+the diffusion equation with the Neumann eigenfunctions $\cos(k\pi x/L)$.
+\Cref{ch:one-equation} shows that one reaction--diffusion equation cannot exhibit
+diffusion-driven instability and that its nonconstant stationary solutions are
+unstable. \Cref{ch:turing} is the core: the exact criterion for diffusion-driven
+instability with two species, the critical diffusion ratio, and the role of the
+domain size. \Cref{ch:examples} maps the parameter regions where the running
+examples form patterns (Turing spaces) and simulates the nonlinear equations.
+\Cref{ch:outlook} explains what lies beyond. \Cref{app:fourier,app:linear-algebra}
+collect facts on cosine series and on $2\times2$ matrices.
+
+We assume a course on ordinary differential equations (linear systems, matrix
+exponential, linearization, phase planes), real analysis and linear algebra, but no
+knowledge of partial differential equations. We always work on an interval with
+homogeneous Neumann (zero-flux) boundary conditions, natural for a closed system.
+The eigenfunctions of the second derivative are then explicit cosines, so Fourier
+cosine series replace the spectral theory of the Laplace operator on a general
+domain; the results remain true on bounded domains in $\R^n$
+(\cref{rem:general-domain}). Key-idea boxes summarize the central take-aways,
+exercises marked ($\ast$) are harder, and all figures are made by short Python
+scripts in \texttt{scripts/}, ready to be run and modified.
+
+\section{Exercises}\label{sec:intro-exercises}
+
+\begin{exercise}[Units and time scales]\label{exer:intro-units}
+(a) Show that in $u_t=d\,u_{xx}$ the coefficient $d$ has the unit
+$\text{length}^2/\text{time}$, so that $\ell^2/d$ is a time for every length $\ell$.
+(b) Assume $d\approx10^{-11}\,\mathrm{m^2/s}$ for a protein in tissue. Estimate
+$\ell^2/d$ for $\ell=0.1\,\mathrm{mm}$, $1\,\mathrm{mm}$ and $1\,\mathrm{cm}$. What
+does this suggest about the size of tissues in which such molecules lay down a
+pattern?
+\end{exercise}
+
+\begin{exercise}[Why not one species?]\label{exer:intro-one-species}
+Let $u_t=d\,u_{xx}+f(u)$ on $(0,L)$, $u_x=0$ at $x=0,L$, and let $f(\ub)=0$,
+$f'(\ub)<0$. Show that $w(x,t)=e^{\mu t}\cos(k\pi x/L)$ solves the linearized
+equation $w_t=d\,w_{xx}+f'(\ub)\,w$ with the same boundary condition if and only if
+$\mu=f'(\ub)-d\,(k\pi/L)^2$. Why does this suggest that one species cannot produce a
+Turing instability? (See \cref{cor:no-ddi-scalar,thm:nonconstant-unstable}.)
+\end{exercise}
+
+\begin{exercise}[Reading an interaction network]\label{exer:intro-signs}
+Determine the signs of $f_u,f_v,g_u,g_v$ at a steady state, assuming that
+self-enhancement is stronger than degradation:
+(a) $u$ stimulates its own production and that of $v$, $v$ represses the production
+of $u$, and both decay; (b) a substrate $v$ is supplied at a constant rate and
+converted into $u$ in a reaction catalyzed by $u$, and $u$ decays.
+In each case, which species should diffuse faster for a pattern to form? Compare
+with \eqref{eq:gierer-meinhardt} and \eqref{eq:schnakenberg}.
+\end{exercise}
