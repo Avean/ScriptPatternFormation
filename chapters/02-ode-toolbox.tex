@@ -1,4 +1,328 @@
 % 02-ode-toolbox
 \chapter{A toolbox from ordinary differential equations}\label{ch:ode-toolbox}
 
-% TODO: chapter content
+Before diffusion enters the picture, we collect the facts about ODEs on which the
+rest of these notes rely: stability of steady states, linear systems, the
+trace--determinant test for $2\times2$ matrices, and linearized stability. Most of
+this is familiar, so we are brief. The last section introduces the three kinetic
+systems that serve as running examples throughout the notes.
+
+\section{Steady states and stability}\label{sec:ode-stability}
+
+We consider an autonomous system
+\begin{equation}\label{eq:ode-system}
+  x' = F(x),\qquad F:\R^n\to\R^n \text{ smooth}.
+\end{equation}
+For every initial value $x(0)$ there is a unique solution on a maximal interval
+of existence, and a solution that stays bounded exists for all $t\ge0$. We write
+$\abs{\cdot}$ for the Euclidean norm on $\R^n$. A point $\bar x$ with
+$F(\bar x)=0$ is a \emph{steady state}: the constant function $x(t)\equiv\bar x$
+is a solution.
+
+\begin{definition}\label{def:stability-ode}
+A steady state $\bar x$ of \eqref{eq:ode-system} is
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{stable} (in the sense of Lyapunov) if for every $\eps>0$ there is
+        $\delta>0$ such that every solution with $\abs{x(0)-\bar x}<\delta$ exists
+        for all $t\ge0$ and satisfies $\abs{x(t)-\bar x}<\eps$ for all $t\ge0$;
+  \item \emph{asymptotically stable} if it is stable and there is $\eta>0$ such
+        that $\abs{x(0)-\bar x}<\eta$ implies $x(t)\to\bar x$ as $t\to\infty$;
+  \item \emph{unstable} if it is not stable.
+\end{enumerate}
+\end{definition}
+
+Stability means that solutions starting close to $\bar x$ stay close forever.
+Asymptotic stability asks in addition that they return to $\bar x$: small
+perturbations die out. Instability means that some solutions starting
+arbitrarily close to $\bar x$ leave a fixed neighborhood. For $x'=-x$, $x'=0$,
+$x'=x$ the steady state $0$ is asymptotically stable, stable but not
+asymptotically stable, and unstable.
+
+\section{Linear systems}\label{sec:ode-linear}
+
+For a real $n\times n$ matrix $B$, the solution of $x'=Bx$, $x(0)=x_0$, is
+$x(t)=e^{tB}x_0$ with $e^{tB}=\sum_{k\ge0}t^kB^k/k!$; recall that
+$\frac{\mathrm d}{\mathrm dt}e^{tB}=Be^{tB}$, and $e^{X+Y}=e^Xe^Y$ for commuting
+matrices $X,Y$. If $B\bxi=\mu\bxi$ ($\mu\in\C$, $\bxi\neq0$), then
+$e^{tB}\bxi=e^{\mu t}\bxi$ and $\abs{e^{\mu t}}=e^{t\re\mu}$, so we expect the real
+parts of the eigenvalues to decide the long-time behavior.
+
+\begin{theorem}\label{thm:linear-ode-decay}
+Let $B$ be a real $n\times n$ matrix.
+\begin{enumerate}[label=(\alph*)]
+  \item If all eigenvalues of $B$ have negative real parts, there are constants
+        $C\ge1$ and $\gamma>0$ such that
+        $\abs{e^{tB}\mathbf y}\le Ce^{-\gamma t}\abs{\mathbf y}$ for all $t\ge0$
+        and $\mathbf y\in\R^n$.
+  \item If some eigenvalue of $B$ has positive real part, then $x'=Bx$ has a
+        solution with $\abs{x(t)}\to\infty$ as $t\to\infty$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For $n=2$ both parts are proved in \cref{prop:2x2-exponential-bound}, and the
+proof of (b) given there works for every $n$. For general $n$ we omit the proof
+of (a); see \cite{HirschSmaleDevaney2013,Teschl2012}. The idea: by the Jordan
+normal form, the entries of $e^{tB}$ are linear combinations of functions
+$t^je^{\mu t}$ ($\mu$ an eigenvalue, $0\le j<n$), each bounded by a constant times
+$e^{-\gamma t}$ if $\gamma<-\re\mu$.
+\end{proof}
+
+We call a square matrix \emph{stable} if all its eigenvalues have negative real
+parts. Then $0$ is an asymptotically stable steady state of $x'=Bx$ (take
+$\delta=\eps/C$); in case (b) it is unstable, since small multiples of the growing
+solution start arbitrarily close to $0$. The constant $C$ in (a) cannot always be
+taken equal to $1$ (\cref{exer:ode-transient}).
+
+\section{Two-by-two matrices}\label{sec:ode-2x2}
+
+The eigenvalues of a real $2\times2$ matrix $B$ are the roots of
+$\mu^2-\tr B\,\mu+\det B=0$, namely
+$\mu_\pm=\frac12\tr B\pm\sqrt{\frac14(\tr B)^2-\det B}$, with
+$\mu_++\mu_-=\tr B$ and $\mu_+\mu_-=\det B$ (\cref{prop:2x2-eigenvalues}). So two
+numbers decide stability.
+
+\begin{lemma}[Trace--determinant criterion]\label{lem:trace-det}
+Let $B$ be a real $2\times2$ matrix.
+\begin{enumerate}[label=(\alph*)]
+  \item Both eigenvalues of $B$ have negative real parts if and only if
+        $\tr B<0$ and $\det B>0$.
+  \item If $\det B<0$, the eigenvalues of $B$ are real, one positive and one
+        negative.
+  \item If $\det B>0$ and $\tr B>0$, both eigenvalues of $B$ have positive real
+        parts.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By \cref{prop:2x2-eigenvalues}, either $\mu_\pm=\alpha\pm i\beta$ with $\beta\neq0$,
+or $\mu_\pm$ are real. In the first case both real parts equal
+$\alpha=\frac12\tr B$ and $\det B=\mu_+\mu_-=\alpha^2+\beta^2>0$; then (a) and (c)
+are immediate, and (b) is void. In the second case, if $\det B=\mu_+\mu_-<0$, the
+eigenvalues have opposite signs, which is (b). If $\det B>0$, they have the same
+sign, namely the sign of their sum $\tr B$; this gives (c) and the ``if'' part of
+(a). Finally, if $\mu_\pm<0$, then $\tr B=\mu_++\mu_-<0$ and $\det B=\mu_+\mu_->0$.
+\end{proof}
+
+\Cref{fig:ch02-trace-det} refines this picture. On its boundary lines $B$ is
+degenerate: for $\det B=0$, $0$ is an eigenvalue, and for $\tr B=0<\det B$ the
+eigenvalues $\pm i\sqrt{\det B}$ are purely imaginary (a center). In
+\cref{ch:turing}, diffusion moves the matrices of spatial modes to the left in this
+diagram, and a diffusion-driven (Turing) instability occurs when one of them is
+pushed below the axis.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.62\textwidth]{ch02-trace-det}
+  \caption{The trace--determinant diagram of a real $2\times2$ matrix $B$. Stable
+  matrices ($\tr B<0$, $\det B>0$) form the shaded quadrant; below the horizontal
+  axis lie the saddles. Between the axis and
+  the parabola $\det B=\frac14(\tr B)^2$ the eigenvalues are real with equal signs
+  (nodes), above it they are complex (foci). The dots are the
+  Jacobians of the Schnakenberg and Gierer--Meinhardt kinetics at their standard
+  parameters (\cref{tab:standard-parameters}); both are stable foci.}
+  \label{fig:ch02-trace-det}
+\end{figure}
+
+\section{Linearization}\label{sec:ode-linearization}
+
+Let $\bar x$ be a steady state of \eqref{eq:ode-system} and let $DF(\bar x)$ be the
+Jacobian matrix of $F$ at $\bar x$. Since $F(\bar x)=0$, Taylor's formula gives
+$F(\bar x+z) = DF(\bar x)\,z + R(z)$ with $\abs{R(z)}/\abs z\to0$ as $z\to0$, so
+$z=x-\bar x$ satisfies $z'=DF(\bar x)z+R(z)$. Dropping the remainder gives the
+\emph{linearized system} $z'=DF(\bar x)\,z$. Apart from borderline cases, it
+decides the stability of $\bar x$.
+
+\begin{theorem}[Principle of linearized stability]\label{thm:linearized-stability}
+Let $\bar x$ be a steady state of \eqref{eq:ode-system}.
+\begin{enumerate}[label=(\alph*)]
+  \item If all eigenvalues of $DF(\bar x)$ have negative real parts, then $\bar x$
+        is asymptotically stable. More precisely, there are $C\ge1$, $\gamma>0$,
+        $\rho>0$ such that every solution with $\abs{x(0)-\bar x}<\rho$ exists for
+        all $t\ge0$ and satisfies $\abs{x(t)-\bar x}\le Ce^{-\gamma t}\abs{x(0)-\bar x}$.
+  \item If some eigenvalue of $DF(\bar x)$ has positive real part, then $\bar x$
+        is unstable.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Let $B=DF(\bar x)$. By \cref{thm:linear-ode-decay}(a) there are $C\ge1$ and
+$\gamma>0$ with $\abs{e^{tB}\mathbf y}\le Ce^{-2\gamma t}\abs{\mathbf y}$. Choose
+$r>0$ with $\abs{R(z)}\le(\gamma/C)\abs z$ for $\abs z\le r$, put $\rho=r/C$, and
+let $\abs{z(0)}<\rho$. As long as $\abs z\le r$, the variation of constants formula
+$z(t) = e^{tB}z(0) + \int_0^t e^{(t-s)B}R(z(s))\dd s$ shows that $\varphi(t)=e^{2\gamma t}\abs{z(t)}$ satisfies
+$\varphi(t)\le C\abs{z(0)}+\gamma\int_0^t\varphi(s)\dd s$, and Gronwall's
+inequality ($\varphi\le\alpha+\beta\int_0^t\varphi$ with constants
+$\alpha,\beta\ge0$ implies $\varphi(t)\le\alpha e^{\beta t}$) gives
+$\abs{z(t)}\le Ce^{-\gamma t}\abs{z(0)}\le C\abs{z(0)}<r$. So $z$ never reaches
+the sphere $\abs z=r$: at a first time $t^*$ with $\abs{z(t^*)}=r$ this estimate
+would give $\abs{z(t^*)}<r$. Hence $z$ stays bounded, exists for all $t\ge0$ and
+satisfies the estimate; stability follows with $\delta=\min\{\rho,\eps/C\}$.
+(b) We omit the proof; see \cite{Teschl2012}.
+\end{proof}
+
+\begin{remark}[The borderline case]\label{rem:ode-borderline}
+If $DF(\bar x)$ has an eigenvalue on the imaginary axis and none with positive real
+part, linearization decides nothing: $x'=-x^3$ and $x'=x^3$ both linearize to
+$z'=0$ at $0$, but $0$ is asymptotically stable for the first and unstable for the
+second. Without such eigenvalues, the Hartman--Grobman theorem gives more: near
+$\bar x$, a continuous change of coordinates maps the solutions of $x'=F(x)$ onto
+those of $z'=DF(\bar x)z$ \cite{Teschl2012}.
+\end{remark}
+
+\begin{remark}[Partial differential equations]\label{rem:ode-pde}
+For reaction--diffusion systems, \cref{ch:turing} studies only the linearized
+problem. PDE analogues of \cref{thm:linearized-stability} exist but are harder:
+there are infinitely many eigenvalues, and norms of functions, unlike norms on
+$\R^n$, are not all equivalent, so the remainder must be estimated in a
+well-chosen norm; see \cref{ch:outlook}.
+\end{remark}
+
+\section{Kinetic systems and the running examples}\label{sec:ode-kinetics}
+
+A \emph{kinetic system} for two species with concentrations $u(t)$, $v(t)$ is
+$u'=f(u,v)$, $v'=g(u,v)$ with smooth $f,g$; it models a well-stirred reactor.
+At a steady state
+$(\ub,\vb)$, that is, $f(\ub,\vb)=g(\ub,\vb)=0$, the Jacobian matrix is
+\begin{equation*}
+  A=\begin{pmatrix} f_u & f_v\\ g_u & g_v\end{pmatrix},
+  \qquad\text{all derivatives evaluated at } (\ub,\vb),
+\end{equation*}
+with $\tr A=f_u+g_v$ and $\det A=f_ug_v-f_vg_u$. Since the real parts of the
+eigenvalues add up to $\tr A$, \cref{thm:linearized-stability,lem:trace-det} give:
+
+\begin{keyidea}
+A steady state $(\ub,\vb)$ of a two-species kinetic system is asymptotically
+stable if $\tr A<0$ and $\det A>0$, and unstable if $\det A<0$ or $\tr A>0$.
+\end{keyidea}
+
+The signs of the entries of $A$ have a direct meaning. If $f_u>0$, the species
+$u$ is \emph{self-enhancing} (more $u$ accelerates its own production); if
+$g_v<0$, $v$ is \emph{self-limiting}. Two off-diagonal sign structures will be
+important: \emph{activator--inhibitor} type, $f_v<0<g_u$ ($u$
+promotes the production of $v$, and $v$ inhibits that of $u$), and
+\emph{substrate-depletion} type, $f_v>0>g_u$ ($v$ is a substrate that promotes the
+production of $u$ and is used up by $u$). If also $f_u>0>g_v$, they are called
+\emph{pure} and \emph{cross} activator--inhibitor systems \cite{Murray2003}; in
+examples with $f_u>0$, $u$ is called the \emph{activator}.
+
+\begin{example}[Schnakenberg kinetics]\label{ex:schnakenberg}
+The system
+\begin{equation}\label{eq:schnakenberg}
+  u' = a-u+u^2v,\qquad v'=b-u^2v,\qquad a,b>0,
+\end{equation}
+is a rescaled reaction scheme of Schnakenberg \cite{Schnakenberg1979}: $u$ and $v$
+are supplied at constant rates, $u$ decays, and the term $u^2v$ models the
+reaction $2u+v\to3u$. Adding the two
+equations gives $a+b-u=0$, so the only steady state is $\ub=a+b$,
+$\vb=b/(a+b)^2$. From $f_u=-1+2uv$, $f_v=u^2$, $g_u=-2uv$, $g_v=-u^2$ and
+$\ub\vb=b/(a+b)$ we get
+\begin{equation*}
+  f_u=\frac{b-a}{a+b},\quad f_v=(a+b)^2,\quad g_u=-\frac{2b}{a+b},\quad g_v=-(a+b)^2,
+\end{equation*}
+so $\det A=-(b-a)(a+b)+2b(a+b)=(a+b)^2$ and $\tr A=(b-a)/(a+b)-(a+b)^2$. Since
+$\det A>0$, the steady state is asymptotically stable if $b-a<(a+b)^3$ and
+unstable if $b-a>(a+b)^3$. They are of substrate-depletion type
+($f_v>0>g_u$), and $u$ is self-enhancing if and only if $b>a$. For the
+\emph{standard parameters} $a=0.1$, $b=0.9$ we get $(\ub,\vb)=(1,0.9)$, $f_u=0.8$,
+$f_v=1$, $g_u=-1.8$, $g_v=-1$, so $\tr A=-0.2$, $\det A=1$: a stable focus
+($\mu=-0.1\pm i\sqrt{0.99}$).
+\end{example}
+
+\begin{example}[Gierer--Meinhardt kinetics]\label{ex:gierer-meinhardt}
+The simplest form of the activator--inhibitor model of Gierer and Meinhardt
+\cite{GiererMeinhardt1972} is
+\begin{equation}\label{eq:gierer-meinhardt}
+  u' = a-bu+\frac{u^2}{v},\qquad v'=u^2-v,\qquad a\ge0,\ b>0,
+\end{equation}
+for $v>0$. The activator $u$ has a basal production $a$, an autocatalytic
+production $u^2/v$ suppressed by the inhibitor $v$, and decay rate $b$; the
+inhibitor is produced by $u$ and decays.
+From $g=0$ we get $\vb=\ub^2$, and then $f=0$ becomes $a-b\ub+1=0$; so
+$\ub=(a+1)/b$, $\vb=\ub^2$. From $f_u=-b+2u/v$, $f_v=-u^2/v^2$, $g_u=2u$,
+$g_v=-1$ and $\ub/\vb=1/\ub=b/(a+1)$ we get
+\begin{equation*}
+  f_u=\frac{b(1-a)}{1+a},\quad f_v=-\frac{b^2}{(a+1)^2},\quad g_u=\frac{2(a+1)}{b},\quad g_v=-1,
+\end{equation*}
+so $\det A=-b(1-a)/(1+a)+2b/(a+1)=b$ and $\tr A=b(1-a)/(1+a)-1$. So the steady state is asymptotically stable if $b(1-a)<1+a$ (for $a=0$: if
+$b<1$) and unstable if $b(1-a)>1+a$. The kinetics are of activator--inhibitor type
+($f_v<0<g_u$), and $u$ is self-enhancing if and only if $a<1$. For the
+\emph{standard parameters} $a=0$, $b=0.5$ we get $(\ub,\vb)=(2,4)$, $f_u=0.5$,
+$f_v=-0.25$, $g_u=4$, $g_v=-1$, so $\tr A=-0.5$, $\det A=0.5$: a stable focus
+($\mu=-0.25\pm i\sqrt7/4$).
+\end{example}
+
+\begin{example}[Lengyel--Epstein kinetics]\label{ex:lengyel-epstein}
+Lengyel and Epstein \cite{LengyelEpstein1991} modeled the
+chlorite--iodide--malonic acid (CIMA) reaction, in which Turing patterns were first
+observed in the laboratory \cite{Castets1990}, by
+\begin{equation}\label{eq:lengyel-epstein}
+  u'=a-u-\frac{4uv}{1+u^2},\qquad v'=b\Big(u-\frac{uv}{1+u^2}\Big),\qquad a,b>0,
+\end{equation}
+where $u$ and $v$ are rescaled concentrations of iodide and chlorite. Since
+$f(0,v)=a\neq0$, the equation $g=0$ forces $\vb=1+\ub^2$, and then $f=a-5\ub=0$;
+so the only steady state is $\ub=a/5$, $\vb=1+\ub^2$. Differentiating
+and inserting $\vb=1+\ub^2$, we find
+\begin{equation*}
+  A=\frac{1}{1+\ub^2}\begin{pmatrix} 3\ub^2-5 & -4\ub\\ 2b\ub^2 & -b\ub\end{pmatrix},
+  \qquad
+  \det A=\frac{-b\ub(3\ub^2-5)+8b\ub^3}{(1+\ub^2)^2}=\frac{5b\ub}{1+\ub^2}>0,
+\end{equation*}
+and $\tr A=(3\ub^2-5-b\ub)/(1+\ub^2)$. So the steady state is asymptotically
+stable if $b>(3\ub^2-5)/\ub$ (for every $b>0$ if $3\ub^2\le5$) and unstable if
+$b<(3\ub^2-5)/\ub$. They are of activator--inhibitor type
+($f_v<0<g_u$), and $u$ is self-enhancing if and only if $\ub^2>5/3$. The case
+$a=10$ is treated in \cref{exer:turing-lengyel-epstein}.
+\end{example}
+
+\begin{table}[t]
+  \centering
+  \caption{The running examples at their standard parameters (cross:
+  substrate-depletion type; pure: activator--inhibitor type). The Lengyel--Epstein
+  kinetics \eqref{eq:lengyel-epstein} (pure type) have no standard parameters.}
+  \label{tab:standard-parameters}
+  \small
+  \begin{tabular}{@{}llllccc@{}}
+    \toprule
+    model & type & parameters & $(\ub,\vb)$ & $A$ & $\tr A$ & $\det A$\\
+    \midrule
+    Schnakenberg \eqref{eq:schnakenberg} & cross & $a=0.1$, $b=0.9$ & $(1,\,0.9)$ &
+      $\left(\begin{smallmatrix}0.8&1\\-1.8&-1\end{smallmatrix}\right)$ & $-0.2$ & $1$\\[6pt]
+    Gierer--Meinhardt \eqref{eq:gierer-meinhardt} & pure & $a=0$, $b=0.5$ & $(2,\,4)$ &
+      $\left(\begin{smallmatrix}0.5&-0.25\\4&-1\end{smallmatrix}\right)$ & $-0.5$ & $0.5$\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Exercises}\label{sec:ode-exercises}
+
+\begin{exercise}\label{exer:ode-transient}
+Let $B=\left(\begin{smallmatrix}1&-5\\1&-3\end{smallmatrix}\right)$. (a) Show that
+the eigenvalues of $B$ are $-1\pm i$, that $N=B+I$ satisfies $N^2=-I$, and that
+$e^{tB}=e^{-t}(\cos t\,I+\sin t\,N)$. (b) Show that
+$\abs{e^{tB}\mathbf y}>\abs{\mathbf y}$ for $\mathbf y=(1,0)^\top$ and small
+$t>0$. Conclude that $C$ in \cref{thm:linear-ode-decay} cannot always be $1$.
+\end{exercise}
+
+\begin{exercise}\label{exer:ode-three}
+(a) Show that if all eigenvalues of a real $3\times3$ matrix $B$ have negative
+real parts, then $\tr B<0$ and $\det B<0$. (b) Find a real $3\times3$ matrix with
+$\tr B<0$ and $\det B<0$ that has an eigenvalue with positive real part. (The correct
+test is the Routh--Hurwitz criterion \cite{Murray2002}.)
+\end{exercise}
+
+\begin{exercise}\label{exer:ode-predator-prey}
+Consider $u'=u(1-u)-uv$, $v'=v(u-c)$ for $u,v\ge0$, with a parameter $0<c<1$.
+(a) Find the three steady states and classify them (saddle, node or focus; stable
+or unstable). (b) When is the steady state with $\ub,\vb>0$ a focus? What is the
+sign structure of its Jacobian? Is $u$ self-enhancing there?
+\end{exercise}
+
+\begin{exercise}\label{exer:ode-hopf}
+Fix $b>0$ in the Schnakenberg kinetics \eqref{eq:schnakenberg}. (a) Show that
+$\tr A$ is strictly decreasing in $a>0$; conclude that for $b\ge1$ the steady
+state is asymptotically stable for all $a>0$. (b) Let $0<b<1$. Show that
+$\tr A=0$ for exactly one $a_H>0$, that the steady state is stable for $a>a_H$
+and unstable for $a<a_H$, and that at $a=a_H$ the eigenvalues are $\pm i(a_H+b)$: a complex pair crosses the imaginary axis, as in a Hopf
+bifurcation \cite{Schnakenberg1979}. (c) Compute $a_H$ for $b=0.9$ numerically.
+\end{exercise}

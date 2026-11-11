@@ -1,4 +1,112 @@
 % B-linear-algebra
 \chapter{Linear algebra of $2\times 2$ matrices}\label{app:linear-algebra}
 
-% TODO: chapter content
+This appendix proves the facts about real $2\times2$ matrices used in
+\cref{ch:ode-toolbox,ch:turing}. Throughout, $B$ is a real $2\times2$ matrix, $I$
+is the identity matrix, and $\abs{\cdot}$ is the Euclidean norm on $\R^2$ or
+$\C^2$, $\abs{\mathbf z}^2=\abs{z_1}^2+\abs{z_2}^2$.
+
+\section{Eigenvalues}\label{sec:linalg-eigenvalues}
+
+\begin{proposition}\label{prop:2x2-eigenvalues}
+Let $\Delta=\frac14(\tr B)^2-\det B$. The eigenvalues of $B$ are the roots of
+$\mu^2-\tr B\,\mu+\det B=0$, namely
+\begin{equation*}
+  \mu_\pm=\tfrac12\tr B\pm\sqrt{\Delta},
+  \qquad\text{where } \sqrt{\Delta}=i\sqrt{-\Delta} \text{ if } \Delta<0 .
+\end{equation*}
+If $\Delta>0$, they are real and distinct; if $\Delta=0$, there is one real
+(double) eigenvalue $\frac12\tr B$; if $\Delta<0$, they are complex conjugate,
+$\frac12\tr B\pm i\sqrt{-\Delta}$, with common real part $\frac12\tr B$. In all
+cases $\mu_++\mu_-=\tr B$ and $\mu_+\mu_-=\det B$. A real eigenvalue has a real
+eigenvector, and if $\bxi$ is an eigenvector for $\mu$, then $\bar\bxi$ is one for
+$\bar\mu$.
+\end{proposition}
+
+\begin{proof}
+Write $B=\left(\begin{smallmatrix}b_{11}&b_{12}\\b_{21}&b_{22}\end{smallmatrix}\right)$.
+A number $\mu\in\C$ is an eigenvalue if and only if $B-\mu I$ is singular, i.e.\
+$0=\det(B-\mu I)=(b_{11}-\mu)(b_{22}-\mu)-b_{12}b_{21}=\mu^2-\tr B\,\mu+\det B$.
+The quadratic formula gives $\mu_\pm$ and the three cases, and comparing
+coefficients in $\mu^2-\tr B\,\mu+\det B=(\mu-\mu_+)(\mu-\mu_-)$ gives the sum and
+the product. If $\mu$ is real, $B-\mu I$ is a real matrix with determinant zero,
+so its columns are linearly dependent over $\R$: $(B-\mu I)\bxi=0$ for some real
+$\bxi\neq0$. Finally, conjugating $B\bxi=\mu\bxi$ gives $B\bar\bxi=\bar\mu\bar\bxi$,
+since $B$ is real.
+\end{proof}
+
+\section{Norms}\label{sec:linalg-norms}
+
+For a real or complex $2\times2$ matrix $M$ we use the \emph{operator norm}
+$\norm{M}=\max\{\abs{M\mathbf z}:\mathbf z\in\C^2,\ \abs{\mathbf z}=1\}$, which
+exists because $\mathbf z\mapsto\abs{M\mathbf z}$ is continuous on the compact unit
+sphere. (In the main text, $\norm{\cdot}$ also denotes the $L^2$ norm of
+functions; the argument always shows which is meant.) By definition
+$\abs{M\mathbf z}\le\norm{M}\abs{\mathbf z}$, and
+$\norm{\diag(c_1,c_2)}=\max\{\abs{c_1},\abs{c_2}\}$, because
+$\abs{c_1z_1}^2+\abs{c_2z_2}^2\le\max_j\abs{c_j}^2\,\abs{\mathbf z}^2$ with equality
+for a suitable unit vector. For real $\mathbf y\in\R^2$ and real $M$, the
+Cauchy--Schwarz inequality gives
+$\mathbf y\cdot M\mathbf y\le\abs{\mathbf y}\abs{M\mathbf y}\le\norm{M}\abs{\mathbf y}^2$,
+and for $D=\diag(d_u,d_v)$ with $d_u,d_v>0$ we have
+$\mathbf y\cdot D\mathbf y=d_uy_1^2+d_vy_2^2\ge\min\{d_u,d_v\}\abs{\mathbf y}^2$. Both
+inequalities are used in the proof of \cref{thm:spectral-criterion}.
+
+\section{The matrix exponential}\label{sec:linalg-exponential}
+
+\begin{proposition}\label{prop:2x2-exponential-bound}
+Let $\mu_\pm$ be the eigenvalues of $B$.
+\begin{enumerate}[label=(\alph*)]
+  \item Suppose $\re\mu_\pm<0$, and let $\gamma_0=-\max\{\re\mu_+,\re\mu_-\}>0$.
+        Then for every $\gamma<\gamma_0$ there is $C\ge1$ such that
+        \begin{equation*}
+          \abs{e^{tB}\mathbf y}\le Ce^{-\gamma t}\abs{\mathbf y}
+          \qquad\text{for all } t\ge0 \text{ and } \mathbf y\in\R^2 .
+        \end{equation*}
+        If $\mu_+\neq\mu_-$, one may also take $\gamma=\gamma_0$.
+  \item If $\re\mu>0$ for an eigenvalue $\mu$ of $B$, then $x'=Bx$ has a real
+        solution with $\abs{x(t)}\to\infty$ as $t\to\infty$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) \emph{Distinct eigenvalues.} Let $\bxi_\pm\in\C^2$ be eigenvectors for
+$\mu_\pm$. They are linearly independent: $\bxi_-=c\,\bxi_+$ would give
+$\mu_-\bxi_-=B\bxi_-=c\,\mu_+\bxi_+=\mu_+\bxi_-$. So the matrix $S$ with columns
+$\bxi_+,\bxi_-$ is invertible, and $BS=S\Lambda$ with $\Lambda=\diag(\mu_+,\mu_-)$.
+Then $B^k=S\Lambda^kS^{-1}$ for all $k$, and summing the exponential series gives
+$e^{tB}=Se^{t\Lambda}S^{-1}$ with $e^{t\Lambda}=\diag(e^{\mu_+t},e^{\mu_-t})$. Since
+$\abs{e^{\mu t}}=e^{t\re\mu}$, for $\mathbf y\in\R^2$
+\begin{equation*}
+  \abs{e^{tB}\mathbf y}\le\norm{S}\,\norm{e^{t\Lambda}}\,\norm{S^{-1}}\,\abs{\mathbf y}
+  = Ce^{-\gamma_0t}\abs{\mathbf y}\le Ce^{-\gamma t}\abs{\mathbf y},
+  \qquad C=\norm{S}\,\norm{S^{-1}},
+\end{equation*}
+and $C\ge1$ because $1=\abs{SS^{-1}\mathbf z}\le\norm{S}\norm{S^{-1}}$ for
+$\abs{\mathbf z}=1$.
+
+\emph{Repeated eigenvalue.} Now $\mu_\pm=\mu=\frac12\tr B$ is real and
+$\mu^2=\det B$. Multiplying out shows $B^2-(\tr B)B+(\det B)I=0$ (the
+Cayley--Hamilton theorem), so $N=B-\mu I$ satisfies
+$N^2=B^2-2\mu B+\mu^2I=0$. Since $\mu I$ and $N$ commute,
+$e^{tB}=e^{\mu t}e^{tN}=e^{\mu t}(I+tN)$; the series for $e^{tN}$ breaks off after
+two terms. Given $\gamma<\gamma_0=-\mu$, let $\eps=\gamma_0-\gamma>0$. Then
+\begin{equation*}
+  \abs{e^{tB}\mathbf y}\le e^{\mu t}\big(1+t\norm{N}\big)\abs{\mathbf y}
+  = e^{-\gamma t}\big(1+t\norm{N}\big)e^{-\eps t}\abs{\mathbf y}.
+\end{equation*}
+The function $t\mapsto(1+t\norm{N})e^{-\eps t}$ is continuous on $[0,\infty)$,
+equals $1$ at $t=0$ and tends to $0$ as $t\to\infty$, so it is bounded by some
+$C\ge1$.
+
+(b) Let $\mu=\alpha+i\beta$ with $\alpha>0$, and let $\bxi$ be an eigenvector.
+Then $e^{\mu t}\bxi$ solves $x'=Bx$, and since $B$ is real, so does its real part
+$x(t)=e^{\alpha t}\big(\cos(\beta t)\re\bxi-\sin(\beta t)\im\bxi\big)$. If
+$\beta=0$, we may take $\bxi$ real, and $\abs{x(t)}=e^{\alpha t}\abs{\bxi}\to\infty$.
+If $\beta\neq0$, then $\re\bxi$ and $\im\bxi$ are linearly independent: otherwise
+$\bxi$ would be a complex multiple of a real vector $\mathbf r\neq0$, and
+$B\mathbf r=\mu\mathbf r$ with $B\mathbf r$ real would force $\mu\in\R$. Hence the
+continuous $2\pi$-periodic function $s\mapsto\abs{\cos(s)\re\bxi-\sin(s)\im\bxi}$
+has no zero, its minimum $c$ is positive, and $\abs{x(t)}\ge c\,e^{\alpha t}\to\infty$.
+This argument works for real $n\times n$ matrices as well.
+\end{proof}

@@ -1,4 +1,194 @@
 % 07-outlook
 \chapter{Outlook: from linear to nonlinear}\label{ch:outlook}
 
-% TODO: chapter content
+The linear theory of \cref{ch:one-equation,ch:turing} answers the questions (Q1) and
+(Q2) of \cref{ch:introduction}: a constant steady state that is stable for the
+kinetics becomes linearly unstable through diffusion exactly when $h(\lambda_k)<0$ for
+some mode $k$ (\cref{thm:ddi-criterion}), which needs two species, a large enough
+diffusion ratio and a large enough domain. We have not proved that the full
+nonlinear system is unstable, nor that the growing perturbation settles into a
+pattern. This chapter explains, without proofs and with function spaces mentioned
+only in words, how these questions are approached.
+
+\section{From linear to nonlinear instability}\label{sec:outlook-nonlinear}
+
+For ODEs, the principle of linearized stability (\cref{thm:linearized-stability})
+justifies dropping the nonlinear terms: the linear flow is controlled by the
+eigenvalues, and near the steady state the nonlinear remainder is small compared with
+the linear part. For \eqref{eq:rd-system} we write $u=\ub+w_1$, $v=\vb+w_2$ and
+$F=(f,g)^\top$, and obtain, with Neumann boundary conditions,
+\begin{equation*}
+  \bw_t = \mathcal L\bw + \mathcal N(\bw),\qquad
+  \mathcal L\bw = D\bw_{xx}+A\bw,\qquad
+  \mathcal N(\bw) = F(\ub+w_1,\vb+w_2)-A\bw .
+\end{equation*}
+Here $\mathcal L$ is the operator of the linearized problem
+\eqref{eq:linearized-system}, and $\mathcal N$ is the Taylor remainder: for smooth
+$f,g$ there is $C$ with $\abs{\mathcal N(\bw)}\le C\abs{\bw}^2$ pointwise whenever
+$\abs{\bw}\le1$.
+
+The new difficulty is that $\bw(t)$ lives in an infinite-dimensional space of
+functions, such as the continuous functions on $[0,L]$ or $L^p(0,L)$. The solution
+operators $\bw(0)\mapsto\bw(t)$ of the linearized problem are denoted by
+$e^{t\mathcal L}$ and form a \emph{semigroup}: $e^{(t+s)\mathcal L}=e^{t\mathcal
+L}e^{s\mathcal L}$. Here they are explicit: by \cref{thm:modal-decomposition},
+$e^{t\mathcal L}$ multiplies the $k$-th cosine coefficient by $e^{tA_k}$. As for ODEs,
+one then studies $\bw(t)=e^{t\mathcal L}\bw(0)+\int_0^te^{(t-s)\mathcal L}\mathcal
+N(\bw(s))\dd s$. The tools to make this rigorous, semigroup theory and Sobolev
+spaces, belong to a graduate course on PDEs \cite{Evans2010}. We use the sup norm
+$\norm{\bw}_\infty=\max_{x\in[0,L]}\abs{\bw(x)}$.
+
+\begin{definition}\label{def:outlook-stability}
+A stationary solution $(U,V)$ of \eqref{eq:rd-system}, constant or not, is
+\emph{stable} if for every $\eps>0$ there is $\rho>0$ such that every solution with
+$\norm{(u_0-U,v_0-V)}_\infty<\rho$ satisfies $\norm{(u-U,v-V)(\cdot,t)}_\infty<\eps$
+for all $t\ge0$. Otherwise it is \emph{(nonlinearly) unstable}: for some $\eps>0$,
+arbitrarily small perturbations of $(U,V)$ lead to solutions with
+$\norm{(u-U,v-V)(\cdot,t)}_\infty\ge\eps$ at some time $t>0$.
+\end{definition}
+
+This is \cref{def:stability-ode} with the sup norm in place of the Euclidean norm.
+
+\begin{theorem}[Nonlinear instability; informal]\label{thm:nonlinear-instability}
+Let $\mathcal L$ generate a semigroup on a function space with norm $\norm{\cdot}$,
+and let the nonlinearity be superlinear near zero:
+$\norm{\mathcal N(\bw)}\le C\norm{\bw}^{1+\eta}$ for $\norm{\bw}\le1$, with constants
+$C,\eta>0$. If $\mathcal L$ has an eigenvalue with positive real part, then the zero
+solution of $\bw_t=\mathcal L\bw+\mathcal N(\bw)$ is nonlinearly unstable.
+\end{theorem}
+
+We omit the proof; see \cite{ShatahStrauss2000} for a precise statement. For smooth
+$f,g$ and the sup norm the hypothesis on $\mathcal N$ holds with $\eta=1$, and every
+eigenvalue of a mode matrix $A_k$ is an eigenvalue of $\mathcal L$
+(\cref{prop:normal-modes}). Hence \emph{diffusion-driven instability implies
+nonlinear instability}: the linear theory of \cref{ch:turing} is more than a
+heuristic. The proof starts from a small multiple of an unstable mode and shows that
+the nonlinear terms stay comparatively small until the solution has reached a fixed
+size. An earlier variant \cite{FriedlanderStraussVishik1997} assumes a spectral gap,
+roughly that no part of the linear evolution grows faster than the most unstable
+mode; in our setting the maximal growth rate over all modes is attained
+(\cref{exer:turing-explicit-roots}), which is the key ingredient. Conversely,
+linear stability as in \cref{thm:spectral-criterion}(ii) implies stability for the
+nonlinear problem \cite{Perthame2015}.
+
+\section{After the instability: Turing patterns}\label{sec:outlook-patterns}
+
+Instability says that solutions leave a neighborhood of $(\ub,\vb)$, not where they
+go. In the simulations of \cref{fig:ch06-1d-evolution}, nonlinear effects saturate
+the growth and the solution approaches a stationary, nonconstant state.
+
+\begin{definition}[Turing pattern]\label{def:turing-pattern}
+A \emph{Turing pattern} is a stationary solution $(U,V)$ of \eqref{eq:rd-system},
+i.e.\ $d_uU''+f(U,V)=0$, $d_vV''+g(U,V)=0$ in $(0,L)$ and $U'=V'=0$ at $x=0,L$,
+which is (i)~nonconstant (spatially heterogeneous), (ii)~continuous, (iii)~stable in
+the sense of \cref{def:outlook-stability}, and (iv)~arises from the diffusion-driven
+instability of a constant steady state $(\ub,\vb)$.
+\end{definition}
+
+Condition (iv) is informal; typically $(U,V)$ lies on a branch of solutions that
+bifurcates from $(\ub,\vb)$ when a parameter crosses the instability threshold.
+Condition (ii) is automatic for classical solutions when both species diffuse, but
+not in \cref{sec:outlook-other}.
+
+Near the threshold the picture is fairly complete. As $\delta$ increases, mode $k$
+becomes unstable on $(0,L)$ when $h(\lambda_k)$ changes sign, at some
+$\delta_k\ge\delta_c$, with equality only if $\lambda_k=\lambda_c$
+(\cref{exer:outlook-threshold}). If a single mode $k$ crosses first, bifurcation
+theory yields stationary solutions
+$(U,V)(x)\approx(\ub,\vb)+\eps\cos(k\pi x/L)\,\bxi$, where $\bxi$ spans the
+kernel of $A_k$ at $\delta=\delta_k$ and the small amplitude $\eps$ is determined
+by the nonlinear terms (keywords: \emph{weakly nonlinear
+analysis}, \emph{amplitude equations}). Depending on these terms the bifurcation is
+supercritical, with small stable patterns for $\delta$ slightly above $\delta_k$, or
+subcritical, with no small stable patterns near the threshold. Far from threshold,
+patterns can look very different from a cosine---for instance narrow, high activator
+peaks (``spikes'') when the activator diffuses very slowly---and the final number of
+peaks need not be that of the fastest-growing linear mode.
+
+\begin{keyidea}
+Linear theory predicts when a uniform state breaks up and which wavelengths grow
+first. Whether a stable pattern forms, and which one, is a nonlinear question:
+diffusion-driven instability alone does not guarantee a Turing pattern.
+\end{keyidea}
+
+\section{More than two species}\label{sec:outlook-more-species}
+
+With $n\ge3$ species, the modal decomposition and the spectral criterion carry over,
+but the trace--determinant argument fails: a complex pair of eigenvalues of
+$A-\lambda_kD$ can cross the imaginary axis at a nonzero wavenumber. Such a
+\emph{wave instability}, driven by diffusion, produces patterns that oscillate in
+space and time (compare \cref{rem:turing-bifurcation}); Turing already noted that
+travelling waves become possible with three or more morphogens \cite{Turing1952}.
+Moreover, the requirement $\delta>1$ of \cref{cor:turing-consequences}(c) relies on
+having exactly two species, both diffusing. With $D=d\,I$ there is no
+diffusion-driven instability for any number of species
+(\cref{exer:turing-equal-diffusion}), but if some components of a network do not
+diffuse at all, patterns can form although all diffusing species have the same
+diffusion coefficient \cite{Marcon2016}.
+
+\section{Other directions}\label{sec:outlook-other}
+
+\emph{Reaction--diffusion--ODE systems.} In many biological models one component
+does not diffuse, e.g.\ because it is bound to cells. For $d_u=0$ the linear analysis
+of \cref{ch:turing} still applies with $D=\diag(0,d_v)$, but now
+$h(\lambda)=\det A-\lambda d_vf_u$. If the non-diffusing species is self-enhancing,
+$f_u>0$, then $h(\lambda)<0$ for all large $\lambda$: infinitely many modes are
+unstable, and arbitrarily short wavelengths grow at rates close to $f_u$
+(\cref{exer:outlook-rdode}; compare \cref{thm:turing-small-du}). The same
+mechanism can destabilize nonconstant stationary solutions; for a class of such
+systems all continuous stationary solutions are unstable, so that no Turing pattern
+exists \cite{MarciniakKarchSuzuki2017} (see the paper for the precise assumptions).
+Without diffusion, stationary solutions need not even be continuous, which is one
+reason for condition (ii) in \cref{def:turing-pattern}.
+
+\emph{Nonlocal models.} In tissues, activation and inhibition can be mediated by
+interactions between cells rather than by diffusing molecules \cite{KondoMiura2010}.
+Nonlocal models replace $d\,u_{xx}$ by an integral operator
+$u\mapsto\int K(x-y)u(y)\dd y$ whose kernel $K$ describes the range of the
+interaction. On the whole line $e^{iqx}$ is an eigenfunction of this operator, with
+eigenvalue $\int K(z)e^{-iqz}\dd z$, so a mode-by-mode analysis is again possible.
+
+\section{Further reading}\label{sec:outlook-reading}
+
+Murray's two volumes \cite{Murray2002,Murray2003} treat reaction--diffusion models
+from the modeling side, with many biological examples. Perthame \cite{Perthame2015}
+is rigorous, close in spirit to these notes, and goes further into nonlinear
+questions. For PDE background, Strauss \cite{Strauss2008} is an introduction at the
+level of these notes, and Evans \cite{Evans2010} the standard graduate text. Turing's
+original paper \cite{Turing1952} is still very readable.
+
+\section{Exercises}\label{sec:outlook-exercises}
+
+\begin{exercise}[$\ast$]\label{exer:outlook-rdode}
+Let $d_u=0<d_v$, $\tr A<0$, $\det A>0$ and $f_u>0$. (a) Show that
+$h(\lambda)=\det A-\lambda d_vf_u$, so that mode $k$ is unstable whenever
+$\lambda_k>\det A/(d_vf_u)$. (b) For these $k$ let $\mu_k$ be the positive eigenvalue
+of $A_k$; show that $\mu_k\to f_u$ as $k\to\infty$. (c) Show that $f_vg_u<0$ and
+that $\re\mu<f_u$ for every eigenvalue $\mu$ of every $A_k$, $k\ge0$ (evaluate the
+characteristic polynomial of $A_k$ at $f_u$). So the supremum of the growth rates is
+not attained; compare with \cref{exer:turing-explicit-roots}.
+\end{exercise}
+
+\begin{exercise}[Near the threshold]\label{exer:outlook-threshold}
+Take the Schnakenberg kinetics with $a=0.1$, $b=0.9$ (\cref{ex:schnakenberg-turing}),
+$d_u=1$ and $d_v=\delta$. (a) Show that $h(\lambda)=\delta\lambda(\lambda-0.8)+\lambda+1$,
+and deduce that mode $k$ is unstable if and only if $\lambda_k<0.8$ and
+$\delta>\delta_k=(1+\lambda_k)/\big(\lambda_k(0.8-\lambda_k)\big)$. (b) Show that the
+minimum of $(1+\lambda)/\big(\lambda(0.8-\lambda)\big)$ over $0<\lambda<0.8$ is
+$\delta_c\approx8.57$, attained at $\lambda_c=\sqrt{1.8}-1\approx0.342$. Find $\bxi$
+with $(A-\lambda_cD)\bxi=0$ at $\delta=\delta_c$; is the critical pattern in phase or
+out of phase? (c) Show that a mode sits exactly at $\lambda_c$ if and only if $L$ is
+an integer multiple of $\pi/\sqrt{\lambda_c}\approx5.37$. For $L=40$, show that the
+first mode to become unstable as $\delta$ increases is $k=7$, at
+$\delta_7\approx8.66$.
+\end{exercise}
+
+\begin{exercise}[What is a Turing pattern?]\label{exer:outlook-definition}
+(a) Show that every stationary solution $(U,V)$ of \eqref{eq:rd-system} satisfies
+$\int_0^Lf(U,V)\dd x=\int_0^Lg(U,V)\dd x=0$, so $f(U,V)$ is either identically zero or
+changes sign. (b) Give two reasons why a single equation $u_t=d\,u_{xx}+f(u)$ has no
+Turing patterns (\cref{cor:no-ddi-scalar,thm:nonconstant-unstable}). (c) Which of the
+conditions (i)--(iv) in \cref{def:turing-pattern} can be checked with the linear
+theory of \cref{ch:turing}? Should a stable pattern that coexists with a stable
+constant steady state be called a Turing pattern?
+\end{exercise}
