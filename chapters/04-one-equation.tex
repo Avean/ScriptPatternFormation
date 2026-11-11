@@ -52,13 +52,10 @@ Differentiating under the integral sign we get, for $k=0,1,2,\dots$,
 since $\lambda_k\ge\lambda_0=0$.
 
 \begin{proposition}\label{prop:scalar-constant}
-Let $f(\ub)=0$.
-\begin{enumerate}[label=(\alph*)]
-  \item If $f'(\ub)<0$, every solution of \eqref{eq:one-linearized} satisfies
-        $\norm{\varphi(t)}\le e^{f'(\ub)t}\norm{\varphi(0)}$ for $t\ge0$. In particular,
-        $\ub$ is linearly stable.
-  \item If $f'(\ub)>0$, then $\ub$ is linearly unstable.
-\end{enumerate}
+Let $f(\ub)=0$. (a) If $f'(\ub)<0$, every solution of \eqref{eq:one-linearized}
+satisfies $\norm{\varphi(t)}\le e^{f'(\ub)t}\norm{\varphi(0)}$ for $t\ge0$; in
+particular, $\ub$ is linearly stable. (b) If $f'(\ub)>0$, then $\ub$ is linearly
+unstable.
 \end{proposition}
 
 \begin{proof}
@@ -105,7 +102,7 @@ interval and close to $1$ in another be stable? No (\cref{sec:one-nonconstant}).
 
 At a nonconstant stationary solution the linearized equation has an $x$-dependent
 coefficient, and the cosine modes no longer decouple. We need a tool without Fourier
-series. Let $a$ be a smooth function on $[0,L]$, consider
+series. Let $a$ be a smooth function on $[0,L]$. We consider
 \begin{equation}\label{eq:one-variable}
   \varphi_t = d\,\varphi_{xx} + a(x)\,\varphi,\quad x\in(0,L),\ t>0,\qquad
   \varphi_x=0,\quad x\in\{0,L\},\ t>0 ,
@@ -149,8 +146,8 @@ Cauchy--Schwarz inequality give
 \end{equation*}
 Let $T=\inf\{t>0: N(t)=0\}$ ($T=\infty$ if $N$ has no zero). On $[0,T)$ we have
 $(\log N)'=2R\ge2R(0)$, hence $N(t)\ge N(0)e^{2R(0)t}$. If $T$ were finite, letting
-$t\to T$ would give $N(T)>0$, a contradiction. So $T=\infty$, and taking square roots
-proves (b).
+$t\to T$ would give $N(T)\ge N(0)e^{2R(0)T}>0$, contradicting $N(T)=0$. So
+$T=\infty$, and taking square roots proves (b).
 
 (c) $N'=2Q(\varphi)\le2\int_0^La\varphi^2\dd x\le2\alpha N$, so $(e^{-2\alpha t}N)'\le0$.
 \end{proof}
@@ -171,7 +168,7 @@ We view \eqref{eq:one-stationary} as an ODE with $x$ as time. If $F'=f$, then
 $\frac{\mathrm d}{\mathrm dx}\big(\frac d2U'^2+F(U)\big)=U'(dU''+f(U))=0$: the ODE is
 conservative, and its orbits in the $(U,U')$ plane lie on level curves of
 $\frac d2U'^2+F(U)$. A solution of \eqref{eq:one-stationary} is an orbit piece that
-leaves the axis $U'=0$ at time $x=0$ and is back on it at time $x=L$.
+starts on the axis $U'=0$ at time $x=0$ and is on it again at time $x=L$.
 \Cref{fig:ch04-phase-plane} shows this for the bistable kinetics with
 $\theta=\frac12$, $d=1$. The orbit through $(U_0,0)$, $0<U_0<\frac12$, reaches
 $(1-U_0,0)$ in half a period, which (numerically) increases from $2\pi$ for small
@@ -181,7 +178,8 @@ increasing nonconstant stationary solution.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{ch04-phase-plane}
-  \caption{Problem \eqref{eq:one-stationary} for $f(u)=u(1-u)(u-\frac12)$, $d=1$.
+  \caption{Stationary problem $U''+f(U)=0$, $U'(0)=U'(L)=0$, for
+  $f(u)=u(1-u)(u-\frac12)$.
   (a) Level curves of $\frac12U'^2+F(U)$, with saddles (filled dots), center (open
   dot) and saddle connections (dashed); the highlighted orbit piece leaves the axis
   $U'=0$ at $x=0$ and returns at $x=L=8$. (b) The corresponding stationary solution;
@@ -213,9 +211,12 @@ By \cref{lem:rayleigh-growth}(b), $\norm{\varphi(t)}\ge e^{\mu t}\norm{\varphi_0
 $\mu=R(0)=Q(\varphi_0)/\norm{\varphi_0}^2>0$. It remains to find such a $\varphi_0$.
 
 \emph{Step 2: the derivative of $U$.} Put $w=U'$. Differentiating $dU''+f(U)=0$
-gives $dw''+aw=0$, and the Neumann condition for $U$ says $w(0)=w(L)=0$. Integrating
-by parts, $Q(w)=\int_0^Lw\,(dw''+aw)\dd x-d\big[ww'\big]_0^L=0$. But $w$ does not
-qualify: $Q(w)=0$, and $w'(0)=-f(U(0))/d$ need not vanish.
+gives $dw''+aw=0$, and the Neumann condition for $U$ says $w(0)=w(L)=0$. Hence
+\begin{equation*}
+  Q(w) = \int_0^L\big(aw^2-dw'^2\big)\dd x
+  = \int_0^Lw\,(dw''+aw)\dd x - d\big[ww'\big]_0^L = 0 .
+\end{equation*}
+But $w$ does not qualify: $Q(w)=0$, and $w'(0)=-f(U(0))/d$ need not vanish.
 
 \emph{Step 3: making $Q$ positive.} First, $w'(0)\neq0$: otherwise $w$ would solve
 the linear ODE $dw''+aw=0$ with $w(0)=w'(0)=0$, so $w\equiv0$ by uniqueness, and $U$
@@ -264,15 +265,17 @@ Let $F'=f$ and $E[u]=\int_0^L\big(\frac d2u_x^2-F(u)\big)\dd x$. If $u$ solves
   = d\big[u_xu_t\big]_0^L - \int_0^L\big(du_{xx}+f(u)\big)u_t\dd x = -\norm{u_t}^2 .
 \end{equation*}
 So $E$ is a \emph{Lyapunov functional}: it decreases along solutions and is constant
-only along stationary ones (so time-periodic solutions are stationary). For
+only along stationary ones (hence time-periodic solutions are stationary). For
 stationary $U$ and smooth $\eta$, Taylor's formula and the same integration by parts
 give $E[U+\eps\eta]=E[U]-\frac{\eps^2}2Q(\eta)+\mathcal{O}(\eps^3)$ with $a=f'(U)$:
 stationary solutions are critical points of $E$, and $-Q$ is the second variation.
-If $U$ is nonconstant and $\varphi_0$ is as in Step~4, then for small $\eps>0$ the
-datum $u_0=U+\eps\varphi_0$ gives $E[u(t)]\le E[u_0]<E[U]$ for all $t$, so $u(t)$
-cannot converge to $U$ in any sense in which $E$ is continuous (e.g.\
-$\max\abs{u-U}+\max\abs{u_x-U'}\to0$). So $U$ is \emph{not asymptotically stable}
-for the nonlinear equation; this is slightly weaker than instability.
+If $U$ is nonconstant and $\varphi_0$ is as in the proof of
+\cref{thm:nonconstant-unstable}, then for small $\eps>0$ the datum
+$u_0=U+\eps\varphi_0$ gives $E[u(t)]\le E[u_0]<E[U]$ for all $t$, so $u(t)$ cannot
+converge to $U$ in any sense in which $E$ is continuous, e.g.\ in the distance
+$\max\abs{u-U}+\max\abs{u_x-U'}$. As $u_0$ is arbitrarily close to $U$ in this
+distance, $U$ is \emph{not asymptotically stable} for the nonlinear equation. This
+is slightly weaker than instability: solutions starting near $U$ might stay near it.
 \end{remark}
 
 \begin{remark}[Higher dimensions]\label{rem:higher-dim}
@@ -281,27 +284,27 @@ vanishes at the boundary. On $\Omega\subset\R^n$ the derivatives $\partial_jU$ s
 the linearized equation but need not vanish on $\partial\Omega$. On convex domains a
 careful treatment of the boundary terms still gives instability
 \cite{CastenHolland1978,Matano1979}. On a dumbbell (two regions joined by a thin
-channel), however, bistable kinetics admit stable stationary solutions close to $0$
-in one bulb and to $1$ in the other \cite{Matano1979}. In one dimension the
+channel), however, bistable kinetics can have stable stationary solutions close to
+$0$ in one bulb and to $1$ in the other \cite{Matano1979}. In one dimension the
 long-time behavior is well understood \cite{Chafee1975}.
 \end{remark}
 
-\begin{remark}[Travelling waves]\label{rem:travelling-waves}
-On the whole line, $u_t=du_{xx}+u(1-u)$ has \emph{travelling fronts}
+\begin{remark}[Traveling waves]\label{rem:travelling-waves}
+On the whole line, $u_t=du_{xx}+u(1-u)$ has \emph{traveling fronts}
 $u=\Phi(x-ct)$, $0<\Phi<1$, $\Phi(-\infty)=1$, $\Phi(+\infty)=0$, exactly for
-$c\ge2\sqrt d$ \cite{Murray2002}. On a bounded interval with Neumann conditions
-such a front is transient: afterwards the solution (for nonnegative data, not
-identically zero) approaches the constant $1$.
+$c\ge2\sqrt d$ \cite{Murray2002}. On a bounded interval with Neumann conditions a
+front is only transient: it crosses the interval, and then the solution approaches
+the constant $1$ (for nonnegative data, not identically zero).
 \end{remark}
 
 \section{Why two species?}\label{sec:one-why-two}
 
-Both results rest on the symmetry
+Both results rest on symmetry:
 $\int_0^L(d\psi''+a\psi)\eta\dd x=\int_0^L\psi(d\eta''+a\eta)\dd x$ for smooth
-$\psi,\eta$ with $\psi'=\eta'=0$ at $x=0,L$, which gave $N'=2Q$ and the monotone
-Rayleigh quotient. For two species, $\bw\mapsto D\bw_{xx}+A\bw$ from
-\eqref{eq:linearized-system} is symmetric in this sense if and only if $A$ is, i.e.\
-$f_v=g_u$, and then diffusion is harmless:
+$\psi,\eta$ with $\psi'=\eta'=0$ at $x=0,L$ (integrate by parts twice). It made
+$Q(\varphi(t))$ increase in \cref{lem:rayleigh-growth}. For two species,
+$\bw\mapsto D\bw_{xx}+A\bw$ from \eqref{eq:linearized-system} is symmetric in this
+sense if and only if $A$ is, i.e.\ $f_v=g_u$, and then diffusion is harmless:
 
 \begin{proposition}\label{prop:symmetric-no-ddi}
 Let $A$ be symmetric with two negative eigenvalues, the larger one $\mu_A$, and
@@ -328,7 +331,8 @@ symmetric two-species systems admit no diffusion-driven instability
 \emph{non-symmetric} interaction, $f_v\neq g_u$. \Cref{ch:turing} shows more:
 $f_vg_u<0$ is necessary (\cref{cor:turing-consequences}), so one species promotes the
 other while being suppressed by it. The last proof only used
-$\mathbf y\cdot A\mathbf y\le\mu_A\abs{\mathbf y}^2$; so an instability also needs
+$\mathbf y\cdot A\mathbf y\le\mu_A\abs{\mathbf y}^2$. For non-symmetric $A$, stable
+eigenvalues do not imply $\mathbf y\cdot A\mathbf y<0$; an instability needs
 $\mathbf y\cdot A\mathbf y>0$ for some $\mathbf y$, e.g.\ $f_u>0$ (self-enhancement).
 \end{remark}
 
@@ -345,7 +349,7 @@ $\ub=1$ every mode decays at least like $e^{-t}$. Compare with
 Let $\rho$ be smooth and nondecreasing with $\rho=0$ on $(-\infty,0]$, $\rho=1$ on
 $[1,\infty)$ and $\rho(s)+\rho(1-s)=1$ (e.g.\
 $\rho(s)=e^{-1/s}/(e^{-1/s}+e^{-1/(1-s)})$ on $(0,1)$). Let
-$H(s)=\rho(2s)+\rho(4s-2)\rho(4-4s)$ for $s\le1$, $H(s)=1$ for $s>1$, and
+$H(s)=\rho(2s)+\rho(4s-2)\rho(4-4s)$ for $0\le s\le1$, $H(s)=1$ for $s>1$, and
 $G(s)=\int_0^sH$. Show that $0\le H\le2$, $H(0)=0$, $\int_0^1H=1$, and that
 $g_\delta(x)=\delta G(x/\delta)$ for $x\le L/2$, $g_\delta(x)=L-\delta G((L-x)/\delta)$
 for $x>L/2$, has all properties required in Step 4.

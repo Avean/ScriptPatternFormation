@@ -170,10 +170,10 @@ def main():
     counts = {}
     for seed in range(50):
         a0, b0 = initial_data(seed, x, ub, vb)
-        uf, _ = imex_1d(f, g, a0, b0, DU, DV, L, 0.02, 600.0)
+        uf, _ = imex_1d(f, g, a0, b0, DU, DV, L, DT, 600.0)
         k, _ = dominant_mode(uf, ub)
         counts[k] = counts.get(k, 0) + 1
-    print("final dominant mode over 50 seeds (dt = 0.02):", dict(sorted(counts.items())))
+    print("final dominant mode over 50 seeds (dt = DT):", dict(sorted(counts.items())))
 
 
 if __name__ == "__main__":

@@ -69,10 +69,23 @@ $e^{-\gamma t}$ if $\gamma<-\re\mu$.
 \end{proof}
 
 We call a square matrix \emph{stable} if all its eigenvalues have negative real
-parts. Then $0$ is an asymptotically stable steady state of $x'=Bx$ (take
-$\delta=\eps/C$); in case (b) it is unstable, since small multiples of the growing
+parts. For stable $B$, $0$ is an asymptotically stable steady state of $x'=Bx$
+(take $\delta=\eps/C$); in case (b) it is unstable, since small multiples of the growing
 solution start arbitrarily close to $0$. The constant $C$ in (a) cannot always be
 taken equal to $1$ (\cref{exer:ode-transient}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.62\textwidth]{ch02-trace-det}
+  \caption{The trace--determinant diagram of a real $2\times2$ matrix $B$. Stable
+  matrices ($\tr B<0$, $\det B>0$) form the shaded quadrant; below the horizontal
+  axis lie the saddles. Between the axis and
+  the parabola $\det B=\frac14(\tr B)^2$ the eigenvalues are real with equal signs
+  (nodes), above it they are complex (foci). The dots are the
+  Jacobians of the Schnakenberg and Gierer--Meinhardt kinetics at their standard
+  parameters (\cref{tab:standard-parameters}); both are stable foci.}
+  \label{fig:ch02-trace-det}
+\end{figure}
 
 \section{Two-by-two matrices}\label{sec:ode-2x2}
 
@@ -111,19 +124,6 @@ eigenvalues $\pm i\sqrt{\det B}$ are purely imaginary (a center). In
 diagram, and a diffusion-driven (Turing) instability occurs when one of them is
 pushed below the axis.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.62\textwidth]{ch02-trace-det}
-  \caption{The trace--determinant diagram of a real $2\times2$ matrix $B$. Stable
-  matrices ($\tr B<0$, $\det B>0$) form the shaded quadrant; below the horizontal
-  axis lie the saddles. Between the axis and
-  the parabola $\det B=\frac14(\tr B)^2$ the eigenvalues are real with equal signs
-  (nodes), above it they are complex (foci). The dots are the
-  Jacobians of the Schnakenberg and Gierer--Meinhardt kinetics at their standard
-  parameters (\cref{tab:standard-parameters}); both are stable foci.}
-  \label{fig:ch02-trace-det}
-\end{figure}
-
 \section{Linearization}\label{sec:ode-linearization}
 
 Let $\bar x$ be a steady state of \eqref{eq:ode-system} and let $DF(\bar x)$ be the
@@ -150,8 +150,8 @@ Let $\bar x$ be a steady state of \eqref{eq:ode-system}.
 $\gamma>0$ with $\abs{e^{tB}\mathbf y}\le Ce^{-2\gamma t}\abs{\mathbf y}$. Choose
 $r>0$ with $\abs{R(z)}\le(\gamma/C)\abs z$ for $\abs z\le r$, put $\rho=r/C$, and
 let $\abs{z(0)}<\rho$. As long as $\abs z\le r$, the variation of constants formula
-$z(t) = e^{tB}z(0) + \int_0^t e^{(t-s)B}R(z(s))\dd s$ shows that $\varphi(t)=e^{2\gamma t}\abs{z(t)}$ satisfies
-$\varphi(t)\le C\abs{z(0)}+\gamma\int_0^t\varphi(s)\dd s$, and Gronwall's
+$z(t) = e^{tB}z(0) + \int_0^t e^{(t-s)B}R(z(s))\dd s$ shows that
+$\varphi(t)=e^{2\gamma t}\abs{z(t)}$ satisfies $\varphi(t)\le C\abs{z(0)}+\gamma\int_0^t\varphi(s)\dd s$, and Gronwall's
 inequality ($\varphi\le\alpha+\beta\int_0^t\varphi$ with constants
 $\alpha,\beta\ge0$ implies $\varphi(t)\le\alpha e^{\beta t}$) gives
 $\abs{z(t)}\le Ce^{-\gamma t}\abs{z(0)}\le C\abs{z(0)}<r$. So $z$ never reaches
@@ -182,8 +182,7 @@ well-chosen norm; see \cref{ch:outlook}.
 
 A \emph{kinetic system} for two species with concentrations $u(t)$, $v(t)$ is
 $u'=f(u,v)$, $v'=g(u,v)$ with smooth $f,g$; it models a well-stirred reactor.
-At a steady state
-$(\ub,\vb)$, that is, $f(\ub,\vb)=g(\ub,\vb)=0$, the Jacobian matrix is
+At a steady state $(\ub,\vb)$, that is, $f(\ub,\vb)=g(\ub,\vb)=0$, the Jacobian matrix is
 \begin{equation*}
   A=\begin{pmatrix} f_u & f_v\\ g_u & g_v\end{pmatrix},
   \qquad\text{all derivatives evaluated at } (\ub,\vb),
@@ -222,8 +221,8 @@ $\ub\vb=b/(a+b)$ we get
 \end{equation*}
 so $\det A=-(b-a)(a+b)+2b(a+b)=(a+b)^2$ and $\tr A=(b-a)/(a+b)-(a+b)^2$. Since
 $\det A>0$, the steady state is asymptotically stable if $b-a<(a+b)^3$ and
-unstable if $b-a>(a+b)^3$. They are of substrate-depletion type
-($f_v>0>g_u$), and $u$ is self-enhancing if and only if $b>a$. For the
+unstable if $b-a>(a+b)^3$. Here $f_v>0>g_u$ (substrate-depletion
+type), and $u$ is self-enhancing if and only if $b>a$. For the
 \emph{standard parameters} $a=0.1$, $b=0.9$ we get $(\ub,\vb)=(1,0.9)$, $f_u=0.8$,
 $f_v=1$, $g_u=-1.8$, $g_v=-1$, so $\tr A=-0.2$, $\det A=1$: a stable focus
 ($\mu=-0.1\pm i\sqrt{0.99}$).
@@ -244,9 +243,9 @@ $g_v=-1$ and $\ub/\vb=1/\ub=b/(a+1)$ we get
 \begin{equation*}
   f_u=\frac{b(1-a)}{1+a},\quad f_v=-\frac{b^2}{(a+1)^2},\quad g_u=\frac{2(a+1)}{b},\quad g_v=-1,
 \end{equation*}
-so $\det A=-b(1-a)/(1+a)+2b/(a+1)=b$ and $\tr A=b(1-a)/(1+a)-1$. So the steady state is asymptotically stable if $b(1-a)<1+a$ (for $a=0$: if
-$b<1$) and unstable if $b(1-a)>1+a$. The kinetics are of activator--inhibitor type
-($f_v<0<g_u$), and $u$ is self-enhancing if and only if $a<1$. For the
+so $\det A=-b(1-a)/(1+a)+2b/(a+1)=b$ and $\tr A=b(1-a)/(1+a)-1$. So the steady
+state is asymptotically stable if $b(1-a)<1+a$ (for $a=0$: if $b<1$) and unstable if $b(1-a)>1+a$. Here $f_v<0<g_u$ (activator--inhibitor
+type), and $u$ is self-enhancing if and only if $a<1$. For the
 \emph{standard parameters} $a=0$, $b=0.5$ we get $(\ub,\vb)=(2,4)$, $f_u=0.5$,
 $f_v=-0.25$, $g_u=4$, $g_v=-1$, so $\tr A=-0.5$, $\det A=0.5$: a stable focus
 ($\mu=-0.25\pm i\sqrt7/4$).
@@ -270,8 +269,8 @@ and inserting $\vb=1+\ub^2$, we find
 \end{equation*}
 and $\tr A=(3\ub^2-5-b\ub)/(1+\ub^2)$. So the steady state is asymptotically
 stable if $b>(3\ub^2-5)/\ub$ (for every $b>0$ if $3\ub^2\le5$) and unstable if
-$b<(3\ub^2-5)/\ub$. They are of activator--inhibitor type
-($f_v<0<g_u$), and $u$ is self-enhancing if and only if $\ub^2>5/3$. The case
+$b<(3\ub^2-5)/\ub$. Here $f_v<0<g_u$ (activator--inhibitor
+type), and $u$ is self-enhancing if and only if $\ub^2>5/3$. The case
 $a=10$ is treated in \cref{exer:turing-lengyel-epstein}.
 \end{example}
 
@@ -313,16 +312,23 @@ test is the Routh--Hurwitz criterion \cite{Murray2002}.)
 
 \begin{exercise}\label{exer:ode-predator-prey}
 Consider $u'=u(1-u)-uv$, $v'=v(u-c)$ for $u,v\ge0$, with a parameter $0<c<1$.
-(a) Find the three steady states and classify them (saddle, node or focus; stable
-or unstable). (b) When is the steady state with $\ub,\vb>0$ a focus? What is the
+(a) Find and classify the three steady states. (b) When is the steady state with $\ub,\vb>0$ a focus? What is the
 sign structure of its Jacobian? Is $u$ self-enhancing there?
 \end{exercise}
 
 \begin{exercise}\label{exer:ode-hopf}
 Fix $b>0$ in the Schnakenberg kinetics \eqref{eq:schnakenberg}. (a) Show that
-$\tr A$ is strictly decreasing in $a>0$; conclude that for $b\ge1$ the steady
-state is asymptotically stable for all $a>0$. (b) Let $0<b<1$. Show that
-$\tr A=0$ for exactly one $a_H>0$, that the steady state is stable for $a>a_H$
-and unstable for $a<a_H$, and that at $a=a_H$ the eigenvalues are $\pm i(a_H+b)$: a complex pair crosses the imaginary axis, as in a Hopf
+$\tr A$ is strictly decreasing in $a>0$, and deduce asymptotic stability for all
+$a>0$ if $b\ge1$. (b) Let $0<b<1$. Show that
+$\tr A=0$ for exactly one $a_H>0$, that the steady state is asymptotically
+stable for $a>a_H$ and unstable for $a<a_H$, and that at $a=a_H$ the eigenvalues
+are $\pm i(a_H+b)$: a complex pair crosses the imaginary axis, as in a Hopf
 bifurcation \cite{Schnakenberg1979}. (c) Compute $a_H$ for $b=0.9$ numerically.
+\end{exercise}
+
+\begin{exercise}\label{exer:ode-cubic}
+Solve $x'=-x^3$ explicitly. Show that $0$ is asymptotically stable, but that there
+are no $C,\gamma,\rho>0$ with $\abs{x(t)}\le Ce^{-\gamma t}\abs{x(0)}$ for all
+$t\ge0$ whenever $\abs{x(0)}<\rho$. Compare with \cref{thm:linearized-stability}(a)
+and \cref{rem:ode-borderline}.
 \end{exercise}

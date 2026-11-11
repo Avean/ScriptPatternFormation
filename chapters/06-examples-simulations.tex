@@ -1,4 +1,436 @@
 % 06-examples-simulations
 \chapter{Examples and simulations}\label{ch:examples}
 
-% TODO: chapter content
+\Cref{ch:turing} turned the question ``can diffusion destabilize?'' into conditions
+on $2\times2$ matrices and a band of unstable modes. In this chapter we make these
+results concrete. First we draw, for our running examples, the regions in parameter
+space where diffusion-driven instability (DDI) is possible. Then we set up a simple
+numerical method and use it to solve the full nonlinear system. The simulations
+confirm the linear predictions of \cref{ch:turing} in the early phase, with
+surprising accuracy, and they show what linear theory cannot tell us: how large the
+pattern becomes, and which of several competing modes wins. All numbers quoted below
+were produced by short Python scripts that accompany these notes.
+
+\section{Turing spaces}\label{sec:turing-spaces}
+
+Kinetics usually depend on parameters, such as $a,b$ in our running examples. The
+Turing conditions (T1)--(T4) of \eqref{eq:turing-conditions} involve the diffusion
+coefficients only through the ratio $\delta=d_v/d_u$. For a fixed value of $\delta$
+we call the set of kinetic parameters for which (T1)--(T4) hold the \emph{Turing
+space}. It does not depend on the interval: on $(0,L)$ an instability occurs only if,
+in addition, some $\lambda_k$ lies in the band \eqref{eq:band}, which is automatic
+for large $L$ by \cref{cor:domain-size}.
+
+\begin{example}[Schnakenberg]\label{ex:examples-schnakenberg-space}
+By \cref{ex:schnakenberg}, $f_u=(b-a)/(a+b)$, $f_v=(a+b)^2$, $g_u=-2b/(a+b)$,
+$g_v=-(a+b)^2$ and $\det A=(a+b)^2$. So (T2) always holds, and (T1) reads
+$(b-a)/(a+b)<(a+b)^2$. Since $g_v<0$, \cref{cor:turing-consequences}(a) shows that
+DDI requires $f_u>0$, i.e.\ $a<b$. Then \cref{thm:critical-ratio} applies with
+$-f_vg_u=2b(a+b)$, and the Turing space for $\delta$ is the set of $a,b>0$ with
+\begin{equation}\label{eq:examples-schnakenberg-space}
+  a<b,\qquad b-a<(a+b)^3,\qquad
+  \delta>\delta_c(a,b)=\frac{(a+b)^2\big((a+b)+\sqrt{2b(a+b)}\,\big)^2}{(b-a)^2}.
+\end{equation}
+For $(a,b)=(0.1,0.9)$ we recover $\delta_c=(1+\sqrt{1.8})^2/0.64\approx8.57$
+(\cref{ex:schnakenberg-turing}).
+\end{example}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch06-turing-space}
+  \caption{Turing spaces. (a) Schnakenberg kinetics in the $(a,b)$ plane: shaded,
+  the parameters with DDI for $\delta=20$, bounded by the curve $\delta_c(a,b)=20$
+  and by the region where the kinetics are unstable ((T1) fails, grey); dashed, the
+  curve $\delta_c(a,b)=10$. The dot is the standard point $(0.1,0.9)$. (b)
+  Gierer--Meinhardt kinetics with $a=0$ in the $(b,\delta)$ plane: DDI occurs above
+  the curve $\delta=(1+\sqrt2)^2/b$ and left of $b=1$. Filled dot: the standard
+  parameters $b=0.5$, $\delta=30$; open dot: $\delta_c\approx11.66$ for $b=0.5$.}
+  \label{fig:ch06-turing-space}
+\end{figure}
+
+\Cref{fig:ch06-turing-space}(a) shows this region. For $a=0.1$, condition (T1)
+requires $b>0.779$, and the Turing space consists of the values $0.779<b<1.002$ for
+$\delta=10$ and $0.779<b<1.559$ for $\delta=20$. Thus the standard point is rather
+close to the region where the kinetics themselves are unstable; there the reaction
+oscillates in time, which was Schnakenberg's original interest \cite{Schnakenberg1979}.
+The Turing space grows with $\delta$: since $\delta_c(a,b)<\infty$ whenever $a<b$,
+every point with $a<b$ and (T1) belongs to it once $\delta$ is large enough. Near the
+curve $\delta_c(a,b)=\delta$ the instability is weak; we will see in
+\cref{sec:examples-2d} that patterns near this edge and deep inside can look quite
+different.
+
+\begin{example}[Gierer--Meinhardt, $a=0$]\label{ex:examples-gm-space}
+For $a=0$, \cref{ex:gierer-meinhardt} gives $f_u=b$, $f_v=-b^2$, $g_u=2/b$, $g_v=-1$,
+$\det A=b$ and $\tr A=b-1$. Hence (T2) and $f_u>0$ always hold, (T1) means $b<1$, and
+$-f_vg_u=2b$. \Cref{thm:critical-ratio} gives
+\begin{equation*}
+  \delta_c(b)=\frac{\big(\sqrt b+\sqrt{2b}\,\big)^2}{b^2}=\frac{(1+\sqrt2)^2}{b}
+  \approx\frac{5.83}{b},\qquad 0<b<1 .
+\end{equation*}
+The Turing space is the region above this hyperbola in \cref{fig:ch06-turing-space}(b).
+The general case $a\ge0$ is \cref{exer:examples-gm-space}.
+\end{example}
+
+\section{A numerical method}\label{sec:numerics}
+
+We discretize in space only and keep time continuous; this turns the PDE into a large
+system of ODEs (the \emph{method of lines}), which we then solve by a time-stepping
+scheme. Divide $(0,L)$ into $N$ cells of width $h=L/N$ (not to be confused with the
+function $h(\lambda)$ of \cref{ch:turing}) with centers
+\begin{equation*}
+  x_j=\big(j-\tfrac12\big)h,\qquad j=1,\dots,N,
+\end{equation*}
+and let $u_j(t)\approx u(x_j,t)$. We replace $u_{xx}$ by the central difference
+quotient and impose the Neumann condition by \emph{reflected ghost values}
+$u_0:=u_1$, $u_{N+1}:=u_N$. (The ghost point $x_0=-h/2$ is the mirror image of $x_1$,
+and $(u_1-u_0)/h=0$ is a central difference for $u_x(0)=0$.) This defines the
+\emph{discrete Laplacian} $\Delta_h:\R^N\to\R^N$,
+\begin{equation}\label{eq:discrete-laplacian}
+  (\Delta_hu)_j=\frac{u_{j+1}-2u_j+u_{j-1}}{h^2},\qquad j=1,\dots,N,
+\end{equation}
+and the semi-discrete system $u_j'=d_u(\Delta_hu)_j+f(u_j,v_j)$,
+$v_j'=d_v(\Delta_hv)_j+g(u_j,v_j)$. Remarkably, the discrete problem has exactly the
+same cosine modes as the continuous one.
+
+\begin{proposition}[Discrete cosine modes]\label{prop:examples-discrete-modes}
+For $k=0,1,\dots,N-1$ the vector $\varphi^h_k=\big(\cos(k\pi x_j/L)\big)_{j=1}^N$
+satisfies
+\begin{equation*}
+  \Delta_h\varphi^h_k=-\lambda^h_k\,\varphi^h_k,\qquad
+  \lambda^h_k=\frac4{h^2}\sin^2\Big(\frac{k\pi h}{2L}\Big).
+\end{equation*}
+These $N$ vectors form an orthogonal basis of $\R^N$, and
+$\lambda^h_k\to\lambda_k=(k\pi/L)^2$ as $h\to0$ for each fixed $k$.
+\end{proposition}
+
+\begin{proof}
+Put $\theta=k\pi h/L$, so that $\varphi^h_{k,j}=\cos\big((j-\tfrac12)\theta\big)$.
+From $\cos(\alpha+\theta)+\cos(\alpha-\theta)=2\cos\alpha\cos\theta$ with
+$\alpha=(j-\frac12)\theta$ we get
+\begin{equation*}
+  \cos\big((j+\tfrac12)\theta\big)-2\cos\big((j-\tfrac12)\theta\big)
+  +\cos\big((j-\tfrac32)\theta\big)
+  =-2(1-\cos\theta)\cos\big((j-\tfrac12)\theta\big)
+  =-4\sin^2(\theta/2)\,\cos\big((j-\tfrac12)\theta\big).
+\end{equation*}
+This is the claim for $2\le j\le N-1$. For $j=1$ and $j=N$ it also holds, because
+the reflected ghost values agree with the cosine formula: $\cos(-\theta/2)=\cos(\theta/2)$,
+and, since $N\theta=k\pi$, $\cos\big((N+\frac12)\theta\big)=(-1)^k\cos(\theta/2)
+=\cos\big((N-\frac12)\theta\big)$. The matrix of $\Delta_h$ is symmetric (its rows are
+$(-1,1,0,\dots)/h^2$, $(\dots,1,-2,1,\dots)/h^2$ and $(\dots,0,1,-1)/h^2$), and the
+$\lambda^h_k$ are pairwise distinct because $\sin^2$ is strictly increasing on
+$[0,\pi/2)$ and $k\pi h/(2L)=k\pi/(2N)\in[0,\pi/2)$. Eigenvectors of a symmetric
+matrix for distinct eigenvalues are orthogonal, so we have $N$ orthogonal nonzero
+vectors in $\R^N$. Finally, with $s=k\pi h/(2L)$ we have
+$\lambda^h_k=\lambda_k(\sin s/s)^2\to\lambda_k$ as $h\to0$.
+\end{proof}
+
+So everything we did in \cref{ch:turing} has an exact discrete counterpart: the
+semi-discrete linearized system decouples into $2\times2$ systems with the mode
+matrices $A-\lambda^h_kD$, $k=0,\dots,N-1$. For the modes that matter, $\lambda^h_k$
+is very close to $\lambda_k$: for $L=40$, $h=0.1$ and $k=6$ they differ by $0.02\%$.
+
+\paragraph{Explicit Euler and the step restriction.}
+The simplest time-stepping scheme is the explicit Euler method with step $\Delta t$:
+$u^{n+1}_j=u^n_j+\Delta t\,\big(d_u(\Delta_hu^n)_j+f(u^n_j,v^n_j)\big)$, and similarly
+for $v$. The following listing is a complete implementation for the Schnakenberg
+example (Python with \texttt{numpy}); the arrays \texttt{u}, \texttt{v} hold
+$(u_j)$, $(v_j)$, and \texttt{lap} is \eqref{eq:discrete-laplacian}.
+{\small
+\begin{verbatim}
+import numpy as np
+
+a, b, du, dv = 0.1, 0.9, 1.0, 20.0      # Schnakenberg, standard values
+L, N, T = 40.0, 200, 200.0
+h = L / N
+x = (np.arange(1, N + 1) - 0.5) * h      # cell centres
+dt = 0.9 * h**2 / (2 * max(du, dv))      # step restriction, with a margin
+
+def lap(w):                              # discrete Laplacian, Neumann by reflection
+    wg = np.concatenate(([w[0]], w, [w[-1]]))
+    return (wg[2:] - 2 * wg[1:-1] + wg[:-2]) / h**2
+
+rng = np.random.default_rng(0)
+u = a + b + 1e-3 * rng.uniform(-1, 1, N)          # constant state plus noise
+v = b / (a + b)**2 + 1e-3 * rng.uniform(-1, 1, N)
+for n in range(int(T / dt)):
+    f = a - u + u**2 * v
+    g = b - u**2 * v
+    u, v = u + dt * (du * lap(u) + f), v + dt * (dv * lap(v) + g)
+\end{verbatim}
+}
+\noindent It runs in a few seconds and ends with three peaks of $u$, at
+$x\approx6.7$, $19.9$, $33.3$. The choice of \texttt{dt} is not arbitrary.
+
+\begin{proposition}[Step restriction]\label{prop:examples-step-restriction}
+Let $d>0$ and consider explicit Euler for the semi-discrete heat equation
+$w'=d\,\Delta_hw$, i.e.\ $w^{n+1}=(I+d\,\Delta t\,\Delta_h)w^n$. If
+$\Delta t\le h^2/(2d)$, then $\abs{w^n}\le\abs{w^0}$ for all $n$ (Euclidean norm in
+$\R^N$). If $\Delta t>h^2/\big(2d\cos^2(\pi/(2N))\big)$, there are $w^0$ with
+$\abs{w^n}\to\infty$.
+\end{proposition}
+
+\begin{proof}
+Expand $w^0=\sum_kc_k\varphi^h_k$. By \cref{prop:examples-discrete-modes},
+$w^n=\sum_k m_k^n c_k\varphi^h_k$ with the multipliers
+$m_k=1-\frac{4d\Delta t}{h^2}\sin^2\big(\frac{k\pi}{2N}\big)$. If
+$\Delta t\le h^2/(2d)$, then $0\le\frac{4d\Delta t}{h^2}\sin^2(\cdot)\le2$, so
+$m_k\in[-1,1]$, and orthogonality gives
+$\abs{w^n}^2=\sum_k m_k^{2n}c_k^2\abs{\varphi^h_k}^2\le\abs{w^0}^2$. For $k=N-1$ we have
+$\sin^2\big(\frac{(N-1)\pi}{2N}\big)=\cos^2\big(\frac{\pi}{2N}\big)$; under the second
+assumption $m_{N-1}<-1$, and $w^0=\varphi^h_{N-1}$ gives $\abs{w^n}=\abs{m_{N-1}}^n\abs{w^0}\to\infty$.
+\end{proof}
+
+For the system we therefore need $\Delta t\le h^2/(2\max\{d_u,d_v\})$; the reactions
+add only the mild requirement that $\Delta t$ be small compared with the time scale
+of the kinetics. If the restriction is violated, the mode $k=N-1$, which alternates
+in sign from cell to cell, is amplified at every step and quickly destroys the
+solution (\cref{exer:examples-step-restriction}).
+
+\begin{remark}[Numerical versus Turing instability]\label{rem:examples-numerical-instability}
+Both instabilities make a constant state blow up into a spatial pattern, but they are
+very different. The numerical instability lives at the grid scale, depends on $h$
+and $\Delta t$, and disappears when $\Delta t$ is reduced. The Turing instability
+lives in a fixed band of wavelengths, independent of $h$ and $\Delta t$; refining the
+discretization only makes it more accurate.
+\end{remark}
+
+\paragraph{A semi-implicit scheme.}
+The restriction $\Delta t\le h^2/(2d_v)$ is severe: for $h=0.1$ and $d_v=20$ it gives
+$\Delta t\le2.5\cdot10^{-4}$, and a run up to $t=600$ needs more than two million
+steps. The remedy is to treat diffusion implicitly and the reactions explicitly
+(an \emph{IMEX} scheme):
+\begin{equation*}
+  (I-\Delta t\,d_u\Delta_h)\,u^{n+1}=u^n+\Delta t\,f(u^n,v^n),\qquad
+  (I-\Delta t\,d_v\Delta_h)\,v^{n+1}=v^n+\Delta t\,g(u^n,v^n).
+\end{equation*}
+Now diffusion multiplies mode $k$ by $1/(1+d\,\Delta t\,\lambda^h_k)\in(0,1]$, for
+every $\Delta t>0$. The linear systems are cheap to solve, since they are diagonal in
+the basis $\varphi^h_k$ (the transformation to this basis is the \emph{discrete cosine
+transform}, available as \texttt{scipy.fft.dct}). A stationary solution of the scheme,
+$u^{n+1}=u^n$, $v^{n+1}=v^n$, solves $d_u\Delta_hu+f=0$, $d_v\Delta_hv+g=0$ exactly, for
+any $\Delta t$. All simulations below use this IMEX scheme with $h=0.1$ and
+$\Delta t=0.01$ in one dimension.
+
+\section{One dimension: watching the instability}\label{sec:examples-1d}
+
+We simulate the standard example of \cref{ex:schnakenberg-turing}: Schnakenberg
+kinetics with $a=0.1$, $b=0.9$, $d_u=1$, $d_v=20$ on $(0,40)$, where exactly the
+modes $k=4,\dots,10$ are unstable and $k=6$ grows fastest, with $\mu\approx0.262$. The
+initial data are $(\ub,\vb)=(1,0.9)$ plus independent random numbers, uniform in
+$[-10^{-3},10^{-3}]$, at every grid point (with a fixed random seed). The result is
+shown in \cref{fig:ch06-1d-evolution}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch06-1d-evolution}
+  \caption{Schnakenberg kinetics, $a=0.1$, $b=0.9$, $d_u=1$, $d_v=20$, $L=40$,
+  initial data $(\ub,\vb)$ plus noise of size $10^{-3}$ (IMEX scheme, $h=0.1$,
+  $\Delta t=0.01$). (a) $u(x,t)$ for $0\le t\le150$: nothing visible happens until
+  $t\approx30$, then three peaks appear and slowly move to their final positions.
+  (b) Cosine coefficients $\abs{\hat u_k(t)}$ (log scale) for four unstable modes;
+  black dashed lines have the slopes $\mu_k$ predicted by linear theory. (c) The
+  profile at $t=25$, scaled to maximum $1$, the solution of the linearized problem
+  with the same initial data, and the fastest mode. (d) The stationary pattern: $u$
+  and $v$ are out of phase; dotted lines show $\ub=1$ and $\vb=0.9$.}
+  \label{fig:ch06-1d-evolution}
+\end{figure}
+
+\paragraph{The linear phase.}
+By \cref{thm:modal-decomposition}, as long as the perturbation is small each cosine
+coefficient should evolve by its own $2\times2$ system and, after a short transient,
+grow or decay like $e^{\mu_kt}$. We compute from the simulation the discrete cosine
+coefficients $\hat u_k(t)=\frac2N\sum_j(u_j(t)-\ub)\cos(k\pi x_j/L)$ (the midpoint rule
+for \eqref{eq:cosine-coefficients}). In \cref{fig:ch06-1d-evolution}(b) they are
+straight lines on a logarithmic scale up to $t\approx30$. A least-squares fit of
+$\log\abs{\hat u_k(t)}$ on $10\le t\le20$ gives the rates in \cref{tab:examples-rates}.
+
+\begin{table}[ht]
+  \centering\small
+  \caption{Growth rates of the unstable modes on $(0,40)$: eigenvalue $\mu_k$ of $A_k$
+  and rate fitted from the simulation of \cref{fig:ch06-1d-evolution} on $10\le t\le20$.}
+  \label{tab:examples-rates}
+  \begin{tabular}{lccccccc}
+    \toprule
+    $k$ & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+    \midrule
+    linear theory $\mu_k$ & 0.1194 & 0.2284 & 0.2623 & 0.2510 & 0.2075 & 0.1386 & 0.0487\\
+    simulation & 0.1186 & 0.2285 & 0.2621 & 0.2505 & 0.2070 & 0.1383 & 0.0429\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The agreement is excellent, except for the barely unstable mode $k=10$. The solution
+of the linearized problem gives $0.0489$ for this mode, so the discrepancy is a
+nonlinear effect: the quadratic terms of $f,g$ multiply growing modes, and products
+such as $\cos(4\pi x/L)\cos(6\pi x/L)=\frac12\big(\cos(10\pi x/L)+\cos(2\pi x/L)\big)$
+feed other modes, among them stable ones. At $t=25$ the perturbation is still small
+($\max\abs{u-\ub}=0.041$) and differs from the linearized solution by $1.4\%$ of its
+size (\cref{fig:ch06-1d-evolution}(c)). Note, however, that it is \emph{not} yet the
+pure mode $\cos(6\pi x/L)$: mode 6 carries only $49\%$ of $\norm{u-\ub}^2$, because its
+neighbors grow almost as fast.
+
+\paragraph{Saturation and selection.}
+At $t\approx40$ the perturbation reaches size one, the growth stops, and the peaks
+then drift slowly to $x\approx6.65$, $19.95$, $33.35$, the maxima of $-\cos(6\pi x/40)$
+(up to the grid). From $t\approx200$ on the solution is stationary up to $10^{-2}$,
+and at $t=600$ it changes by less than $10^{-7}$ in ten time units. This run thus
+confirms the linear prediction: the final pattern has the shape of the fastest
+mode $k=6$. But this is not the whole story. We repeated the run with $50$ different
+random seeds: the final pattern was of mode $6$ in $31$ runs, of mode $7$ (peaks at
+$x\approx5.75$, $17.15$, $28.55$, $39.95$) in $18$ runs, and of mode $5$ once. Both
+mode-$6$ and mode-$7$ patterns are stable stationary solutions. The explanation is
+that $\mu_6-\mu_7=0.011$: during the roughly $35$ time units of linear growth, mode $6$
+gains only a factor $e^{0.011\cdot35}\approx1.5$ over mode $7$, which the random initial
+amplitudes can easily outweigh.
+
+\begin{keyidea}
+Linear theory correctly predicts the early phase: which modes grow, how fast, and
+hence the length scale of the pattern. It does not predict the final amplitude, and
+when several modes grow at nearly the same rate it does not decide which one wins.
+These are nonlinear questions, and the answer may depend on the initial data.
+\end{keyidea}
+
+\paragraph{In phase and out of phase.}
+\Cref{rem:turing-phase} predicts that the unstable modes of substrate-depletion
+kinetics ($g_u<0$) have $u$ and $v$ out of phase, and those of activator--inhibitor
+kinetics ($g_u>0$) in phase. \Cref{fig:ch06-phase-relation} shows that this sign
+relation persists in the final nonlinear patterns. For the Gierer--Meinhardt example
+we take $a=0$, $b=0.5$, $d_u=1$, $d_v=30$ on $(0,20)$, where the modes $k=2,3,4$ are
+unstable and $k=2$ is the fastest. The quotient $u^2/v$ requires $v>0$; the exact
+solution keeps $v$ positive, since $v_t\ge d_vv_{xx}-v$, and so does the IMEX scheme
+(\cref{exer:examples-imex}). In the run shown, $v\ge2.75$ throughout.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch06-phase-relation}
+  \caption{Stationary patterns, plotted as $(u-\ub)/\max\abs{u-\ub}$ and
+  $(v-\vb)/\max\abs{v-\vb}$. (a) Schnakenberg ($a=0.1$, $b=0.9$, $d_v=20$, $L=40$),
+  substrate depletion: the peaks of $u$ sit at the troughs of $v$. (b)
+  Gierer--Meinhardt ($a=0$, $b=0.5$, $d_v=30$, $L=20$), activator--inhibitor: the
+  peaks coincide. Both with $d_u=1$, random initial data, IMEX scheme up to $t=600$.}
+  \label{fig:ch06-phase-relation}
+\end{figure}
+
+\paragraph{The size of the domain.}
+\Cref{cor:domain-size} says which modes are unstable on $(0,L)$: the integers $k$
+with $L\sqrt{\lambda_-}/\pi<k<L\sqrt{\lambda_+}/\pi$. In the $(L,k)$ plane these are the
+lattice points in a wedge (\cref{fig:ch06-domain-size}(a)). For $L<\pi/\sqrt{\lambda_+}
+\approx3.82$ there are none, and the simulation with $L=3$ indeed returns to the
+constant state. For $L=10$ the modes $k=1,2$ are unstable and the final pattern is of
+mode $2$, a single peak in the middle. For $L=80$ the modes $k=7,\dots,20$ are unstable,
+$k=12$ and $k=13$ grow almost equally fast ($\mu\approx0.262$ and $0.261$), and our run
+ends with mode $12$. In all cases with a pattern, the peaks have about the same
+height and spacing, close to the wavelength $2\pi/\sqrt{\lambda^*}\approx12.9$ of the
+fastest-growing wavenumber of the dispersion relation ($\lambda^*\approx0.237$). The
+length scale is intrinsic, as predicted in \cref{sec:turing-criterion}; the domain
+only decides how many peaks fit.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch06-domain-size}
+  \caption{Role of the domain size, Schnakenberg with $a=0.1$, $b=0.9$, $d_u=1$,
+  $d_v=20$. (a) Mode $k$ is unstable on $(0,L)$ if and only if $(L,k)$ lies in the
+  shaded wedge between the lines $k=L\sqrt{\lambda_\pm}/\pi$ (\cref{cor:domain-size});
+  the dots are the unstable modes for $L=3,10,40,80$ (none for $L=3$). The wedge
+  begins at $L_{\min}=\pi/\sqrt{\lambda_+}\approx3.82$; the dotted line marks the
+  fastest-growing wavenumber. (b) Final $u$ for these four lengths, on a common
+  $x$-axis (IMEX scheme up to $t=600$, for $L=80$ up to $t=2000$).}
+  \label{fig:ch06-domain-size}
+\end{figure}
+
+\section{Two dimensions}\label{sec:examples-2d}
+
+On the square $(0,L)^2$ with Neumann conditions the same method works: the
+five-point Laplacian with reflected ghost values has the eigenvectors
+$\cos(m\pi x_i/L)\cos(n\pi y_j/L)$, by \cref{prop:examples-discrete-modes} applied in
+each direction. The continuous Neumann eigenfunctions are
+$\cos(m\pi x/L)\cos(n\pi y/L)$ with eigenvalues $(\pi/L)^2(m^2+n^2)$
+(\cref{ex:rectangle-eigen}), and the linear theory of \cref{ch:turing} carries over
+(\cref{rem:general-domain}): mode $(m,n)$ grows if and only if its eigenvalue lies in
+the band. For the Schnakenberg standard example on $(0,80)^2$ this holds for $320$
+pairs $(m,n)$, the lattice points in a quarter annulus. Many of them grow at nearly
+the same rate, and some at exactly the same rate: $(m,n)$ and $(n,m)$, or
+$(1,7)$ and $(5,5)$, since $1^2+7^2=5^2+5^2$. Linear theory fixes the wavelength, but
+not the geometry: a single mode $\cos(m\pi x/L)$ is a pattern of stripes, while a sum
+of modes with different directions produces spots.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch06-2d-patterns}
+  \caption{Schnakenberg kinetics on the square $(0,80)^2$ with Neumann conditions,
+  $a=0.1$, $d_u=1$, $d_v=20$, random initial data near $(\ub,\vb)$, state at
+  $t=2000$ ($128\times128$ cells, IMEX scheme with $\Delta t=0.05$). (a), (b) $b=0.9$:
+  spots of $u$, located at the minima of $v$. (c) $b=1.5$, close to the edge of the
+  Turing space ($\delta_c\approx18.8$): stripes.}
+  \label{fig:ch06-2d-patterns}
+\end{figure}
+
+\Cref{fig:ch06-2d-patterns} shows two simulations, with $128\times128$ cells and the
+IMEX scheme with $\Delta t=0.05$. For $b=0.9$ we obtain about fifty spots of $u$, at
+the minima of $v$ (out of phase, as in one dimension). For $b=1.5$ we obtain stripes.
+We found this value by a small search: one run each for $a=0.1$, $\delta=20$ and
+$b=0.8$, $0.9$, $1.1$, $1.3$, $1.4$, $1.5$ gave spots for $b\le1.1$, a mixture for
+$b=1.3$, and stripes for $b=1.4$ and $1.5$. (Three Gierer--Meinhardt runs gave spots;
+Lengyel--Epstein kinetics \eqref{eq:lengyel-epstein} with $a=10$, $b=4$ gave stripes for
+$\delta=25$ and spots for $\delta=40$.) In both families the stripes appeared closer to
+the threshold $\delta_c$ than the spots, but a handful of runs is not a theorem. Also,
+at $t=2000$ the stripes are still slowly rearranging, while the spots have almost
+settled. Which pattern is selected in two dimensions, and why, is a genuinely
+nonlinear question beyond these notes; see \cref{ch:outlook} and
+\cite{Murray2003}.
+
+\section{Exercises}\label{sec:examples-exercises}
+
+\begin{exercise}\label{exer:examples-step-restriction}
+Run the listing of \cref{sec:numerics}, then replace the factor $0.9$ in \texttt{dt}
+by $1.02$ and set \texttt{T = 5.0}. Plot $v$ at the end and explain what you see
+using the multiplier $m_{N-1}$ from the proof of \cref{prop:examples-step-restriction}.
+Why does the trouble start in $v$ and not in $u$?
+\end{exercise}
+
+\begin{exercise}\label{exer:examples-imex}
+Consider the IMEX scheme of \cref{sec:numerics}.
+\begin{enumerate}[label=(\alph*)]
+  \item Let $c>0$ and $r\in\R^N$ with $r_j\ge0$ for all $j$. Show that the solution of
+        $(I-c\Delta_h)w=r$ satisfies $w_j\ge0$ for all $j$. \emph{Hint:} look at an
+        index $j$ where $w_j$ is minimal.
+  \item For the Gierer--Meinhardt kinetics, show that $v^n_j>0$ for all $j$ implies
+        $v^{n+1}_j>0$ for all $j$, provided $\Delta t<1$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}\label{exer:examples-gm-space}
+Consider the Gierer--Meinhardt kinetics \eqref{eq:gierer-meinhardt} with $a\ge0$.
+Show that DDI is impossible for $a\ge1$, and that for $0\le a<1$ the Turing space is
+given by
+\begin{equation*}
+  b(1-a)<1+a\qquad\text{and}\qquad
+  \delta>\delta_c(a,b)=\frac{(1+a)\big(\sqrt{1+a}+\sqrt2\,\big)^2}{b\,(1-a)^2}.
+\end{equation*}
+Sketch the Turing space in the $(a,b)$ plane for $\delta=30$.
+\end{exercise}
+
+\begin{exercise}\label{exer:examples-l20}
+Take the Schnakenberg standard example, but on $(0,20)$. Which modes are unstable, and
+which grows fastest? Explain why the fastest growth rate is the same as on $(0,40)$.
+Predict the final pattern, test your prediction with a few random seeds, and explain
+why the outcome is more reliable than on $(0,40)$.
+\end{exercise}
+
+\begin{exercise}[$\ast$]\label{exer:examples-near-threshold}
+Take the Schnakenberg kinetics with $a=0.1$, $b=0.9$, $d_u=1$ and
+$d_v=\delta_c(1+\eps)$ with $\delta_c\approx8.57$. Let $\lambda_c=\delta_c^{-1/2}$
+(\cref{thm:critical-ratio}) and $L=\pi/\sqrt{\lambda_c}$.
+\begin{enumerate}[label=(\alph*)]
+  \item Show that for small $\eps>0$ only the mode $k=1$ is unstable, and compute
+        $\mu_1$ numerically for $\eps=0.01$, $0.02$, $0.05$, $0.1$. How does $\mu_1$
+        depend on $\eps$?
+  \item Simulate until the solution is stationary and plot the final amplitude
+        $\max\abs{u-\ub}$ against $\eps$. Show that it behaves like $C\sqrt\eps$.
+  \item Repeat with the Gierer--Meinhardt kinetics ($a=0$, $b=0.5$,
+        $\delta_c\approx11.66$, $\lambda_c=(0.5/\delta_c)^{1/2}$). What is different?
+        Relate your observations to \cref{rem:turing-bifurcation} and
+        \cref{ch:outlook}.
+\end{enumerate}
+\end{exercise}
