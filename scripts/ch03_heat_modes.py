@@ -60,6 +60,7 @@ def main():
     ps.apply()
     x = np.linspace(0.0, L, 1201)
     fig, axes = plt.subplots(1, 2, figsize=ps.FULL)
+    fig.subplots_adjust(wspace=0.38)     # room for the y-label of panel (b)
 
     # (a) eigenfunctions
     ax = axes[0]
