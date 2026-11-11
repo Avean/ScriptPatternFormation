@@ -1,4 +1,469 @@
 % 03-diffusion
 \chapter{Diffusion}\label{ch:diffusion}
 
-% TODO: chapter content
+Before we let reactions and diffusion compete, we must understand what diffusion
+does on its own. This chapter is our first encounter with a partial differential
+equation, the diffusion equation $u_t=d\,u_{xx}$. We derive it, add the zero-flux
+boundary condition used throughout these notes, and show in two ways that diffusion
+makes every profile uniform: by an energy estimate, and by expanding in cosines. The
+second method turns the PDE into decoupled scalar ODEs, one for each cosine mode; it
+is the prototype of everything we do with two species in \cref{ch:turing}.
+
+\section{Where the diffusion equation comes from}\label{sec:diffusion-derivation}
+
+Consider a substance in a thin tube, modeled by the interval $[0,L]$. We assume that
+the concentration varies only along the tube and denote by $u(x,t)$ the amount of
+substance per unit length at position $x$ and time $t$. Let the \emph{flux}
+$J(x,t)$ be the net amount per unit time that passes the point $x$
+from left to right, and let $f(x,t)$ be the net rate of production by reactions per
+unit length ($f<0$ means consumption). The amount in a piece $[x,x+h]$ changes by what
+enters at $x$, minus what leaves at $x+h$, plus what is produced inside:
+\begin{equation*}
+  \frac{\mathrm d}{\mathrm dt}\int_x^{x+h}u(y,t)\dd y
+  = J(x,t)-J(x+h,t)+\int_x^{x+h}f(y,t)\dd y .
+\end{equation*}
+For smooth $u$, $J$, $f$ we differentiate under the integral sign, divide by $h$ and
+let $h\to0$. This gives the \emph{conservation law}
+\begin{equation}\label{eq:diffusion-conservation}
+  u_t = -J_x + f ,
+\end{equation}
+valid whatever the mechanism of transport. For diffusion, i.e.\ transport by the
+random thermal motion of molecules, the flux obeys \emph{Fick's law}
+\begin{equation}\label{eq:fick}
+  J = -d\,u_x
+\end{equation}
+with a constant \emph{diffusion coefficient} $d>0$: substance flows from high to low
+concentration, at a rate proportional to the gradient. Inserting \eqref{eq:fick} into
+\eqref{eq:diffusion-conservation} gives, without reactions and with reactions that
+depend only on the local concentration,
+\begin{align}
+  u_t &= d\,u_{xx} &&\text{(diffusion equation)},\label{eq:heat}\\
+  u_t &= d\,u_{xx}+f(u) &&\text{(reaction--diffusion equation)}.\label{eq:diffusion-reaction}
+\end{align}
+Since \eqref{eq:heat} also describes heat conduction, it is also called the
+\emph{heat equation}.
+
+\paragraph{Units and the diffusive time scale.}
+As $u_t$ has the units of $u$ per second and $u_{xx}$ those of $u$ per square meter,
+$d$ is measured in $\mathrm{m}^2/\mathrm{s}$, and for every length $\ell$ the
+quantity $\ell^2/d$ is a time: the \emph{diffusive time scale} on which diffusion
+evens out differences over the distance $\ell$. Doubling the distance quadruples the
+time. (Intuitively, a molecule performing a random walk is after $n$ steps typically
+only about $\sqrt n$ steps away from its start.) For small molecules in water,
+$d\approx10^{-9}\,\mathrm{m}^2/\mathrm{s}$; this gives $0.1\,\mathrm{s}$ for
+$\ell=10\,\mu\mathrm{m}$ (a cell), about $17$ minutes for $1\,\mathrm{mm}$, and more
+than a day for $1\,\mathrm{cm}$.
+
+\section{Boundary and initial conditions}\label{sec:diffusion-bc}
+
+Throughout these notes the tube is \emph{closed}: nothing enters or leaves through
+its ends, $J(0,t)=J(L,t)=0$. By Fick's law this is the homogeneous \emph{Neumann} or
+\emph{zero-flux} boundary condition
+\begin{equation}\label{eq:neumann}
+  u_x(0,t)=u_x(L,t)=0,\qquad t>0 .
+\end{equation}
+It says nothing about the values of $u$ at the ends. No spatial structure is imposed
+from outside, so any pattern that forms under \eqref{eq:neumann} is produced inside
+the domain: the natural setting for pattern formation. Other conditions appear only
+in the exercises: the \emph{Dirichlet} condition $u(0,t)=u(L,t)=0$ (ends in contact
+with a reservoir that removes the substance) and \emph{periodic} conditions
+$u(0,t)=u(L,t)$, $u_x(0,t)=u_x(L,t)$ (a ring of length $L$). With an initial profile $u_0$ we arrive at the problem
+\begin{equation}\label{eq:heat-problem}
+\begin{aligned}
+  u_t &= d\,u_{xx}, & x\in(0,L),\ t>0,\\
+  u_x(0,t) &= u_x(L,t) = 0, & t>0,\\
+  u(x,0) &= u_0(x), & x\in(0,L).
+\end{aligned}
+\end{equation}
+
+\begin{remark}[Standing assumption]\label{rem:well-posedness}
+Throughout these notes we assume that for smooth initial data compatible with the
+boundary conditions (for \eqref{eq:heat-problem}: $u_0'(0)=u_0'(L)=0$) the problems
+we consider have exactly one solution, and that it is \emph{smooth}: continuous on
+$[0,L]\times[0,\infty)$, with continuous partial derivatives of all orders for $t>0$.
+For nonlinear reactions, solutions may exist only for a finite time (for
+$u_t=u_{xx}+u^2$ and positive constant initial data they blow up); statements then
+refer to the interval of existence. Proofs belong to a PDE course
+\cite{Evans2010,Strauss2008}.
+\end{remark}
+
+\section{Mass conservation}\label{sec:diffusion-mass}
+
+\begin{proposition}[Conservation of mass]\label{prop:mass-conservation}
+For a smooth solution $u$ of \eqref{eq:heat-problem},
+$\frac{\mathrm d}{\mathrm dt}\int_0^Lu(x,t)\dd x=0$ for $t>0$. Hence
+$\int_0^Lu(x,t)\dd x=\int_0^Lu_0\dd x$ for all $t\ge0$: the mean value of $u(\cdot,t)$
+is constant in time and equal to $M=\frac1L\int_0^Lu_0\dd x$.
+\end{proposition}
+
+\begin{proof}
+For $t>0$ we may differentiate under the integral sign, since $u_t$ is continuous.
+By the equation, the fundamental theorem of calculus and \eqref{eq:neumann},
+\begin{equation*}
+  \frac{\mathrm d}{\mathrm dt}\int_0^L u\dd x = \int_0^L u_t\dd x
+  = d\int_0^L u_{xx}\dd x = d\,\big(u_x(L,t)-u_x(0,t)\big) = 0 .
+\end{equation*}
+So $m(t)=\int_0^Lu(x,t)\dd x$ is constant on $(0,\infty)$. As $u$ is uniformly
+continuous on $[0,L]\times[0,1]$, $m$ is continuous at $t=0$, so $m(t)=m(0)$.
+\end{proof}
+
+For \eqref{eq:diffusion-reaction} the same computation gives
+$\frac{\mathrm d}{\mathrm dt}\int_0^Lu\dd x=\int_0^Lf(u)\dd x$: with zero flux,
+the total amount changes only through reactions.
+
+\section{Diffusion makes things uniform}\label{sec:diffusion-energy}
+
+If $u(\cdot,t)$ becomes constant as $t\to\infty$, the constant must be $M$. We prove
+that this happens, exponentially fast, in the norm
+$\norm{u}=\big(\int_0^Lu^2\dd x\big)^{1/2}$; we write $u(t)$ for $x\mapsto u(x,t)$.
+
+Let $u$ be a smooth solution of \eqref{eq:heat-problem}. Constants solve
+\eqref{eq:heat} and satisfy \eqref{eq:neumann}, so $w=u-M$ does too. For $t>0$ we
+multiply $w_t=d\,w_{xx}$ by $w$, integrate, and integrate by parts:
+\begin{equation}\label{eq:diffusion-energy}
+  \frac{\mathrm d}{\mathrm dt}\norm{u-M}^2
+  = 2\int_0^L w\,w_t\dd x
+  = 2d\big[w\,w_x\big]_0^L - 2d\int_0^L w_x^2\dd x
+  = -2d\norm{u_x}^2 .
+\end{equation}
+The boundary term vanishes because $w_x=u_x=0$ at $x=0,L$. So $\norm{u(t)-M}$ never
+increases. (For the difference $w=u_1-u_2$ of two smooth solutions with the same
+initial datum, the same computation shows that $\norm{w(t)}$ is nonincreasing; as it
+vanishes at $t=0$, it vanishes for all $t$. So \eqref{eq:heat-problem} has at most
+one smooth solution.)
+To obtain a rate, we compare $\norm{u_x}$ with $\norm{u-M}$: a function with mean
+value zero cannot be large unless its derivative is large.
+
+\begin{lemma}[Poincar\'e--Wirtinger inequality]\label{lem:poincare-wirtinger}
+Let $u\in C^1[0,L]$ with $\int_0^Lu\dd x=0$. Then
+$\norm{u}^2 \le (L/\pi)^2\norm{u'}^2$, and the constant $(L/\pi)^2$ is the best
+possible.
+\end{lemma}
+
+\begin{proof}
+We use Fourier series (\cref{app:fourier}). The cosine coefficients of $u$ are
+$\hat u_0=\frac1L\int_0^Lu\dd x$ and $\hat u_k=\frac2L\int_0^Lu(x)\cos(k\pi x/L)\dd x$
+for $k\ge1$ (see \eqref{eq:cosine-coefficients} below); let
+$b_k=\frac2L\int_0^Lu'(x)\sin(k\pi x/L)\dd x$, $k\ge1$, be the sine coefficients of
+$u'$. Integrating by parts,
+\begin{equation}\label{eq:diffusion-sine-coefficients}
+  b_k = \frac2L\Big[u(x)\sin\frac{k\pi x}{L}\Big]_0^L
+        - \frac{k\pi}{L}\,\frac2L\int_0^L u(x)\cos\frac{k\pi x}{L}\dd x
+      = -\frac{k\pi}{L}\,\hat u_k ,\qquad k\ge1 .
+\end{equation}
+The boundary term vanishes because $\sin(0)=\sin(k\pi)=0$; note that \emph{no
+boundary condition on $u$} is needed. By Parseval's identity for the sine series of
+$u'$ and the cosine series of $u$ (\cref{thm:cosine-series}), and since $\hat u_0=0$,
+\begin{equation*}
+  \norm{u'}^2 = \frac L2\sum_{k=1}^\infty b_k^2
+  = \frac L2\sum_{k=1}^\infty \Big(\frac{k\pi}{L}\Big)^2\hat u_k^2
+  \ge \Big(\frac{\pi}{L}\Big)^2\,\frac L2\sum_{k=1}^\infty \hat u_k^2
+  = \Big(\frac{\pi}{L}\Big)^2\norm{u}^2 .
+\end{equation*}
+For $u(x)=\cos(\pi x/L)$ we have $\int_0^Lu\dd x=0$, $\norm{u}^2=L/2$ and
+$\norm{u'}^2=(\pi/L)^2L/2$; so equality holds, and the constant cannot be improved.
+\end{proof}
+
+\begin{theorem}[Diffusion homogenizes]\label{thm:heat-decay}
+Let $u$ be a smooth solution of \eqref{eq:heat-problem} and
+$M=\frac1L\int_0^Lu_0\dd x$. Then
+\begin{equation*}
+  \norm{u(t)-M} \le e^{-d\pi^2t/L^2}\,\norm{u_0-M}\qquad\text{for all } t\ge0 .
+\end{equation*}
+\end{theorem}
+
+\begin{proof}
+Let $E(t)=\norm{u(t)-M}^2$ and $\gamma=d\pi^2/L^2$. For $t>0$, $u(t)-M$ lies in
+$C^1[0,L]$ and has mean value zero (\cref{prop:mass-conservation}), so
+\cref{lem:poincare-wirtinger} gives $\norm{u_x(t)}^2\ge(\pi/L)^2E(t)$, and
+\eqref{eq:diffusion-energy} becomes $E'\le-2\gamma E$. Hence
+$\frac{\mathrm d}{\mathrm dt}\big(e^{2\gamma t}E\big)=e^{2\gamma t}(E'+2\gamma E)\le0$
+on $(0,\infty)$. Since $E$ is continuous on $[0,\infty)$ (as in the proof of
+\cref{prop:mass-conservation}), $E(t)\le e^{-2\gamma t}E(0)$ for all $t\ge0$.
+\end{proof}
+
+\begin{keyidea}
+With zero-flux boundary conditions, diffusion \emph{homogenizes}: every solution of
+the heat equation converges to its mean value $M$, exponentially fast with rate at
+least $d\pi^2/L^2$. Its time scale $(L/\pi)^2/d$ is the diffusive time scale of the
+domain: small domains and fast diffusion homogenize faster.
+\end{keyidea}
+
+\section{Separation of variables}\label{sec:diffusion-separation}
+
+The energy method tells us \emph{that} $u$ approaches $M$, not \emph{how} the profile
+changes. To see this, we look for solutions $u(x,t)=T(t)\varphi(x)$ with
+$\varphi\not\equiv0$. Then \eqref{eq:heat} reads $T'\varphi=d\,T\varphi''$, and
+wherever $T\varphi\neq0$ we get $T'(t)/(d\,T(t))=\varphi''(x)/\varphi(x)$. The
+left-hand side does not depend on $x$, the right-hand side not on $t$, so both equal a
+constant $-\lambda$. Thus $T(t)=e^{-d\lambda t}T(0)$, and, by \eqref{eq:neumann},
+$\varphi$ solves the \emph{Neumann eigenvalue problem}
+\begin{equation}\label{eq:neumann-eigenproblem}
+  -\varphi'' = \lambda\varphi\quad\text{on } (0,L),\qquad \varphi'(0)=\varphi'(L)=0 .
+\end{equation}
+We call $\lambda\in\R$ an \emph{eigenvalue} if \eqref{eq:neumann-eigenproblem} has
+a solution $\varphi\in C^2[0,L]$, $\varphi\not\equiv0$ (an \emph{eigenfunction}).
+
+\begin{proposition}[Neumann eigenpairs of the interval]\label{prop:neumann-eigen}
+The eigenvalues of \eqref{eq:neumann-eigenproblem} are exactly
+\begin{equation*}
+  \lambda_k = \Big(\frac{k\pi}{L}\Big)^2,\qquad k=0,1,2,\dots,
+\end{equation*}
+and the eigenfunctions for $\lambda_k$ are the nonzero multiples of
+$\varphi_k(x)=\cos(k\pi x/L)$. In particular, $\lambda_0=0$ is an eigenvalue, with
+the constant eigenfunction $\varphi_0\equiv1$.
+\end{proposition}
+
+\begin{proof}
+Let $\varphi$ solve \eqref{eq:neumann-eigenproblem}; we use the general solution of
+$\varphi''+\lambda\varphi=0$. \emph{Case $\lambda=-\sigma^2<0$, $\sigma>0$.} Then
+$\varphi=\alpha\cosh(\sigma x)+\beta\sinh(\sigma x)$, so
+$\varphi'(0)=\sigma\beta=0$ gives $\beta=0$, and
+$\varphi'(L)=\sigma\alpha\sinh(\sigma L)=0$ gives $\alpha=0$ since
+$\sinh(\sigma L)>0$. So $\varphi\equiv0$: no eigenvalue.
+
+\emph{Case $\lambda=0$.} Then $\varphi=\alpha+\beta x$ and $\varphi'(0)=\beta=0$, so
+$\varphi$ is constant.
+
+\emph{Case $\lambda=\sigma^2>0$, $\sigma>0$.} Then
+$\varphi=\alpha\cos(\sigma x)+\beta\sin(\sigma x)$, so $\varphi'(0)=\sigma\beta=0$
+gives $\beta=0$, and $\varphi'(L)=-\sigma\alpha\sin(\sigma L)=0$. A solution with
+$\alpha\neq0$ exists if and only if $\sin(\sigma L)=0$, i.e.\ $\sigma L=k\pi$ with
+$k\in\N$; then $\lambda=(k\pi/L)^2$ and $\varphi=\alpha\cos(k\pi x/L)$. Conversely,
+$\varphi_k''=-\lambda_k\varphi_k$, and $\varphi_k'(x)=-\frac{k\pi}{L}\sin(k\pi x/L)$
+vanishes at $x=0$ and $x=L$.
+\end{proof}
+
+The eigenfunctions (\cref{fig:ch03-heat-modes}(a)) are mutually orthogonal:
+\begin{equation}\label{eq:diffusion-orthogonality}
+  \int_0^L\varphi_k\varphi_m\dd x = 0\quad (k\neq m),\qquad
+  \int_0^L\varphi_k^2\dd x = \frac L2\quad (k\ge1),\qquad
+  \int_0^L\varphi_0^2\dd x = L .
+\end{equation}
+Indeed, $\cos\alpha\cos\beta=\frac12\big(\cos(\alpha-\beta)+\cos(\alpha+\beta)\big)$
+and $\int_0^L\cos(j\pi x/L)\dd x=0$ for every integer $j\neq0$; for $k\neq m$ both
+$k\pm m$ are such integers, and for $k=m\ge1$ only the constant $\frac12$ survives.
+If $u=\sum_k\hat u_k\varphi_k$, multiplying by $\varphi_m$ and integrating gives
+$\int_0^Lu\varphi_m\dd x=\hat u_m\int_0^L\varphi_m^2\dd x$. This motivates the
+\emph{cosine series} and the \emph{cosine coefficients} of a function $u$:
+\begin{equation}\label{eq:cosine-coefficients}
+  u(x) = \sum_{k=0}^\infty\hat u_k\cos\Big(\frac{k\pi x}{L}\Big),\quad
+  \hat u_0 = \frac1L\int_0^L u\dd x,\quad
+  \hat u_k = \frac2L\int_0^L u(x)\cos\Big(\frac{k\pi x}{L}\Big)\dd x\ \ (k\ge1).
+\end{equation}
+So $\hat u_0$ is the mean value of $u$. By \cref{thm:cosine-series} the series
+converges in mean square for every square-integrable $u$, with Parseval's identity
+$\norm{u}^2=L\,\hat u_0^2+\frac L2\sum_{k\ge1}\hat u_k^2$, and uniformly if
+$u\in C^1[0,L]$. In cosine coefficients, the second derivative with Neumann
+conditions acts like a diagonal matrix:
+
+\begin{lemma}[Cosine coefficients of the second derivative]\label{lem:coefficient-uxx}
+Let $u\in C^2[0,L]$ with $u'(0)=u'(L)=0$. Then the cosine coefficients of $u''$ are
+$-\lambda_k\hat u_k$, $k=0,1,2,\dots$, where $\hat u_k$ are those of $u$.
+\end{lemma}
+
+\begin{proof}
+Let $k\ge1$. Integrating by parts twice,
+\begin{equation*}
+  \int_0^L u''\varphi_k\dd x
+  = \big[u'\varphi_k\big]_0^L - \int_0^L u'\varphi_k'\dd x
+  = \big[u'\varphi_k\big]_0^L - \big[u\,\varphi_k'\big]_0^L + \int_0^L u\,\varphi_k''\dd x .
+\end{equation*}
+The first boundary term vanishes because $u'(0)=u'(L)=0$: this is where the Neumann
+condition on $u$ is used. The second vanishes because
+$\varphi_k'(x)=-\frac{k\pi}{L}\sin(k\pi x/L)$ is zero at $x=0$ and $x=L$: this is a
+property of the eigenfunction and holds for every $u$. Since
+$\varphi_k''=-\lambda_k\varphi_k$, we get
+$\frac2L\int_0^Lu''\varphi_k\dd x=-\lambda_k\hat u_k$. For $k=0$,
+$\frac1L\int_0^Lu''\dd x=\frac1L\big(u'(L)-u'(0)\big)=0=-\lambda_0\hat u_0$.
+\end{proof}
+
+\begin{theorem}[The heat equation in cosine modes]\label{thm:heat-modes}
+Let $u$ be a smooth solution of \eqref{eq:heat-problem}, and let $\hat u_k(t)$ be the
+cosine coefficients of $u(t)$ (so $\hat u_k(0)$ are those of $u_0$). Then for every
+$k\ge0$
+\begin{equation*}
+  \hat u_k'(t) = -d\lambda_k\,\hat u_k(t),\qquad\text{hence}\qquad
+  \hat u_k(t) = e^{-d\lambda_kt}\,\hat u_k(0).
+\end{equation*}
+Consequently, for every $t\ge0$, with uniform convergence in $x\in[0,L]$,
+\begin{equation}\label{eq:heat-series}
+  u(x,t) = \sum_{k=0}^\infty e^{-d\lambda_kt}\,\hat u_k(0)\cos\Big(\frac{k\pi x}{L}\Big).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $k\ge1$ and $t>0$. Differentiating under the integral sign and using the equation,
+\begin{equation*}
+  \hat u_k'(t) = \frac2L\int_0^L u_t(x,t)\,\varphi_k(x)\dd x
+  = d\,\frac2L\int_0^L u_{xx}(x,t)\,\varphi_k(x)\dd x = -d\lambda_k\,\hat u_k(t),
+\end{equation*}
+by \cref{lem:coefficient-uxx} applied to $u(t)$, which satisfies the Neumann
+condition. For $k=0$ the same computation (with $\frac1L$ in place of $\frac2L$)
+gives $\hat u_0'=0$, as in \cref{prop:mass-conservation}. So
+$\frac{\mathrm d}{\mathrm dt}\big(e^{d\lambda_kt}\hat u_k(t)\big)=0$ for $t>0$, and
+since $\hat u_k$ is continuous on $[0,\infty)$, $\hat u_k(t)=e^{-d\lambda_kt}\hat u_k(0)$.
+Finally, $u(t)\in C^1[0,L]$, so its cosine series converges uniformly to $u(t)$
+(\cref{thm:cosine-series}); this is \eqref{eq:heat-series}.
+\end{proof}
+
+Each term of \eqref{eq:heat-series} is a separated solution
+$e^{-d\lambda_kt}\varphi_k(x)$, and every solution is a superposition of them. The
+series makes sense for every square-integrable $u_0$, even a discontinuous one, and
+still defines a smooth solution for $t>0$ \cite{Strauss2008}; this is how
+\cref{fig:ch03-heat-modes}(b) was computed.
+
+\begin{keyidea}
+In cosine coefficients the heat equation decouples into the scalar ODEs
+$\hat u_k'=-d\lambda_k\hat u_k$, $k=0,1,2,\dots$, one for each mode. Mode $k$ decays
+at the rate $d\lambda_k=d\,k^2\pi^2/L^2$: short wavelengths die first, and only the
+mean $\hat u_0=M$ is preserved.
+\end{keyidea}
+
+\paragraph{A second proof of \cref{thm:heat-decay}.}
+Since $\hat u_0(t)=M$, the function $u(t)-M$ has the cosine coefficients
+$0,\hat u_1(t),\hat u_2(t),\dots$, and Parseval's identity \eqref{eq:parseval} gives
+\begin{equation*}
+  \norm{u(t)-M}^2 = \frac L2\sum_{k=1}^\infty e^{-2d\lambda_kt}\,\hat u_k(0)^2
+  \le e^{-2d\lambda_1t}\,\frac L2\sum_{k=1}^\infty\hat u_k(0)^2
+  = e^{-2d\lambda_1t}\,\norm{u_0-M}^2,
+\end{equation*}
+because $\lambda_k\ge\lambda_1=\pi^2/L^2$ for $k\ge1$. The rate is sharp: for
+$u_0=M+\cos(\pi x/L)$ the solution is $u=M+e^{-d\lambda_1t}\cos(\pi x/L)$, with
+equality.
+
+The proof also shows how the shape evolves. The rate $d\lambda_k$ grows
+quadratically in $k$ (mode $10$ decays a hundred times faster than mode $1$), so at
+time $t$ only modes with $d\lambda_kt\lesssim1$ are visible: structures on scales
+below about $\sqrt{dt}$ are erased. In \cref{fig:ch03-heat-modes}(b), small-scale
+noise disappears almost instantly, while the step is smoothed out much more slowly.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch03-heat-modes}
+  \caption{(a) The Neumann eigenfunctions $\varphi_k(x)=\cos(k\pi x/L)$,
+  $k=0,\dots,3$; $\varphi_k$ has $k$ zeros in $(0,L)$. (b) The solution of
+  \eqref{eq:heat-problem} with $d=1$, $L=1$, computed from the cosine series
+  \eqref{eq:heat-series}. The initial profile (grey) is a step plus noise made of the
+  modes $k=12,\dots,40$. The noise is gone by $t=10^{-2}$ (damping factor at most
+  $e^{-d\lambda_{12}t}<10^{-6}$), while the step is only smoothed out. For large $t$
+  the profile approaches the mean value $M=0.48$ (dashed) in the shape of $\varphi_1$.}
+  \label{fig:ch03-heat-modes}
+\end{figure}
+
+\section{With reactions}\label{sec:diffusion-reactions}
+
+Diffusion alone homogenizes, and stable kinetics alone return to their steady state.
+The question for the rest of these notes is: \emph{can the combination be
+destabilizing?} For one species, \eqref{eq:diffusion-reaction} with the Neumann
+condition, each zero $\ub$ of $f$ is a constant steady state. Linearizing
+about $\ub$ and expanding in cosines as in \cref{thm:heat-modes}, mode $k$ obeys a
+scalar ODE with rate $f'(\ub)-d\lambda_k$: the rate of the kinetics plus diffusive
+damping. So diffusion seems only to stabilize; \cref{ch:one-equation} makes this
+precise, also beyond linearization. For two species we obtain the system
+$u_t=d_u\,u_{xx}+f(u,v)$, $v_t=d_v\,v_{xx}+g(u,v)$ of \cref{ch:turing} (see
+\eqref{eq:rd-system}). Each species diffuses on its own, the reactions couple them,
+and each cosine mode of the linearized problem is a $2\times2$ linear ODE system.
+Now the answer can be yes: this is \emph{diffusion-driven instability (DDI)}, or
+\emph{Turing instability} \cite{Turing1952}.
+
+\section{Beyond the interval}\label{sec:diffusion-general}
+
+Animal coat patterns live in two dimensions. On a bounded domain $\Omega\subset\R^n$
+the diffusion equation is $u_t=d\,\Delta u$, $\Delta u=\sum_{i}\partial^2u/\partial x_i^2$,
+with the zero-flux condition $\partial_\nu u=\nabla u\cdot\nu=0$ on $\partial\Omega$
+($\nu$ the outer unit normal). Mass conservation and the energy identity carry over
+(via the divergence theorem), and separation of variables leads to
+$-\Delta\varphi=\lambda\varphi$ in $\Omega$, $\partial_\nu\varphi=0$ on
+$\partial\Omega$, whose solutions behave like cosines.
+
+\begin{theorem}[Neumann eigenpairs of a bounded domain]\label{thm:neumann-eigen-general}
+Let $\Omega\subset\R^n$ be a bounded, connected open set with smooth boundary. There
+are numbers $0=\lambda_0<\lambda_1\le\lambda_2\le\dots\to\infty$ and functions
+$\varphi_0,\varphi_1,\dots$, smooth on $\overline\Omega$, with
+$-\Delta\varphi_k=\lambda_k\varphi_k$ in $\Omega$ and $\partial_\nu\varphi_k=0$ on
+$\partial\Omega$, that form an orthonormal basis of $L^2(\Omega)$. Each eigenvalue is
+repeated according to the dimension of its eigenspace, and $\varphi_0$ is constant.
+\end{theorem}
+
+We omit the proof; see \cite[Ch.~6]{Evans2010}, where the Dirichlet case is treated
+and the Neumann case is analogous. ``Orthonormal basis'' means that
+$\int_\Omega\varphi_j\varphi_k\dd x$ is $1$ for $j=k$ and $0$ otherwise, and that
+every square-integrable $u$ is the mean-square limit of $\sum_{k\le N}c_k\varphi_k$,
+$c_k=\int_\Omega u\varphi_k\dd x$, as for cosine series; on $(0,L)$ the normalized
+cosines $1/\sqrt L$, $\sqrt{2/L}\cos(k\pi x/L)$ form such a basis. As on the
+interval, indexing starts at $k=0$; by connectedness, only constants have eigenvalue
+$0$.
+
+\begin{example}[Rectangle]\label{ex:rectangle-eigen}
+On $\Omega=(0,L_1)\times(0,L_2)$ the products
+\begin{equation*}
+  \varphi_{k,l}(x,y)=\cos\Big(\frac{k\pi x}{L_1}\Big)\cos\Big(\frac{l\pi y}{L_2}\Big),
+  \qquad
+  \lambda_{k,l}=\pi^2\Big(\frac{k^2}{L_1^2}+\frac{l^2}{L_2^2}\Big),
+  \qquad k,l=0,1,2,\dots,
+\end{equation*}
+satisfy $-\Delta\varphi_{k,l}=\lambda_{k,l}\varphi_{k,l}$ and
+$\partial_\nu\varphi_{k,l}=0$ (on the sides $x=0,L_1$, $\partial_\nu=\mp\partial_x$
+produces the factor $\sin(k\pi x/L_1)=0$; similarly for $y=0,L_2$). Using cosine
+series in each variable one shows that, normalized, they form an orthonormal basis,
+although the rectangle has corners. The modes $\varphi_{k,0}$ and $\varphi_{0,l}$
+depend on one variable only: they are \emph{stripes}. For $k,l\ge1$ the sign of
+$\varphi_{k,l}$ alternates like a checkerboard, and the maxima form a lattice of
+\emph{spots}. Several modes can share an eigenvalue: on a square, $L_1=L_2=L$, the
+stripes $\varphi_{1,0}$, $\varphi_{0,1}$ and all their combinations have the
+eigenvalue $\pi^2/L^2$ (so $\lambda_1=\lambda_2$), and $5^2+0^2=4^2+3^2$ gives a
+four-dimensional eigenspace for $25\pi^2/L^2$ containing stripes and spots. Which of
+them a pattern-forming system selects is beyond linear analysis (\cref{ch:examples}).
+\end{example}
+
+\begin{remark}[Wavenumber]\label{rem:wavenumber}
+We call $q_k=\sqrt{\lambda_k}=k\pi/L$ the \emph{wavenumber} of mode $k$. Then
+$\varphi_k(x)=\cos(q_kx)$ has the \emph{wavelength} $2\pi/q_k=2L/k$: mode $k$ fits
+$k$ half-wavelengths into $(0,L)$. In higher dimensions $\lambda=\abs{\mathbf q}^2$
+for a wave vector $\mathbf q$, e.g.\ $\mathbf q=(k\pi/L_1,l\pi/L_2)$ on the rectangle.
+Some authors call $\lambda_k$ itself the ``wave number''; we do not.
+\end{remark}
+
+\section{Exercises}\label{sec:diffusion-exercises}
+
+\begin{exercise}[Dirichlet conditions]\label{exer:diffusion-dirichlet}
+(a) Show that the eigenvalues of $-\varphi''=\lambda\varphi$ on $(0,L)$ with
+$\varphi(0)=\varphi(L)=0$ are exactly $(k\pi/L)^2$, $k\in\N$, with eigenfunctions
+$\sin(k\pi x/L)$ (up to factors). (b) Let $u$ be a smooth solution of
+$u_t=d\,u_{xx}$ with $u(0,t)=u(L,t)=0$ and $u(x,0)=u_0(x)$. Show that the sine
+coefficients $b_k(t)$ of $u(t)$ satisfy $b_k'=-d(k\pi/L)^2b_k$, and deduce
+$\norm{u(t)}\le e^{-d\pi^2t/L^2}\norm{u_0}$. (c) Is mass conserved? Compute
+$\frac{\mathrm d}{\mathrm dt}\int_0^Lu\dd x$ and interpret it.
+\end{exercise}
+
+\begin{exercise}[Periodic conditions]\label{exer:diffusion-periodic}
+Show that the eigenvalues of $-\varphi''=\lambda\varphi$ on $(0,L)$ with
+$\varphi(0)=\varphi(L)$, $\varphi'(0)=\varphi'(L)$ are $(2k\pi/L)^2$,
+$k=0,1,2,\dots$, with the constants as eigenfunctions for $k=0$ and the nonzero
+combinations of $\cos(2k\pi x/L)$, $\sin(2k\pi x/L)$ for $k\ge1$. Show that the
+heat equation with periodic conditions conserves mass.
+\end{exercise}
+
+\begin{exercise}\label{exer:diffusion-cos2}
+Solve \eqref{eq:heat-problem} explicitly for $u_0(x)=\cos^2(\pi x/L)$. Determine $M$
+and show that $\norm{u(t)-M}=e^{-4d\pi^2t/L^2}\norm{u_0-M}$. Why is the decay faster
+than guaranteed by \cref{thm:heat-decay}? Which symmetry of $u_0$ explains it?
+\end{exercise}
+
+\begin{exercise}[Sharpness of Poincar\'e--Wirtinger]\label{exer:diffusion-poincare}
+(a) Show that equality holds in \cref{lem:poincare-wirtinger} if and only if
+$u(x)=c\cos(\pi x/L)$, $c\in\R$. (b) Show that the inequality fails without the
+assumption $\int_0^Lu\dd x=0$, but that $\norm{u-\hat u_0}\le(L/\pi)\norm{u'}$ for
+every $u\in C^1[0,L]$.
+\end{exercise}
+
+\begin{exercise}[$\ast$]\label{exer:diffusion-max}
+Let $u$ be a smooth solution of \eqref{eq:heat-problem}. (a) Show that
+$\frac{\mathrm d}{\mathrm dt}\int_0^Lu^4\dd x=-12d\int_0^Lu^2u_x^2\dd x\le0$ for $t>0$,
+and more generally $\frac{\mathrm d}{\mathrm dt}\int_0^L\Phi(u)\dd x\le0$ for every
+convex $\Phi\in C^2(\R)$. (b) Deduce that
+$\max_x\abs{u(x,t)}\le\max_x\abs{u_0(x)}$ for all $t\ge0$. \emph{Hint:} take
+$\Phi(s)=s^{2p}$ and use $\big(\int_0^L\abs{g}^{2p}\dd x\big)^{1/(2p)}\to\max\abs{g}$
+as $p\to\infty$ for continuous $g$.
+\end{exercise}

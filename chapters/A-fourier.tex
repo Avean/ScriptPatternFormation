@@ -1,4 +1,113 @@
 % A-fourier
 \chapter{Fourier cosine series}\label{app:fourier}
 
-% TODO: chapter content
+This appendix collects the facts about cosine and sine series on $(0,L)$ that we use,
+with short proofs where possible; for the remaining proofs we refer to
+\cite{Strauss2008}. A function $u$ on $(0,L)$ is called \emph{square-integrable} if
+$\int_0^Lu^2\dd x<\infty$; piecewise continuous functions are the examples we need.
+(Readers who know Lebesgue integration may read ``$u\in\Ltwo$''.) As before,
+$\norm{u}=\big(\int_0^Lu^2\dd x\big)^{1/2}$.
+
+\section{Orthogonality and coefficients}\label{sec:fourier-orthogonality}
+
+For integers $k,m\ge1$,
+\begin{equation}\label{eq:fourier-orthogonality}
+  \int_0^L\cos\frac{k\pi x}{L}\cos\frac{m\pi x}{L}\dd x
+  = \int_0^L\sin\frac{k\pi x}{L}\sin\frac{m\pi x}{L}\dd x
+  = \begin{cases} 0, & k\neq m,\\ L/2, & k=m, \end{cases}
+\end{equation}
+and $\int_0^L\cos(k\pi x/L)\dd x=0$, while $\int_0^L1\dd x=L$; so the cosines
+$\cos(k\pi x/L)$, $k=0,1,2,\dots$, are mutually orthogonal, as are the sines. The
+cosine relations were verified after \eqref{eq:diffusion-orthogonality}. For the
+sines we use $\sin\alpha\sin\beta=\frac12\big(\cos(\alpha-\beta)-\cos(\alpha+\beta)\big)$
+and again $\int_0^L\cos(j\pi x/L)\dd x=0$ for all integers $j\neq0$. Cosines and sines
+are \emph{not} orthogonal to each other on $(0,L)$; for instance
+$\int_0^L\sin(\pi x/L)\dd x=2L/\pi$. We therefore never mix the two families in one
+expansion.
+
+For square-integrable $u$ the cosine coefficients $\hat u_k$ are defined by
+\eqref{eq:cosine-coefficients}, and the \emph{sine coefficients} by
+\begin{equation}\label{eq:fourier-sine-coefficients}
+  b_k = \frac2L\int_0^L u(x)\sin\Big(\frac{k\pi x}{L}\Big)\dd x,\qquad k\ge1 .
+\end{equation}
+Let $S_Nu=\sum_{k=0}^N\hat u_k\varphi_k$, with $\varphi_k(x)=\cos(k\pi x/L)$, be the
+partial sums of the cosine series. Then
+\begin{equation}\label{eq:fourier-bessel}
+  \norm{u-S_Nu}^2 = \norm{u}^2 - L\,\hat u_0^2 - \frac L2\sum_{k=1}^N\hat u_k^2 .
+\end{equation}
+Indeed, by \eqref{eq:fourier-orthogonality} and the definition of $\hat u_m$, we have
+$\int_0^LS_Nu\,\varphi_m\dd x=\hat u_m\int_0^L\varphi_m^2\dd x=\int_0^Lu\,\varphi_m\dd x$
+for $m\le N$. Hence $\int_0^L(u-S_Nu)\,S_Nu\dd x=0$, and
+$\norm{S_Nu}^2=L\,\hat u_0^2+\frac L2\sum_{k=1}^N\hat u_k^2$, again by
+orthogonality. Expanding $\norm{u}^2=\norm{(u-S_Nu)+S_Nu}^2$ gives
+\eqref{eq:fourier-bessel}. In particular $\sum_k\hat u_k^2<\infty$, so
+$\hat u_k\to0$. The same computation works for sine series.
+
+\section{Convergence}\label{sec:fourier-convergence}
+
+\begin{theorem}[Cosine and sine series]\label{thm:cosine-series}
+Let $u$ be square-integrable on $(0,L)$, with cosine coefficients $\hat u_k$
+\eqref{eq:cosine-coefficients} and sine coefficients $b_k$
+\eqref{eq:fourier-sine-coefficients}.
+\begin{enumerate}[label=(\alph*)]
+  \item The cosine series converges to $u$ in mean square, $\norm{u-S_Nu}\to0$ as
+        $N\to\infty$, and \emph{Parseval's identity} holds:
+        \begin{equation}\label{eq:parseval}
+          \norm{u}^2 = L\,\hat u_0^2 + \frac L2\sum_{k=1}^\infty\hat u_k^2 .
+        \end{equation}
+  \item The sine series converges to $u$ in mean square,
+        $\norm{u-\sum_{k=1}^Nb_k\sin(k\pi x/L)}\to0$, and
+        $\norm{u}^2=\frac L2\sum_{k=1}^\infty b_k^2$.
+  \item If $u\in C^1[0,L]$, then $\sum_k\abs{\hat u_k}<\infty$, and the cosine series
+        converges to $u$ uniformly on $[0,L]$.
+  \item If $u$ and $v$ are continuous on $[0,L]$ and have the same cosine
+        coefficients, then $u=v$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) By \eqref{eq:fourier-bessel}, mean-square convergence and Parseval's identity
+are equivalent. That they hold for \emph{every} square-integrable $u$ (the
+\emph{completeness} of the cosines) is the one deep fact we do not prove; see
+\cite[Ch.~5]{Strauss2008}. It can be reduced to the corresponding result for full
+Fourier series on $(-L,L)$: the even extension $x\mapsto u(\abs{x})$ has no sine
+terms, and its cosine coefficients are exactly the $\hat u_k$.
+
+(b) The same, with the odd extension of $u$.
+
+(c) Let $b_k$ now denote the sine coefficients of $u'$. By
+\eqref{eq:diffusion-sine-coefficients} (integration by parts, no boundary condition
+needed), $\hat u_k=-\frac{L}{k\pi}b_k$ for $k\ge1$. The Cauchy--Schwarz inequality for
+sums and (b), applied to the continuous function $u'$, give
+\begin{equation*}
+  \sum_{k=1}^\infty\abs{\hat u_k}
+  \le \frac L\pi\Big(\sum_{k=1}^\infty\frac1{k^2}\Big)^{1/2}
+      \Big(\sum_{k=1}^\infty b_k^2\Big)^{1/2}
+  = \frac L\pi\Big(\sum_{k=1}^\infty\frac1{k^2}\Big)^{1/2}\sqrt{\frac2L}\,\norm{u'}
+  <\infty .
+\end{equation*}
+Since $\abs{\hat u_k\varphi_k(x)}\le\abs{\hat u_k}$, the Weierstrass M-test shows that
+$S_Nu$ converges uniformly on $[0,L]$ to a continuous function $g$. Then
+$\norm{g-S_Nu}\le\sqrt L\max_{[0,L]}\abs{g-S_Nu}\to0$, and with (a)
+$\norm{u-g}\le\norm{u-S_Nu}+\norm{S_Nu-g}\to0$. So $\int_0^L(u-g)^2\dd x=0$, and since
+$u-g$ is continuous, $u=g$. (In the language of full Fourier series: the even
+$2L$-periodic extension of $u$ is continuous and piecewise $C^1$. By contrast, a sine
+series cannot converge uniformly to $u$ unless $u(0)=u(L)=0$, because all its partial
+sums vanish at $0$ and $L$.)
+
+(d) The continuous function $w=u-v$ has all cosine coefficients zero, so
+$\norm{w}=0$ by \eqref{eq:parseval}, and hence $w\equiv0$.
+\end{proof}
+
+\begin{remark}[Differentiate coefficients, not series]\label{rem:fourier-differentiation}
+In these notes we never differentiate a series term by term. Instead we differentiate
+the \emph{coefficients}: with respect to $x$ by integration by parts
+(\cref{lem:coefficient-uxx}, \eqref{eq:diffusion-sine-coefficients}), with respect to
+$t$ under the integral sign (\cref{thm:heat-modes,thm:modal-decomposition}). The
+reason is that termwise differentiation can fail badly. The function $u(x)=x$ has the
+sine coefficients $b_k=2L(-1)^{k+1}/(k\pi)$, but the termwise derivative
+$\sum_k2(-1)^{k+1}\cos(k\pi x/L)$ diverges at every $x$, because its terms do not tend
+to zero (if $\cos(k\theta)\to0$, then $\cos(2k\theta)=2\cos^2(k\theta)-1\to-1$, a
+contradiction); yet $u'=1$. Integration by parts also keeps track of the boundary
+terms, which is exactly where the boundary conditions enter.
+\end{remark}

@@ -25,7 +25,7 @@ interval $(0,L)$:
 Here $d_u,d_v>0$ are the diffusion coefficients, collected in the diagonal matrix
 $D=\diag(d_u,d_v)$, and $f,g$ are smooth functions describing the reactions
 (production, degradation, interaction). The Neumann condition says that nothing
-enters or leaves through the ends of the interval (\cref{eq:neumann}).
+enters or leaves through the ends of the interval; see \eqref{eq:neumann}.
 
 Ignoring space altogether gives the \emph{kinetic system}
 \begin{equation}\label{eq:kinetic-system}
@@ -217,7 +217,7 @@ The linearized reaction--diffusion system is equivalent to infinitely many
 one for each cosine mode. Mode $k$ feels diffusion only through $-\lambda_kD$.
 \end{keyidea}
 
-By Parseval's identity (\cref{eq:parseval}), applied to each component,
+By Parseval's identity \eqref{eq:parseval}, applied to each component,
 \begin{equation}\label{eq:turing-parseval}
   \norm{\bw(t)}^2 = L\,\abs{\hatbw_0(t)}^2 + \frac L2\sum_{k=1}^\infty \abs{\hatbw_k(t)}^2 .
 \end{equation}
@@ -588,7 +588,7 @@ $\pi/\sqrt{\lambda_+}\approx 3.82$. On $(0,40)$ the unstable modes are the integ
 $k$ with $0.272<k\pi/40<0.822$, i.e.\ $3.46<k<10.47$: exactly $k=4,\dots,10$. The
 largest growth rate, $\mu\approx0.262$, belongs to $k=6$ (\cref{fig:ch05-dispersion}(b)).
 So we expect the perturbation to develop, at first, a profile close to
-$\cos(6\pi x/40)$, with three peaks of $u$. Since $g_u<0$ (substrate depletion), the
+$\cos(6\pi x/40)$, which fits three full wavelengths into the interval. Since $g_u<0$ (substrate depletion), the
 peaks of $v$ sit at the troughs of $u$ (\cref{rem:turing-phase}).
 \Cref{fig:ch06-1d-evolution} shows a simulation of the full nonlinear system.
 \end{example}
@@ -642,8 +642,8 @@ Reformulate \cref{thm:turing-small-du} as a statement about large domains.
 Instead of the trace--determinant argument one can compute the eigenvalues of
 $A_k$ explicitly:
 \begin{equation*}
-  \mu_{1,2} = -q_k\pm\sqrt{q_k^2-h(\lambda_k)},\qquad
-  q_k=\tfrac12\big(\lambda_k(d_u+d_v)-\tr A\big).
+  \mu_{1,2} = -p_k\pm\sqrt{p_k^2-h(\lambda_k)},\qquad
+  p_k=\tfrac12\big(\lambda_k(d_u+d_v)-\tr A\big).
 \end{equation*}
 Verify this formula, and use it to give a second proof of \cref{thm:ddi-criterion}.
 Show in addition that $\re\mu_2<0$ for every $k$, and that $\max\{\re\mu: \mu\in\sigma(A_k),\ k\ge0\}$
