@@ -31,7 +31,7 @@ CASES = [
 
 def main():
     ps.apply()
-    fig, axes = plt.subplots(1, 2, figsize=(6.2, 1.65))
+    fig, axes = plt.subplots(1, 2, figsize=(6.2, 1.55))
     for ax, (title, (f, g, (ub, vb)), jac, dv, L) in zip(axes, CASES):
         lm, lp = band(jac, 1.0, dv)
         k = np.arange(0, 15)
@@ -54,10 +54,10 @@ def main():
         ax.plot(x, wv, color=ps.V_COLOR, label=r"$v$")
         ax.axhline(0, color="black", lw=0.5)
         ax.set_xlim(0, L)
-        ax.set_ylim(-1.15, 1.5)
+        ax.set_ylim(-1.15, 1.85)
         ax.set_xlabel(r"$x$")
         ax.set_title(title)
-        ax.legend(loc="upper right", ncol=2)
+        ax.legend(loc="upper center", ncol=2, borderaxespad=0.1)
     fig.tight_layout(w_pad=2.0)
     ps.save(fig, "ch06-phase-relation")
 

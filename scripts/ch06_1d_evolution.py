@@ -82,8 +82,15 @@ def main():
     m = (t >= FIT_WINDOW[0]) & (t <= FIT_WINDOW[1])
     fitted = {k: np.polyfit(t[m], np.log(np.abs(C[m, k])), 1)[0] for k in k_all}
     print("mode  predicted mu_k  fitted rate (t in [%g, %g])" % FIT_WINDOW)
+    # the same fit applied to the solution of the linearized problem (same initial data)
+    lin = np.array([cosine_coefficients(linear_prediction(u0 - ub, v0 - vb, tt)[0])
+                    for tt in t[m]])
+    fitted_lin = {k: np.polyfit(t[m], np.log(np.abs(lin[:, k])), 1)[0] for k in k_all}
+    print("          (last column: same fit for the linearized problem)")
     for k, mk in zip(k_all, mu):
-        print(f"  k={k:2d}   {mk:+.4f}        {fitted[k]:+.4f}")
+        print(f"  k={k:2d}   {mk:+.4f}        {fitted[k]:+.4f}        {fitted_lin[k]:+.4f}")
+    print(f"  mu_6 - mu_7 = {mu[5] - mu[6]:.4f}, exp(35 (mu_6 - mu_7)) = "
+          f"{np.exp(35 * (mu[5] - mu[6])):.2f}")
     for tt in (10, 20, 25, 30, 40, 50):
         i = np.argmin(abs(t - tt))
         share = C[i, 6] ** 2 / np.sum(C[i, 1:] ** 2)
@@ -103,7 +110,7 @@ def main():
     print(f"  peaks of v at x = {np.round(x[(vp[1:-1] > vp[:-2]) & (vp[1:-1] > vp[2:])], 2)}")
 
     # ---- figure
-    fig, axes = plt.subplots(2, 2, figsize=(6.2, 3.8))
+    fig, axes = plt.subplots(2, 2, figsize=(6.2, 3.35))
 
     ax = axes[0, 0]
     tmax = 150.0
@@ -130,9 +137,9 @@ def main():
         ax.semilogy(tt[mref], ref[mref], "--", color="black", lw=0.6)
     ax.set_xlabel(r"$t$")
     ax.set_ylabel(r"$|\hat u_k(t)|$")
-    ax.set_ylim(1e-6, 3)
+    ax.set_ylim(1e-8, 5)
     ax.set_title("(b) cosine coefficients")
-    ax.legend(loc="lower right", ncol=2, handlelength=1.5, columnspacing=1.0)
+    ax.legend(loc="lower center", ncol=4, handlelength=1.2, columnspacing=0.7, handletextpad=0.4, borderaxespad=0.2)
 
     ax = axes[1, 0]
     i = np.argmin(abs(t - T_EARLY))
@@ -158,10 +165,10 @@ def main():
     ax.axhline(ub, color=ps.U_COLOR, lw=0.6, ls=":")
     ax.axhline(vb, color=ps.V_COLOR, lw=0.6, ls=":")
     ax.set_xlim(0, L)
-    ax.set_ylim(0, 2.4)
+    ax.set_ylim(0, 2.85)
     ax.set_xlabel(r"$x$")
     ax.set_title(rf"(d) stationary pattern ($t={T_END:g}$)")
-    ax.legend(loc="upper right", ncol=2)
+    ax.legend(loc="upper center", ncol=2, borderaxespad=0.1)
 
     fig.tight_layout(h_pad=1.0, w_pad=1.5)
     ps.save(fig, "ch06-1d-evolution")

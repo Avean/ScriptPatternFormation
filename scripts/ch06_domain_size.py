@@ -36,7 +36,7 @@ def main():
           f"fastest lambda = {lmax:.4f}, mu = {-res.fun:.4f}, "
           f"wavelength 2 pi/sqrt(lambda) = {2 * np.pi / np.sqrt(lmax):.2f}")
 
-    fig = plt.figure(figsize=(6.2, 2.35))
+    fig = plt.figure(figsize=(6.2, 2.05))
     gs = fig.add_gridspec(4, 2, width_ratios=[1.0, 1.35], wspace=0.28, hspace=0.25)
 
     # ---------------------------------------------------------- (a) (L, k) plane
@@ -51,8 +51,10 @@ def main():
         k = np.arange(1, 25)
         inside = (k > L * np.sqrt(lm) / np.pi) & (k < L * np.sqrt(lp) / np.pi)
         ax.plot(np.full(inside.sum(), L), k[inside], "o", color=ps.UNSTABLE_COLOR, ms=2.2)
-        ax.axvline(L, color=ps.GREY, lw=0.4, zorder=0)
-        print(f"L = {L:g}: unstable modes k = {k[inside]}")
+        ax.plot([L, L], [L * np.sqrt(lm) / np.pi, L * np.sqrt(lp) / np.pi], color=ps.GREY,
+                lw=0.5, zorder=0)
+        mu_in = mode_rates(JAC, DU, DV, (k[inside] * np.pi / L) ** 2)
+        print(f"L = {L:g}: unstable modes k = {k[inside]}, mu_k = {np.round(mu_in, 4)}")
     Lmin = np.pi / np.sqrt(lp)
     ax.plot([Lmin], [1], "o", mfc="white", color="black", ms=4, zorder=5)
     ax.annotate(r"$L_{\min}\approx3.82$", xy=(Lmin, 1), xytext=(19, 0.9), fontsize=8,

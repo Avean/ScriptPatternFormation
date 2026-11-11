@@ -14,6 +14,7 @@ Produces figures/ch06-turing-space.pdf
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import brentq
 
 import plotstyle as ps
 
@@ -31,7 +32,7 @@ def gm_delta_c(a, b):
 
 def main():
     ps.apply()
-    fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.15))
+    fig, axes = plt.subplots(1, 2, figsize=(6.2, 1.9))
 
     # ------------------------------------------------ (a) Schnakenberg
     ax = axes[0]
@@ -53,7 +54,6 @@ def main():
     ax.contour(AA, BB, dc_inside, levels=[20], colors=[ps.UNSTABLE_COLOR], linewidths=1.0)
     ax.contour(AA, BB, dc_inside, levels=[10], colors=["black"], linewidths=0.9,
                linestyles="--")
-    turing10 = t1 & fu_pos & (dc < 10)
     ax.plot([0.1], [0.9], "o", color="black", ms=4)
     ax.annotate(r"$(0.1,\,0.9)$", xy=(0.1, 0.9), xytext=(0.22, 1.3), fontsize=8,
                 arrowprops=dict(arrowstyle="-", lw=0.6))
@@ -68,15 +68,14 @@ def main():
 
     # numbers quoted in the text
     print(f"Schnakenberg delta_c(0.1, 0.9) = {schnakenberg_delta_c(0.1, 0.9):.4f}")
-    for a0 in (0.0, 0.1):
-        # (T1) boundary on the line a = a0: smallest b > a0 with b - a0 = (a0 + b)^3
-        bb = np.linspace(a0 + 1e-6, 3, 300001)
-        ok = (bb - a0) < (a0 + bb) ** 3
-        print(f"  a = {a0}: (T1) holds for b > {bb[np.argmax(ok & (bb > 0.5))]:.4f}")
-    col = turing20[:, np.argmin(abs(a - 0.1))]
-    print(f"  a = 0.1, delta = 20: Turing for b in ({b[col].min():.3f}, {b[col].max():.3f})")
-    col = turing10[:, np.argmin(abs(a - 0.1))]
-    print(f"  a = 0.1, delta = 10: Turing for b in ({b[col].min():.3f}, {b[col].max():.3f})")
+    # on the line a = 0.1: (T1) boundary b - a = (a + b)^3, and delta_c(0.1, b) = delta
+    b_t1 = brentq(lambda x: (x - 0.1) - (0.1 + x) ** 3, 0.5, 1.0)
+    print(f"  a = 0.1: (T1) holds for b > {b_t1:.4f}")
+    for d in (10.0, 20.0):
+        b_up = brentq(lambda x: schnakenberg_delta_c(0.1, x) - d, 1.0, 3.0)
+        print(f"  a = 0.1, delta = {d:g}: Turing space {b_t1:.4f} < b < {b_up:.4f}")
+    for bb_ in (0.8, 0.9, 1.1, 1.3, 1.4, 1.5):
+        print(f"  delta_c(0.1, {bb_}) = {schnakenberg_delta_c(0.1, bb_):.3f}")
 
     # ------------------------------------------------ (b) Gierer-Meinhardt, a = 0
     ax = axes[1]
