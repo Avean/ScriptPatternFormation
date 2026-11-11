@@ -47,8 +47,8 @@ Since \eqref{eq:heat} also describes heat conduction, it is also called the
 As $u_t$ has the units of $u$ per second and $u_{xx}$ those of $u$ per square meter,
 $d$ is measured in $\mathrm{m}^2/\mathrm{s}$, and for every length $\ell$ the
 quantity $\ell^2/d$ is a time: the \emph{diffusive time scale} on which diffusion
-evens out differences over the distance $\ell$. Doubling the distance quadruples the
-time. (Intuitively, a molecule performing a random walk is after $n$ steps typically
+evens out differences over the distance $\ell$; doubling $\ell$ quadruples it.
+(Intuitively, a molecule performing a random walk is after $n$ steps typically
 only about $\sqrt n$ steps away from its start.) For small molecules in water,
 $d\approx10^{-9}\,\mathrm{m}^2/\mathrm{s}$; this gives $0.1\,\mathrm{s}$ for
 $\ell=10\,\mu\mathrm{m}$ (a cell), about $17$ minutes for $1\,\mathrm{mm}$, and more
@@ -337,11 +337,10 @@ because $\lambda_k\ge\lambda_1=\pi^2/L^2$ for $k\ge1$. The rate is sharp: for
 $u_0=M+\cos(\pi x/L)$ the solution is $u=M+e^{-d\lambda_1t}\cos(\pi x/L)$, with
 equality.
 
-The proof also shows how the shape evolves. The rate $d\lambda_k$ grows
-quadratically in $k$ (mode $10$ decays a hundred times faster than mode $1$), so at
-time $t$ only modes with $d\lambda_kt\lesssim1$ are visible: structures on scales
-below about $\sqrt{dt}$ are erased. In \cref{fig:ch03-heat-modes}(b), small-scale
-noise disappears almost instantly, while the step is smoothed out much more slowly.
+The rate $d\lambda_k$ grows quadratically in $k$, so at time $t$ only modes with
+$d\lambda_kt\lesssim1$ are visible: structures on scales below about $\sqrt{dt}$
+are erased. In \cref{fig:ch03-heat-modes}(b), small-scale noise disappears almost
+instantly, while the step is smoothed out much more slowly.
 
 \begin{figure}[t]
   \centering
@@ -367,7 +366,7 @@ ODE with rate $f'(\ub)-d\lambda_k$, so diffusion seems only to stabilize;
 \cref{ch:one-equation} makes this precise. For two species, $u_t=d_u\,u_{xx}+f(u,v)$,
 $v_t=d_v\,v_{xx}+g(u,v)$ (\cref{ch:turing}), each cosine mode of the linearized
 problem is a $2\times2$ linear ODE system, and the answer can be yes:
-\emph{diffusion-driven instability (DDI)}, or \emph{Turing instability}
+\emph{diffusion-driven instability (DDI)} or \emph{Turing instability}
 \cite{Turing1952}.
 
 \section{Beyond the interval}\label{sec:diffusion-general}

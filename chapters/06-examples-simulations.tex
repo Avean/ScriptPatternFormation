@@ -42,8 +42,10 @@ For $(a,b)=(0.1,0.9)$ we recover $\delta_c=(1+\sqrt{1.8})^2/0.64\approx8.57$.
   \label{fig:ch06-turing-space}
 \end{figure}
 
-For $a=0.1$, (T1) requires $b>0.779$, and the Turing space is $0.779<b<1.002$ for
-$\delta=10$ and $0.779<b<1.559$ for $\delta=20$ (\cref{fig:ch06-turing-space}(a)). The
+For $a=0.1$ and $b>a$, (T1) fails for $0.109<b<0.779$; on the thin strip
+$0.1<b<0.109$ (T1) holds, but there $\delta_c>93$. So for $\delta=10$ (resp.\ $20$) the
+Turing space on this line is $0.779<b<1.002$ (resp.\ $0.779<b<1.559$)
+(\cref{fig:ch06-turing-space}(a)). The
 standard point is thus rather close to the region of unstable kinetics, where the
 reaction oscillates in time, Schnakenberg's original interest \cite{Schnakenberg1979}.
 Since $\delta_c(a,b)<\infty$ whenever $a<b$, the Turing space grows with $\delta$ and
@@ -191,12 +193,13 @@ $\norm{u-\ub}^2$.
 
 \paragraph{Saturation and selection.}
 At $t\approx40$ the perturbation reaches size one and stops growing; the peaks drift
-slowly to $x\approx6.65$, $19.95$, $33.35$, the maxima of $-\cos(6\pi x/40)$, and after
+slowly to the grid points nearest to $20/3$, $20$, $100/3$, the maxima of
+$-\cos(6\pi x/40)$, and after
 $t=200$ the solution changes by less than $10^{-2}$. The final pattern has the shape
 of the fastest mode, as predicted. But that is not the whole story. In $50$ runs with
 different random seeds, the final pattern was of mode $6$ in $30$ runs, of mode $7$
-(three and a half wavelengths) in $19$ runs, and of mode $5$ once; each run ended at a
-stationary solution. The reason
+(three and a half wavelengths) in $19$ runs, and of mode $5$ once; each run
+approached a stationary solution (the mode-$7$ runs more slowly). The reason
 is that $\mu_6-\mu_7=0.011$: in the roughly $35$ time units of linear growth, mode $6$
 gains only a factor $e^{0.011\cdot35}\approx1.5$ over mode $7$, which the random initial
 amplitudes can easily outweigh.
@@ -260,8 +263,8 @@ grows if and only if $(\pi/L)^2(m^2+n^2)$ lies in the band. For the standard
 Schnakenberg example on $(0,80)^2$ this holds for $320$ pairs $(m,n)$, the lattice
 points in a quarter annulus. Many grow at nearly the same rate, some at exactly the same
 rate: $(m,n)$ and $(n,m)$, or $(1,12)$ and $(8,9)$. Linear theory fixes the wavelength
-but not the geometry: one mode $\cos(m\pi x/L)$ gives stripes, a sum of modes with
-different directions gives spots.
+but not the geometry: a single mode with $n=0$ gives stripes; a product mode with
+$m,n\ge1$, or a sum of modes with different directions, gives spots.
 
 \begin{figure}[t]
   \centering
@@ -282,7 +285,7 @@ $b=0.3,0.5,0.8$) gave only spots; Lengyel--Epstein \eqref{eq:lengyel-epstein} ($
 $b=4$) gave stripes for $\delta=25$, spots for $\delta=40$. Where stripes occurred, they
 appeared closer to the threshold than the spots, but a handful of runs is not a theorem
 (and at $t=2000$ the stripes still rearrange slowly). Pattern selection in two dimensions is a genuinely nonlinear
-question beyond these notes; see \cref{ch:outlook} and \cite{Murray2003}.
+question beyond these notes; see \cref{sec:outlook-patterns} and \cite{Murray2003}.
 
 \section{Exercises}\label{sec:examples-exercises}
 

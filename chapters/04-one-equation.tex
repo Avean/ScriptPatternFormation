@@ -4,9 +4,10 @@
 What can a single species do on its own? For one reaction--diffusion equation on
 $(0,L)$ with Neumann conditions we prove two negative results: diffusion cannot
 destabilize a constant steady state, and every nonconstant stationary solution is
-unstable. So one equation cannot produce stable patterns. The tools are elementary
-(integration by parts, Cauchy--Schwarz, cosine coefficients, uniqueness for linear
-ODEs), and at the end we identify the structural reason behind both results.
+linearly unstable. So one equation cannot produce linearly stable patterns. The tools
+are elementary (integration by parts, Cauchy--Schwarz, cosine coefficients,
+uniqueness for linear ODEs), and at the end we identify the structural reason behind
+both results.
 
 \section{Constant steady states}\label{sec:one-constant}
 
@@ -21,57 +22,57 @@ Let $d>0$ and let $f\colon\R\to\R$ be smooth. We consider
 If $f(\ub)=0$, the constant function $u\equiv\ub$ solves \eqref{eq:scalar-rd}; we call
 it a \emph{constant steady state}. It is also a steady state of the \emph{kinetic
 equation} $u'=f(u)$, asymptotically stable if $f'(\ub)<0$ and unstable if
-$f'(\ub)>0$ (\cref{thm:linearized-stability}). We perturb, $u=\ub+\varphi$, use
-$f(\ub+\varphi)=f'(\ub)\varphi+\mathcal{O}(\varphi^2)$ and drop the quadratic remainder,
-exactly as for ODEs (the justification is discussed in \cref{ch:outlook}). This gives
-the \emph{linearized problem}
+$f'(\ub)>0$ (\cref{thm:linearized-stability}). We perturb, $u=\ub+w$, use
+$f(\ub+w)=f'(\ub)w+\mathcal{O}(w^2)$ and drop the quadratic remainder, exactly as for
+ODEs (the justification is discussed in \cref{ch:outlook}). This gives the
+\emph{linearized problem}
 \begin{equation}\label{eq:one-linearized}
-  \varphi_t = d\,\varphi_{xx} + f'(\ub)\,\varphi,\quad x\in(0,L),\ t>0,\qquad
-  \varphi_x = 0,\quad x\in\{0,L\},\ t>0 .
+  w_t = d\,w_{xx} + f'(\ub)\,w,\quad x\in(0,L),\ t>0,\qquad
+  w_x = 0,\quad x\in\{0,L\},\ t>0 .
 \end{equation}
 
 \begin{definition}\label{def:linear-stability-scalar}
 The constant steady state $\ub$ is \emph{linearly stable} if every solution of
 \eqref{eq:one-linearized} (with smooth initial data satisfying the boundary
-condition) satisfies $\norm{\varphi(t)}\to0$ as $t\to\infty$. It is \emph{linearly
-unstable} if \eqref{eq:one-linearized} has a solution with $\norm{\varphi(t)}\to\infty$
+condition) satisfies $\norm{w(t)}\to0$ as $t\to\infty$. It is \emph{linearly
+unstable} if \eqref{eq:one-linearized} has a solution with $\norm{w(t)}\to\infty$
 as $t\to\infty$.
 \end{definition}
 
 \Cref{ch:turing} uses the same definition for systems (\cref{def:linear-stability-rd}).
 We solve \eqref{eq:one-linearized} like the heat equation in \cref{ch:diffusion}. Let
-$\hat\varphi_k(t)$ be the cosine coefficients \eqref{eq:cosine-coefficients} of
-$\varphi(\cdot,t)$. Since $\varphi_x=0$ at both ends, the coefficients of
-$\varphi_{xx}$ are $-\lambda_k\hat\varphi_k$ (\cref{lem:coefficient-uxx}).
-Differentiating under the integral sign we get, for $k=0,1,2,\dots$,
+$\hat w_k(t)$ be the cosine coefficients \eqref{eq:cosine-coefficients} of $w(\cdot,t)$.
+Since $w_x=0$ at both ends, the coefficients of $w_{xx}$ are $-\lambda_k\hat w_k$
+(\cref{lem:coefficient-uxx}). Differentiating under the integral sign for $t>0$, and
+using that $\hat w_k$ is continuous at $t=0$, we get for $k=0,1,2,\dots$
 \begin{equation}\label{eq:one-modes}
-  \hat\varphi_k'(t) = \big(f'(\ub)-d\lambda_k\big)\hat\varphi_k(t),
+  \hat w_k'(t) = \big(f'(\ub)-d\lambda_k\big)\hat w_k(t),
   \qquad\text{hence}\qquad
-  \hat\varphi_k(t)=e^{\mu_kt}\hat\varphi_k(0),\quad \mu_k = f'(\ub)-d\lambda_k\le f'(\ub),
+  \hat w_k(t)=e^{\mu_kt}\hat w_k(0),\quad \mu_k = f'(\ub)-d\lambda_k .
 \end{equation}
-since $\lambda_k\ge\lambda_0=0$.
+Since $\lambda_k\ge\lambda_0=0$, all growth rates satisfy $\mu_k\le\mu_0=f'(\ub)$.
 
 \begin{proposition}\label{prop:scalar-constant}
 Let $f(\ub)=0$. (a) If $f'(\ub)<0$, every solution of \eqref{eq:one-linearized}
-satisfies $\norm{\varphi(t)}\le e^{f'(\ub)t}\norm{\varphi(0)}$ for $t\ge0$; in
-particular, $\ub$ is linearly stable. (b) If $f'(\ub)>0$, then $\ub$ is linearly
-unstable.
+satisfies $\norm{w(t)}\le e^{f'(\ub)t}\norm{w(0)}$ for $t\ge0$; in particular, $\ub$ is
+linearly stable. (b) If $f'(\ub)>0$, then $\ub$ is linearly unstable.
 \end{proposition}
 
 \begin{proof}
 (a) By Parseval's identity \eqref{eq:parseval}, \eqref{eq:one-modes} and
 $\mu_k\le f'(\ub)$,
 \begin{equation*}
-  \norm{\varphi(t)}^2 = Le^{2\mu_0t}\hat\varphi_0(0)^2
-     + \frac L2\sum_{k=1}^\infty e^{2\mu_kt}\hat\varphi_k(0)^2
-  \le e^{2f'(\ub)t}\norm{\varphi(0)}^2 .
+  \norm{w(t)}^2 = Le^{2\mu_0t}\hat w_0(0)^2
+     + \frac L2\sum_{k=1}^\infty e^{2\mu_kt}\hat w_k(0)^2
+  \le e^{2f'(\ub)t}\norm{w(0)}^2 .
 \end{equation*}
-(b) The mode $k=0$, $\varphi(x,t)=e^{f'(\ub)t}$, solves \eqref{eq:one-linearized}, and
-$\norm{\varphi(t)}=\sqrt L\,e^{f'(\ub)t}\to\infty$.
+(b) The mode $k=0$, $w(x,t)=e^{f'(\ub)t}$, solves \eqref{eq:one-linearized}, and
+$\norm{w(t)}=\sqrt L\,e^{f'(\ub)t}\to\infty$.
 \end{proof}
 
-We exclude the borderline case $f'(\ub)=0$. By analogy with \cref{def:ddi}, \emph{diffusion-driven instability (DDI)} would mean $f'(\ub)<0$
-together with linear instability for \eqref{eq:scalar-rd}.
+We exclude the borderline case $f'(\ub)=0$. By analogy with \cref{def:ddi},
+\emph{diffusion-driven instability (DDI)} would mean $f'(\ub)<0$ together with linear
+instability for \eqref{eq:scalar-rd}.
 
 \begin{corollary}\label{cor:no-ddi-scalar}
 A single reaction--diffusion equation never exhibits diffusion-driven instability: if
@@ -93,8 +94,8 @@ For the logistic (Fisher--KPP) kinetics $f(u)=u(1-u)$, the state $0$ is linearly
 unstable ($f'(0)=1$) and $1$ is linearly stable ($f'(1)=-1$). The bistable kinetics
 $f(u)=u(1-u)(u-\theta)$, $0<\theta<1$, have $f'(0)=-\theta$,
 $f'(\theta)=\theta(1-\theta)$, $f'(1)=\theta-1$: $0$ and $1$ are linearly stable,
-$\theta$ is unstable. Can a stationary solution close to $0$ in one part of the
-interval and close to $1$ in another be stable? No (\cref{sec:one-nonconstant}).
+$\theta$ is linearly unstable. Can a stationary solution close to $0$ in one part of the
+interval and close to $1$ in another be linearly stable? No (\cref{sec:one-nonconstant}).
 \end{example}
 
 \section{A growth lemma}\label{sec:one-growth}
@@ -103,57 +104,61 @@ At a nonconstant stationary solution the linearized equation has an $x$-dependen
 coefficient, and the cosine modes no longer decouple. We need a tool without Fourier
 series. Let $a$ be a smooth function on $[0,L]$. We consider
 \begin{equation}\label{eq:one-variable}
-  \varphi_t = d\,\varphi_{xx} + a(x)\,\varphi,\quad x\in(0,L),\ t>0,\qquad
-  \varphi_x=0,\quad x\in\{0,L\},\ t>0 ,
+  w_t = d\,w_{xx} + a(x)\,w,\quad x\in(0,L),\ t>0,\qquad
+  w_x=0,\quad x\in\{0,L\},\ t>0 ,
 \end{equation}
-and define $Q(\psi) = \int_0^L \big(a\,\psi^2 - d\,\psi'^2\big)\dd x$ for smooth
-$\psi$ on $[0,L]$.
+and define $Q(\psi) = \int_0^L \big(a\,\psi^2 - d\,\psi'^2\big)\dd x$ for
+$\psi\in C^1[0,L]$.
 
 \begin{lemma}[Growth lemma]\label{lem:rayleigh-growth}
-Let $\varphi$ be a smooth solution of \eqref{eq:one-variable} such that
-$\varphi(\cdot,0)$ is not identically zero, and put $N(t)=\norm{\varphi(t)}^2$. Then for
-all $t\ge0$:
+Let $w$ be a smooth solution of \eqref{eq:one-variable} (as in
+\cref{rem:well-posedness}) such that $w(\cdot,0)$ is not identically zero, and put
+$N(t)=\norm{w(t)}^2$.
 \begin{enumerate}[label=(\alph*)]
-  \item $N'(t)=2Q(\varphi(t))$ and $\frac{\mathrm d}{\mathrm dt}Q(\varphi(t)) = 2\norm{\varphi_t(t)}^2$;
-  \item $N(t)>0$, the \emph{Rayleigh quotient} $R(t)=Q(\varphi(t))/N(t)$ is
-        nondecreasing, and $\norm{\varphi(t)}\ge e^{R(0)t}\norm{\varphi(0)}$;
-  \item $\norm{\varphi(t)}\le e^{\alpha t}\norm{\varphi(0)}$, where $\alpha=\max_{[0,L]}a$.
+  \item For $t>0$, $N'(t)=2Q(w(t))$ and $\frac{\mathrm d}{\mathrm dt}Q(w(t)) = 2\norm{w_t(t)}^2$.
+  \item $N(t)>0$ for $t\ge0$, the \emph{Rayleigh quotient} $R(t)=Q(w(t))/N(t)$ is
+        nondecreasing on $[0,\infty)$, and $\norm{w(t)}\ge e^{R(0)t}\norm{w(0)}$.
+  \item $\norm{w(t)}\le e^{\alpha t}\norm{w(0)}$ for $t\ge0$, where $\alpha=\max_{[0,L]}a$.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-(a) We differentiate under the integral sign, use the equation and integrate by parts:
+(a) For $t>0$ we differentiate under the integral sign, use the equation and integrate
+by parts:
 \begin{equation}\label{eq:one-N-prime}
-  \frac12N' = \int_0^L\varphi\varphi_t\dd x = \int_0^L\varphi\,(d\varphi_{xx}+a\varphi)\dd x
-  = d\big[\varphi\varphi_x\big]_0^L + \int_0^L\big(a\varphi^2-d\varphi_x^2\big)\dd x = Q(\varphi),
+  \frac12N' = \int_0^Lww_t\dd x = \int_0^Lw\,(dw_{xx}+aw)\dd x
+  = d\big[ww_x\big]_0^L + \int_0^L\big(aw^2-dw_x^2\big)\dd x = Q(w),
 \end{equation}
 \begin{equation*}
-  \frac{\mathrm d}{\mathrm dt}Q(\varphi)
-  = 2\int_0^L\big(a\varphi\varphi_t - d\varphi_x\varphi_{xt}\big)\dd x
-  = -2d\big[\varphi_x\varphi_t\big]_0^L + 2\int_0^L(d\varphi_{xx}+a\varphi)\,\varphi_t\dd x
-  = 2\int_0^L\varphi_t^2\dd x .
+  \frac{\mathrm d}{\mathrm dt}Q(w)
+  = 2\int_0^L\big(aww_t - dw_xw_{xt}\big)\dd x
+  = -2d\big[w_xw_t\big]_0^L + 2\int_0^L(dw_{xx}+aw)\,w_t\dd x
+  = 2\int_0^Lw_t^2\dd x .
 \end{equation*}
-Both boundary terms vanish because $\varphi_x=0$ at $x=0,L$.
+Both boundary terms vanish because $w_x=0$ at $x=0,L$. Moreover, $w$ and $w_x$ are
+continuous on $[0,L]\times[0,\infty)$, hence uniformly continuous on
+$[0,L]\times[0,1]$; so $N(t)\to N(0)$ and $Q(w(t))\to Q(w(0))$ as $t\downarrow0$.
 
-(b) On every time interval on which $N>0$, part (a), the identity
-$Q(\varphi)=\int_0^L\varphi\varphi_t\dd x$ from \eqref{eq:one-N-prime} and the
-Cauchy--Schwarz inequality give
+(b) Let $T=\inf\{t>0: N(t)=0\}$ ($T=\infty$ if $N$ has no zero); $T>0$ since $N(0)>0$.
+On $(0,T)$, part (a), the identity $Q(w)=\int_0^Lww_t\dd x$ from
+\eqref{eq:one-N-prime} and the Cauchy--Schwarz inequality give
 \begin{equation*}
-  R' = \frac{N\,\frac{\mathrm d}{\mathrm dt}Q(\varphi) - Q(\varphi)\,N'}{N^2}
-  = \frac{2}{N^2}\Big(\norm{\varphi}^2\norm{\varphi_t}^2
-     - \Big(\int_0^L\varphi\varphi_t\dd x\Big)^2\Big)\ge0 .
+  R' = \frac{N\,\frac{\mathrm d}{\mathrm dt}Q(w) - Q(w)\,N'}{N^2}
+  = \frac{2}{N^2}\Big(\norm{w}^2\norm{w_t}^2
+     - \Big(\int_0^Lww_t\dd x\Big)^2\Big)\ge0 .
 \end{equation*}
-Let $T=\inf\{t>0: N(t)=0\}$ ($T=\infty$ if $N$ has no zero). On $[0,T)$ we have
-$(\log N)'=2R\ge2R(0)$, hence $N(t)\ge N(0)e^{2R(0)t}$. If $T$ were finite, letting
-$t\to T$ would give $N(T)\ge N(0)e^{2R(0)T}>0$, contradicting $N(T)=0$. So
-$T=\infty$, and taking square roots proves (b).
+As $R$ is continuous on $[0,T)$, it is nondecreasing there. Hence $(\log N)'=2R\ge2R(0)$
+on $(0,T)$, and integrating (with $N$ continuous at $0$) gives $N(t)\ge N(0)e^{2R(0)t}$
+on $[0,T)$. If $T$ were finite, letting $t\to T$ would give $N(T)>0$, contradicting
+$N(T)=0$. So $T=\infty$, and taking square roots proves (b).
 
-(c) $N'=2Q(\varphi)\le2\int_0^La\varphi^2\dd x\le2\alpha N$, so $(e^{-2\alpha t}N)'\le0$.
+(c) $N'=2Q(w)\le2\int_0^Law^2\dd x\le2\alpha N$, so $e^{-2\alpha t}N(t)$ is
+nonincreasing on $(0,\infty)$ and, by continuity, on $[0,\infty)$.
 \end{proof}
 
 By (b), to prove instability it suffices to find \emph{one} admissible initial datum
 with $Q>0$. For constant $a\equiv f'(\ub)$, part (c) is the estimate of
-\cref{prop:scalar-constant}(a), and $\varphi(\cdot,0)\equiv1$ has $R(0)=f'(\ub)$: the
+\cref{prop:scalar-constant}(a), and $w(\cdot,0)\equiv1$ has $R(0)=f'(\ub)$: the
 lemma reproves \cref{prop:scalar-constant} and \cref{cor:no-ddi-scalar} without
 Fourier series.
 
@@ -169,7 +174,7 @@ Fourier series.
   \label{fig:ch04-phase-plane}
 \end{figure}
 
-\section{Nonconstant stationary solutions are unstable}\label{sec:one-nonconstant}
+\section{Nonconstant stationary solutions are linearly unstable}\label{sec:one-nonconstant}
 
 A \emph{stationary solution} of \eqref{eq:scalar-rd} is a function $U(x)$ with
 \begin{equation}\label{eq:one-stationary}
@@ -186,10 +191,10 @@ $(1-U_0,0)$ in half a period, which (numerically) increases from $2\pi$ for smal
 orbits to $\infty$ near the saddle connections. So for every $L>2\pi$ there is an
 increasing nonconstant stationary solution.
 
-Linearizing \eqref{eq:scalar-rd} at a stationary solution $U$, $u=U+\varphi$, gives
+Linearizing \eqref{eq:scalar-rd} at a stationary solution $U$, $u=U+w$, gives
 \begin{equation}\label{eq:one-linearized-U}
-  \varphi_t = d\,\varphi_{xx} + f'(U(x))\,\varphi,\quad x\in(0,L),\ t>0,\qquad
-  \varphi_x=0,\quad x\in\{0,L\},\ t>0 ,
+  w_t = d\,w_{xx} + f'(U(x))\,w,\quad x\in(0,L),\ t>0,\qquad
+  w_x=0,\quad x\in\{0,L\},\ t>0 ,
 \end{equation}
 that is, \eqref{eq:one-variable} with $a=f'(U)$; $Q$ denotes the corresponding form.
 We call $U$ linearly (un)stable as in \cref{def:linear-stability-scalar}, with
@@ -199,86 +204,88 @@ smooth, since $U''=-f(U)/d$.
 \begin{theorem}\label{thm:nonconstant-unstable}
 Every nonconstant solution $U$ of \eqref{eq:one-stationary} is linearly unstable.
 More precisely, \eqref{eq:one-linearized-U} has a solution with
-$\norm{\varphi(t)}\ge c\,e^{\mu t}$ for all $t\ge0$, where $c,\mu>0$ are constants.
+$\norm{w(t)}\ge c\,e^{\mu t}$ for all $t\ge0$, where $c,\mu>0$ are constants.
 \end{theorem}
 
 \begin{proof}
-\emph{Step 1: reduction.} Let $\varphi_0$ be smooth on $[0,L]$ with
-$\varphi_0'(0)=\varphi_0'(L)=0$ and $Q(\varphi_0)>0$, and let $\varphi$ solve
-\eqref{eq:one-linearized-U} with $\varphi(\cdot,0)=\varphi_0$ (\cref{rem:well-posedness}).
-By \cref{lem:rayleigh-growth}(b), $\norm{\varphi(t)}\ge e^{\mu t}\norm{\varphi_0}$ with
-$\mu=R(0)=Q(\varphi_0)/\norm{\varphi_0}^2>0$. It remains to find such a $\varphi_0$.
+\emph{Step 1: reduction.} Let $w_0$ be smooth on $[0,L]$ with $w_0'(0)=w_0'(L)=0$ and
+$Q(w_0)>0$, and let $w$ solve \eqref{eq:one-linearized-U} with $w(\cdot,0)=w_0$
+(\cref{rem:well-posedness}). By \cref{lem:rayleigh-growth}(b),
+$\norm{w(t)}\ge e^{\mu t}\norm{w_0}$ with $\mu=R(0)=Q(w_0)/\norm{w_0}^2>0$. It remains
+to find such a $w_0$.
 
-\emph{Step 2: the derivative of $U$.} Put $w=U'$. Differentiating $dU''+f(U)=0$
-gives $dw''+aw=0$, and the Neumann condition for $U$ says $w(0)=w(L)=0$. Hence
+\emph{Step 2: the derivative of $U$.} Put $z=U'$. Differentiating $dU''+f(U)=0$ gives
+$dz''+az=0$, and the Neumann condition for $U$ says $z(0)=z(L)=0$. Hence
 \begin{equation*}
-  Q(w) = \int_0^L\big(aw^2-dw'^2\big)\dd x
-  = \int_0^Lw\,(dw''+aw)\dd x - d\big[ww'\big]_0^L = 0 .
+  Q(z) = \int_0^L\big(az^2-dz'^2\big)\dd x
+  = \int_0^Lz\,(dz''+az)\dd x - d\big[zz'\big]_0^L = 0 .
 \end{equation*}
-But $w$ does not qualify: $Q(w)=0$, and $w'(0)=-f(U(0))/d$ need not vanish.
+But $z$ does not qualify: $Q(z)=0$, and $z'(0)=-f(U(0))/d$ need not vanish.
 
-\emph{Step 3: making $Q$ positive.} First, $w'(0)\neq0$: otherwise $w$ would solve
-the linear ODE $dw''+aw=0$ with $w(0)=w'(0)=0$, so $w\equiv0$ by uniqueness, and $U$
-would be constant. For smooth $\eta$ and $\eps\in\R$, expanding and using $Q(w)=0$
-gives $Q(w+\eps\eta)=2\eps B+\eps^2Q(\eta)$, where, by parts and since $dw''+aw=0$,
+\emph{Step 3: making $Q$ positive.} First, $z'(0)\neq0$: otherwise $z$ would solve
+the linear ODE $dz''+az=0$ with $z(0)=z'(0)=0$, so $z\equiv0$ by uniqueness, and $U$
+would be constant. For smooth $\eta$ and $\eps\in\R$, expanding and using $Q(z)=0$
+gives $Q(z+\eps\eta)=2\eps B+\eps^2Q(\eta)$, where, by parts and since $dz''+az=0$,
 \begin{equation*}
-  B=\int_0^L\big(aw\eta-dw'\eta'\big)\dd x
-  = \int_0^L\eta\,(dw''+aw)\dd x - d\big[w'\eta\big]_0^L
-  = d\big(w'(0)\eta(0)-w'(L)\eta(L)\big).
+  B=\int_0^L\big(az\eta-dz'\eta'\big)\dd x
+  = \int_0^L\eta\,(dz''+az)\dd x - d\big[z'\eta\big]_0^L
+  = d\big(z'(0)\eta(0)-z'(L)\eta(L)\big).
 \end{equation*}
-For $\eta(x)=w'(0)(1-x/L)$ we get $Q(w+\eps\eta)=2\eps d\,w'(0)^2+\eps^2Q(\eta)>0$ for
-small $\eps>0$. Fix such an $\eps$; then $\psi=w+\eps\eta$ is smooth with $Q(\psi)>0$,
+For $\eta(x)=z'(0)(1-x/L)$ we get $Q(z+\eps\eta)=2\eps d\,z'(0)^2+\eps^2Q(\eta)>0$ for
+small $\eps>0$. Fix such an $\eps$; then $\psi=z+\eps\eta$ is smooth with $Q(\psi)>0$,
 but need not satisfy the Neumann condition.
 
-\emph{Step 4: the Neumann condition.} For $0<\delta<L/2$ let
-$g_\delta\colon[0,L]\to[0,L]$ be smooth and nondecreasing with $g_\delta(0)=0$,
-$g_\delta(L)=L$, $g_\delta'(0)=g_\delta'(L)=0$, $g_\delta(x)=x$ on $[\delta,L-\delta]$
-and $0\le g_\delta'\le2$ (\cref{exer:one-g-delta}). Then $\varphi_\delta=\psi\circ g_\delta$
-is smooth, $\varphi_\delta'(0)=\psi'(0)g_\delta'(0)=0$, likewise $\varphi_\delta'(L)=0$,
-and $\varphi_\delta=\psi$ outside $I_\delta=[0,\delta]\cup[L-\delta,L]$. With
+\emph{Step 4: the Neumann condition.} For $0<\tau<L/2$ let
+$g_\tau\colon[0,L]\to[0,L]$ be smooth and nondecreasing with $g_\tau(0)=0$,
+$g_\tau(L)=L$, $g_\tau'(0)=g_\tau'(L)=0$, $g_\tau(x)=x$ on $[\tau,L-\tau]$
+and $0\le g_\tau'\le2$ (\cref{exer:one-g-delta}). Then $\psi_\tau=\psi\circ g_\tau$
+is smooth, $\psi_\tau'(0)=\psi'(0)g_\tau'(0)=0$, likewise $\psi_\tau'(L)=0$,
+and $\psi_\tau=\psi$ outside $I_\tau=[0,\tau]\cup[L-\tau,L]$. With
 $M_0=\max\abs{\psi}$, $M_1=\max\abs{\psi'}$, $C_a=\max\abs{a}$ we have
-$\abs{\varphi_\delta}\le M_0$, $\abs{\varphi_\delta'}\le2M_1$, so
+$\abs{\psi_\tau}\le M_0$, $\abs{\psi_\tau'}\le2M_1$, so
 \begin{equation*}
-  \abs{Q(\varphi_\delta)-Q(\psi)}
-  \le \int_{I_\delta}\big(\abs{a}\varphi_\delta^2+d\varphi_\delta'^2
+  \abs{Q(\psi_\tau)-Q(\psi)}
+  \le \int_{I_\tau}\big(\abs{a}\psi_\tau^2+d\psi_\tau'^2
       +\abs{a}\psi^2+d\psi'^2\big)\dd x
-  \le 2\delta\big(2C_aM_0^2+5dM_1^2\big).
+  \le 2\tau\big(2C_aM_0^2+5dM_1^2\big).
 \end{equation*}
-Hence $Q(\varphi_\delta)>0$ for small $\delta$, and $\varphi_0=\varphi_\delta$ does the
-job.
+Hence $Q(\psi_\tau)>0$ for small $\tau$, and $w_0=\psi_\tau$ does the job.
 \end{proof}
 
 \begin{keyidea}
-In one space dimension with Neumann conditions, a single reaction--diffusion
-equation has no stable nonconstant stationary solutions. The only candidates for
-stable stationary states are constants.
+In one space dimension with Neumann conditions, every nonconstant stationary solution
+of a single reaction--diffusion equation is linearly unstable. The only candidates for
+linearly stable stationary states are constants.
 \end{keyidea}
 
 \section{Remarks}\label{sec:one-remarks}
 
 \begin{remark}[An energy]\label{rem:lyapunov}
 Let $F'=f$ and $E[u]=\int_0^L\big(\frac d2u_x^2-F(u)\big)\dd x$. If $u$ solves
-\eqref{eq:scalar-rd}, then, integrating by parts and using $u_x=0$ at the ends,
+\eqref{eq:scalar-rd}, then for $t>0$, integrating by parts and using $u_x=0$ at the ends,
 \begin{equation*}
   \frac{\mathrm d}{\mathrm dt}E[u(t)] = \int_0^L\big(d\,u_xu_{xt}-f(u)u_t\big)\dd x
-  = d\big[u_xu_t\big]_0^L - \int_0^L\big(du_{xx}+f(u)\big)u_t\dd x = -\norm{u_t}^2 .
+  = d\big[u_xu_t\big]_0^L - \int_0^L\big(du_{xx}+f(u)\big)u_t\dd x = -\norm{u_t}^2 ,
 \end{equation*}
+and $E[u(t)]\to E[u_0]$ as $t\downarrow0$, since $u$, $u_x$ are continuous up to $t=0$.
 So $E$ is a \emph{Lyapunov functional}: it decreases along solutions and is constant
 only along stationary ones (hence time-periodic solutions are stationary). For
 stationary $U$ and smooth $\eta$, Taylor's formula and the same integration by parts
 give $E[U+\eps\eta]=E[U]-\frac{\eps^2}2Q(\eta)+\mathcal{O}(\eps^3)$ with $a=f'(U)$:
 stationary solutions are critical points of $E$, and $-Q$ is the second variation.
-If $U$ is nonconstant and $\varphi_0$ is as in the proof of
+If $U$ is nonconstant and $w_0$ is as in the proof of
 \cref{thm:nonconstant-unstable}, then for small $\eps>0$ the datum
-$u_0=U+\eps\varphi_0$ gives $E[u(t)]\le E[u_0]<E[U]$ for all $t$, so $u(t)$ cannot
+$u_0=U+\eps w_0$ gives $E[u(t)]\le E[u_0]<E[U]$ for all $t\ge0$, so $u(t)$ cannot
 converge to $U$ in any sense in which $E$ is continuous, e.g.\ in the distance
 $\max\abs{u-U}+\max\abs{u_x-U'}$. As $u_0$ is arbitrarily close to $U$ in this
 distance, $U$ is \emph{not asymptotically stable} for the nonlinear equation. This
-is slightly weaker than instability: solutions starting near $U$ might stay near it.
+is weaker than instability (solutions starting near $U$ might stay near it); under
+suitable assumptions on $f$, nonlinear instability holds as well
+\cite{CastenHolland1978,Chafee1975}.
 \end{remark}
 
 \begin{remark}[Higher dimensions]\label{rem:higher-dim}
-One dimension was used in Step 2: $w=U'$ solves the linearized equation \emph{and}
+One dimension was used in Step 2: $z=U'$ solves the linearized equation \emph{and}
 vanishes at the boundary. On $\Omega\subset\R^n$ the derivatives $\partial_jU$ solve
 the linearized equation but need not vanish on $\partial\Omega$. On convex domains a
 careful treatment of the boundary terms still gives instability
@@ -298,12 +305,13 @@ the constant $1$ (for nonnegative data, not identically zero).
 
 \section{Why two species?}\label{sec:one-why-two}
 
-Both results rest on symmetry:
+\Cref{thm:nonconstant-unstable} rests on the symmetry
 $\int_0^L(d\psi''+a\psi)\eta\dd x=\int_0^L\psi(d\eta''+a\eta)\dd x$ for smooth
-$\psi,\eta$ with $\psi'=\eta'=0$ at $x=0,L$ (integrate by parts twice). It made
-$Q(\varphi(t))$ increase in \cref{lem:rayleigh-growth}. For two species,
-$\bw\mapsto D\bw_{xx}+A\bw$ from \eqref{eq:linearized-system} is symmetric in this
-sense if and only if $A$ is, i.e.\ $f_v=g_u$, and then diffusion is harmless:
+$\psi,\eta$ with $\psi'=\eta'=0$ at $x=0,L$ (integrate by parts twice), which gave
+$\frac{\mathrm d}{\mathrm dt}Q(w)=2\norm{w_t}^2$; \cref{cor:no-ddi-scalar} rests on the
+fact that a scalar reaction term satisfies $aw^2\le(\max a)w^2$. For two species both
+properties hold if $A$ is symmetric, $f_v=g_u$: then $\bw\mapsto D\bw_{xx}+A\bw$ from
+\eqref{eq:linearized-system} is symmetric in the same sense, and diffusion is harmless:
 
 \begin{proposition}\label{prop:symmetric-no-ddi}
 Let $A$ be symmetric with two negative eigenvalues, the larger one $\mu_A$, and
@@ -324,8 +332,8 @@ $\frac{\mathrm d}{\mathrm dt}\norm{\bw}^2=-2\int_0^L\bw_x\cdot D\bw_x\dd x
 
 \begin{remark}[Why two species]\label{rem:why-two}
 One equation admits neither diffusion-driven instability (\cref{cor:no-ddi-scalar})
-nor stable nonconstant stationary solutions (\cref{thm:nonconstant-unstable}), and
-symmetric two-species systems admit no diffusion-driven instability
+nor linearly stable nonconstant stationary solutions (\cref{thm:nonconstant-unstable}),
+and symmetric two-species systems admit no diffusion-driven instability
 (\cref{prop:symmetric-no-ddi}). A Turing instability needs two species and a
 \emph{non-symmetric} interaction, $f_v\neq g_u$. \Cref{ch:turing} shows more:
 $f_vg_u<0$ is necessary (\cref{cor:turing-consequences}), so one species promotes the
@@ -350,29 +358,30 @@ $[1,\infty)$ and $\rho(s)+\rho(1-s)=1$ (e.g.\
 $\rho(s)=e^{-1/s}/(e^{-1/s}+e^{-1/(1-s)})$ on $(0,1)$). Let
 $H(s)=\rho(2s)+\rho(4s-2)\rho(4-4s)$ for $0\le s\le1$, $H(s)=1$ for $s>1$, and
 $G(s)=\int_0^sH$. Show that $0\le H\le2$, $H(0)=0$, $\int_0^1H=1$, and that
-$g_\delta(x)=\delta G(x/\delta)$ for $x\le L/2$, $g_\delta(x)=L-\delta G((L-x)/\delta)$
+$g_\tau(x)=\tau G(x/\tau)$ for $x\le L/2$, $g_\tau(x)=L-\tau G((L-x)/\tau)$
 for $x>L/2$, has all properties required in Step 4.
 \end{exercise}
 
 \begin{exercise}[$\ast$]\label{exer:one-minimal-length}
 Let $f(u)=u-u^3$, $F(u)=\frac12u^2-\frac14u^4$. (a) Show that every nonconstant
-solution of \eqref{eq:one-stationary} lies on a closed orbit through $(\pm A,0)$,
-$0<A<1$, and $L=mT(A)/2$ with $m\in\N$, where $T(A)$ is the period.
-(b) Show $T(A)=\sqrt{2d}\int_{-A}^A(F(A)-F(U))^{-1/2}\dd U>2\pi\sqrt d$, using
-$F(A)-F(U)<\frac12(A^2-U^2)$. (c) Assuming that $T$ is continuous, $T(A)\to2\pi\sqrt d$
-as $A\to0$ and $T(A)\to\infty$ as $A\to1$, show that a nonconstant stationary solution
-exists if and only if $L>\pi\sqrt d$. Which mode of $\ub=0$ starts to grow there?
+solution of \eqref{eq:one-stationary} lies on a closed orbit through $(\pm U_m,0)$,
+$0<U_m<1$, and $L=mT(U_m)/2$ with $m\in\N$, where $T(U_m)$ is the period.
+(b) Show $T(U_m)=\sqrt{2d}\int_{-U_m}^{U_m}(F(U_m)-F(U))^{-1/2}\dd U>2\pi\sqrt d$, using
+$F(U_m)-F(U)<\frac12(U_m^2-U^2)$. (c) Assuming that $T$ is continuous,
+$T(U_m)\to2\pi\sqrt d$ as $U_m\to0$ and $T(U_m)\to\infty$ as $U_m\to1$, show that a
+nonconstant stationary solution exists if and only if $L>\pi\sqrt d$. Which mode of
+$\ub=0$ starts to grow there?
 \end{exercise}
 
 \begin{exercise}[$\ast$]\label{exer:one-dirichlet}
 Consider $u_t=u_{xx}+u(1-u)$ on $(0,L)$ with $u(0,t)=u(L,t)=0$. (a) As in
 \cref{exer:one-minimal-length}, show that for $L>\pi$ there is a stationary solution
-$U$ with $U(0)=U(L)=0$, $0<U<1$ in $(0,L)$. (b) Show that $N'=2Q(\varphi)$, with
-$a=1-2U$, $d=1$, still holds for the linearization $\varphi_t=\varphi_{xx}+(1-2U)\varphi$,
-$\varphi(0,t)=\varphi(L,t)=0$. (c) For smooth $\varphi\not\equiv0$ vanishing at $0,L$
-write $\varphi=U\psi$ and show
-$\int_0^L(\varphi'^2-(1-U)\varphi^2)\dd x=\int_0^LU^2\psi'^2\dd x$; deduce
-$Q(\varphi)\le-\int_0^LU\varphi^2\dd x<0$: no perturbation grows. (In fact $U$ is
-linearly stable.) (d) Which step of the proof of \cref{thm:nonconstant-unstable}
-fails?
+$U$ with $U(0)=U(L)=0$, $0<U<1$ in $(0,L)$. (b) Show that $N'=2Q(w)$, with $a=1-2U$,
+$d=1$, still holds for the linearization $w_t=w_{xx}+(1-2U)w$, $w(0,t)=w(L,t)=0$.
+(c) Let $w\not\equiv0$ be smooth with $w(0)=w(L)=0$. Show that $U'(0),U'(L)\neq0$
+(uniqueness for the ODE) and deduce that $\psi=w/U$ is smooth on $[0,L]$ (near $0$,
+$\psi(x)=\int_0^1w'(sx)\dd s/\int_0^1U'(sx)\dd s$). Show
+$\int_0^L(w'^2-(1-U)w^2)\dd x=\int_0^LU^2\psi'^2\dd x$ and deduce
+$Q(w)\le-\int_0^LUw^2\dd x<0$: no perturbation grows. (In fact $U$ is linearly
+stable.) (d) Which step of the proof of \cref{thm:nonconstant-unstable} fails?
 \end{exercise}

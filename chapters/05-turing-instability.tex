@@ -186,8 +186,9 @@ where $\hatbw_k(0)$ are the cosine coefficients of the initial perturbation.
 \end{theorem}
 
 \begin{proof}
-Let $k\ge1$ and $\varphi_k(x)=\cos(k\pi x/L)$. Since $\bw$ is smooth we may
-differentiate under the integral sign and use the equation:
+Let $k\ge1$, $\varphi_k(x)=\cos(k\pi x/L)$ and $t>0$. Since $\bw$ is smooth for
+$t>0$ (\cref{rem:well-posedness}) we may differentiate under the integral sign and
+use the equation:
 \begin{equation*}
   \hatbw_k'(t) = \frac2L\int_0^L \bw_t\,\varphi_k\dd x
   = D\,\frac2L\int_0^L \bw_{xx}\,\varphi_k\dd x + A\,\frac2L\int_0^L\bw\,\varphi_k\dd x .
@@ -204,8 +205,9 @@ Both boundary terms vanish: the first because $\bw_x=0$ at $x=0,L$, the second
 because $\varphi_k'(x)=-\frac{k\pi}{L}\sin(k\pi x/L)$ vanishes at $x=0,L$. Hence
 $\hatbw_k' = -\lambda_kD\hatbw_k + A\hatbw_k = A_k\hatbw_k$. For $k=0$ the same
 computation with $\varphi_0\equiv1$ gives $\int_0^L\bw_{xx}\dd x=[\bw_x]_0^L=0$, so
-$\hatbw_0'=A\hatbw_0=A_0\hatbw_0$. The solution formula for linear ODE systems gives
-$\hatbw_k(t)=e^{tA_k}\hatbw_k(0)$, and \eqref{eq:turing-series} is the cosine series
+$\hatbw_0'=A\hatbw_0=A_0\hatbw_0$. Since $\hatbw_k$ is continuous on $[0,\infty)$
+(because $\bw$ is), the solution formula for linear ODE systems gives
+$\hatbw_k(t)=e^{tA_k}\hatbw_k(0)$ for all $t\ge0$, and \eqref{eq:turing-series} is the cosine series
 of $\bw(\cdot,t)$, which converges uniformly in $x$ because $\bw(\cdot,t)$ is
 continuously differentiable (\cref{thm:cosine-series}(c)).
 \end{proof}
@@ -223,8 +225,8 @@ By Parseval's identity \eqref{eq:parseval}, applied to each component,
 \begin{equation}\label{eq:turing-parseval}
   \norm{\bw(t)}^2 = L\,\abs{\hatbw_0(t)}^2 + \frac L2\sum_{k=1}^\infty \abs{\hatbw_k(t)}^2 .
 \end{equation}
-So $\bw$ decays if and only if all the coefficients decay, and the decay must be
-uniform in $k$. This is the content of the following criterion.
+So $\norm{\bw(t)}\to0$ for every solution exactly when the coefficients decay
+uniformly in $k$; the following criterion makes this precise.
 
 \begin{theorem}[Spectral criterion]\label{thm:spectral-criterion}
 \leavevmode
@@ -281,15 +283,16 @@ only for exceptional parameter values (exactly at a bifurcation), and we exclude
 
 \begin{remark}[General domains]\label{rem:general-domain}
 Nothing in this section used that we work on an interval, except the explicit form
-of the eigenpairs $(\lambda_k,\cos(k\pi x/L))$. On a bounded domain
-$\Omega\subset\R^n$ one replaces them by the Neumann eigenpairs of $-\Delta$ from
+of the eigenpairs $(\lambda_k,\cos(k\pi x/L))$. On a bounded, connected domain
+$\Omega\subset\R^n$ with smooth boundary one replaces them by the Neumann eigenpairs of $-\Delta$ from
 \cref{thm:neumann-eigen-general}, and the same proofs go through. In the language
 of operator theory the result says that the spectrum of the linearized operator
 $\mathcal L\bw = D\Delta\bw + A\bw$ is
 \begin{equation*}
   \sigma(\mathcal L) = \bigcup_{k} \sigma(A-\lambda_kD),
 \end{equation*}
-the union of the eigenvalues of all mode matrices. This is the form in which the
+the union of the eigenvalues of all mode matrices (for a matrix $B$, $\sigma(B)$
+denotes the set of its eigenvalues). This is the form in which the
 result usually appears in the literature; see \cite{Perthame2015,Murray2003}.
 \end{remark}
 
@@ -323,8 +326,8 @@ Assume $\tr A<0$ and $\det A>0$.
   \item If $h(\lambda_k)>0$ for all $k\ge1$, then $(\ub,\vb)$ is linearly stable.
   \item If $h(\lambda_k)<0$ for some $k\ge1$, then $(\ub,\vb)$ is linearly unstable,
         i.e.\ it exhibits diffusion-driven instability. The unstable eigenvalue
-        $\mu$ of $A_k$ is real and positive, and the corresponding growing solution
-        $e^{\mu t}\cos(k\pi x/L)\,\bxi$ has a real eigenvector $\bxi$.
+        $\mu$ of $A_k$ is real and positive, and the eigenvector $\bxi$ in the
+        growing solution $e^{\mu t}\cos(k\pi x/L)\,\bxi$ can be chosen real.
 \end{enumerate}
 \end{theorem}
 
@@ -456,13 +459,16 @@ structures:
 
 \begin{remark}[In phase or out of phase]\label{rem:turing-phase}
 The two cases produce different patterns. Let $\mu>0$ be the unstable eigenvalue of
-$A_k$ with real eigenvector $\bxi=(\xi_1,\xi_2)$. The second row of
+$A_k$ with real eigenvector $\bxi=(\xi_1,\xi_2)^{\top}$, and use the convention
+$f_u>0>g_v$ of \cref{cor:turing-consequences}. The second row of
 $(A_k-\mu I)\bxi=0$ reads $g_u\xi_1 + (g_v-\lambda_kd_v-\mu)\xi_2=0$, so
 \begin{equation*}
   \xi_2 = \frac{g_u}{\mu+\lambda_kd_v-g_v}\,\xi_1,
   \qquad \mu+\lambda_kd_v-g_v>0 .
 \end{equation*}
-Hence $\xi_1,\xi_2$ have the sign of $g_u$. For activator--inhibitor kinetics the
+Hence $\xi_1\neq0$ (otherwise $\bxi=0$), and $\xi_2/\xi_1$ has the sign of $g_u$:
+the two components have equal signs if $g_u>0$ and opposite signs if $g_u<0$.
+For activator--inhibitor kinetics the
 peaks of $u$ and $v$ coincide (\emph{in phase}); for substrate depletion the peaks of
 $u$ sit at the troughs of $v$ (\emph{out of phase}). Simulations in
 \cref{ch:examples} show both cases (\cref{fig:ch06-phase-relation}).
@@ -481,7 +487,9 @@ $\lambda_c=\sqrt{\det A/(d_ud_v)}$.
 \end{theorem}
 
 \begin{proof}
-By \cref{cor:turing-consequences}(b), $-f_vg_u>0$, so $\delta_c$ is well defined.
+By (T1) and $f_u>0$ we have $g_v<-f_u<0$, and then (T2) gives
+$f_vg_u<f_ug_v<0$ (as in the proof of \cref{cor:turing-consequences}(b)). So
+$-f_vg_u>0$ and $\delta_c$ is well defined.
 Dividing (T4) by $d_u^2$ and expanding, (T4) is equivalent to
 \begin{equation*}
   P(\delta) := f_u^2\delta^2 - 2\big(2\det A - f_ug_v\big)\delta + g_v^2 > 0 .
@@ -585,8 +593,9 @@ By \cref{cor:domain-size}, there is no instability on intervals shorter than
 $\pi/\sqrt{\lambda_+}\approx 3.82$. On $(0,40)$ the unstable modes are the integers
 $k$ with $0.272<k\pi/40<0.822$, i.e.\ $3.46<k<10.47$: exactly $k=4,\dots,10$. The
 largest growth rate, $\mu\approx0.262$, belongs to $k=6$ (\cref{fig:ch05-dispersion}(b)).
-So we expect the perturbation to develop, at first, a profile close to
-$\cos(6\pi x/40)$, which fits three full wavelengths into the interval. Since $g_u<0$ (substrate depletion), the
+So we expect the perturbation to develop, at first, a profile dominated by the
+modes near $k=6$ ($\mu\approx0.228$, $0.262$, $0.251$ for $k=5,6,7$); the mode
+$\cos(6\pi x/40)$ fits three full wavelengths into the interval. Since $g_u<0$ (substrate depletion), the
 peaks of $v$ sit at the troughs of $u$ (\cref{rem:turing-phase}).
 \Cref{fig:ch06-1d-evolution} shows a simulation of the full nonlinear system.
 \end{example}
@@ -633,7 +642,8 @@ on $(0,L)$ if and only if $\tilde u(\tilde x,t)=u(\ell\tilde x,t)$,
 $\tilde v(\tilde x,t)=v(\ell\tilde x,t)$ solve the same system on $(0,L/\ell)$ with
 diffusion coefficients $d_u/\ell^2$ and $d_v/\ell^2$. Deduce that, for given kinetics,
 the linear stability of $(\ub,\vb)$ depends only on $\delta=d_v/d_u$ and on $L^2/d_u$.
-Reformulate \cref{thm:turing-small-du} as a statement about large domains.
+Reformulate \cref{thm:turing-small-du} as a statement for $d_u=1$, $d_v=\delta$
+and $L=c\sqrt\delta$ (with $c>0$ fixed) as $\delta\to\infty$.
 \end{exercise}
 
 \begin{exercise}[$\ast$]\label{exer:turing-explicit-roots}
@@ -644,6 +654,6 @@ $A_k$ explicitly:
   p_k=\tfrac12\big(\lambda_k(d_u+d_v)-\tr A\big).
 \end{equation*}
 Verify this formula, and use it to give a second proof of \cref{thm:ddi-criterion}.
-Show in addition that $\re\mu_2<0$ for every $k$, and that $\max\{\re\mu: \mu\in\sigma(A_k),\ k\ge0\}$
+Show in addition that $\re\mu_2<0$ for every $k$, and that $\max\{\re\mu:\ \mu \text{ an eigenvalue of } A_k,\ k\ge0\}$
 is attained. Why is the last statement useful?
 \end{exercise}
