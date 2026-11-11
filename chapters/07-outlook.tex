@@ -7,8 +7,8 @@ kinetics becomes linearly unstable through diffusion exactly when $h(\lambda_k)<
 some mode $k$ (\cref{thm:ddi-criterion}), which needs two species, a large enough
 diffusion ratio and a large enough domain. We have not proved that the full
 nonlinear system is unstable, nor that the growing perturbation settles into a
-pattern. This chapter explains, without proofs and with function spaces mentioned
-only in words, how these questions are approached.
+pattern. This chapter explains, without proofs, how these questions are approached;
+function spaces appear only in words.
 
 \section{From linear to nonlinear instability}\label{sec:outlook-nonlinear}
 
@@ -39,15 +39,13 @@ spaces, belong to a graduate course on PDEs \cite{Evans2010}. We use the sup nor
 $\norm{\bw}_\infty=\max_{x\in[0,L]}\abs{\bw(x)}$.
 
 \begin{definition}\label{def:outlook-stability}
-A stationary solution $(U,V)$ of \eqref{eq:rd-system}, constant or not, is
-\emph{stable} if for every $\eps>0$ there is $\rho>0$ such that every solution with
+As in \cref{def:stability-ode}, a stationary solution $(U,V)$ of \eqref{eq:rd-system},
+constant or not, is \emph{stable} if for every $\eps>0$ there is $\rho>0$ such that every solution with
 $\norm{(u_0-U,v_0-V)}_\infty<\rho$ satisfies $\norm{(u-U,v-V)(\cdot,t)}_\infty<\eps$
 for all $t\ge0$. Otherwise it is \emph{(nonlinearly) unstable}: for some $\eps>0$,
 arbitrarily small perturbations of $(U,V)$ lead to solutions with
 $\norm{(u-U,v-V)(\cdot,t)}_\infty\ge\eps$ at some time $t>0$.
 \end{definition}
-
-This is \cref{def:stability-ode} with the sup norm in place of the Euclidean norm.
 
 \begin{theorem}[Nonlinear instability; informal]\label{thm:nonlinear-instability}
 Let $\mathcal L$ generate a semigroup on a function space with norm $\norm{\cdot}$,
@@ -61,8 +59,7 @@ We omit the proof; see \cite{ShatahStrauss2000} for a precise statement. For smo
 $f,g$ and the sup norm the hypothesis on $\mathcal N$ holds with $\eta=1$, and every
 eigenvalue of a mode matrix $A_k$ is an eigenvalue of $\mathcal L$
 (\cref{prop:normal-modes}). Hence \emph{diffusion-driven instability implies
-nonlinear instability}: the linear theory of \cref{ch:turing} is more than a
-heuristic. The proof starts from a small multiple of an unstable mode and shows that
+nonlinear instability}. The proof starts from a small multiple of an unstable mode and shows that
 the nonlinear terms stay comparatively small until the solution has reached a fixed
 size. An earlier variant \cite{FriedlanderStraussVishik1997} assumes a spectral gap,
 roughly that no part of the linear evolution grows faster than the most unstable
@@ -87,8 +84,8 @@ instability of a constant steady state $(\ub,\vb)$.
 
 Condition (iv) is informal; typically $(U,V)$ lies on a branch of solutions that
 bifurcates from $(\ub,\vb)$ when a parameter crosses the instability threshold.
-Condition (ii) is automatic for classical solutions when both species diffuse, but
-not in \cref{sec:outlook-other}.
+Condition (ii) matters only when a species does not diffuse
+(\cref{sec:outlook-other}).
 
 Near the threshold the picture is fairly complete. As $\delta$ increases, mode $k$
 becomes unstable on $(0,L)$ when $h(\lambda_k)$ changes sign, at some
@@ -120,9 +117,7 @@ $A-\lambda_kD$ can cross the imaginary axis at a nonzero wavenumber. Such a
 space and time (compare \cref{rem:turing-bifurcation}); Turing already noted that
 travelling waves become possible with three or more morphogens \cite{Turing1952}.
 Moreover, the requirement $\delta>1$ of \cref{cor:turing-consequences}(c) relies on
-having exactly two species, both diffusing. With $D=d\,I$ there is no
-diffusion-driven instability for any number of species
-(\cref{exer:turing-equal-diffusion}), but if some components of a network do not
+having exactly two species, both diffusing: if some components of a network do not
 diffuse at all, patterns can form although all diffusing species have the same
 diffusion coefficient \cite{Marcon2016}.
 
@@ -137,9 +132,9 @@ unstable, and arbitrarily short wavelengths grow at rates close to $f_u$
 (\cref{exer:outlook-rdode}; compare \cref{thm:turing-small-du}). The same
 mechanism can destabilize nonconstant stationary solutions; for a class of such
 systems all continuous stationary solutions are unstable, so that no Turing pattern
-exists \cite{MarciniakKarchSuzuki2017} (see the paper for the precise assumptions).
-Without diffusion, stationary solutions need not even be continuous, which is one
-reason for condition (ii) in \cref{def:turing-pattern}.
+exists \cite{MarciniakKarchSuzuki2017}. Without diffusion, stationary solutions need
+not even be continuous, which is one reason for condition (ii) in
+\cref{def:turing-pattern}.
 
 \emph{Nonlocal models.} In tissues, activation and inhibition can be mediated by
 interactions between cells rather than by diffusing molecules \cite{KondoMiura2010}.
@@ -154,8 +149,7 @@ Murray's two volumes \cite{Murray2002,Murray2003} treat reaction--diffusion mode
 from the modeling side, with many biological examples. Perthame \cite{Perthame2015}
 is rigorous, close in spirit to these notes, and goes further into nonlinear
 questions. For PDE background, Strauss \cite{Strauss2008} is an introduction at the
-level of these notes, and Evans \cite{Evans2010} the standard graduate text. Turing's
-original paper \cite{Turing1952} is still very readable.
+level of these notes, and Evans \cite{Evans2010} the standard graduate text. Turing's paper \cite{Turing1952} is still very readable.
 
 \section{Exercises}\label{sec:outlook-exercises}
 
@@ -186,9 +180,8 @@ $\delta_7\approx8.66$.
 \begin{exercise}[What is a Turing pattern?]\label{exer:outlook-definition}
 (a) Show that every stationary solution $(U,V)$ of \eqref{eq:rd-system} satisfies
 $\int_0^Lf(U,V)\dd x=\int_0^Lg(U,V)\dd x=0$, so $f(U,V)$ is either identically zero or
-changes sign. (b) Give two reasons why a single equation $u_t=d\,u_{xx}+f(u)$ has no
-Turing patterns (\cref{cor:no-ddi-scalar,thm:nonconstant-unstable}). (c) Which of the
-conditions (i)--(iv) in \cref{def:turing-pattern} can be checked with the linear
+changes sign. (b) Why does a single equation $u_t=d\,u_{xx}+f(u)$ have no Turing
+patterns? (c) Which of the conditions (i)--(iv) in \cref{def:turing-pattern} can be checked with the linear
 theory of \cref{ch:turing}? Should a stable pattern that coexists with a stable
 constant steady state be called a Turing pattern?
 \end{exercise}
