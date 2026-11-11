@@ -1,0 +1,651 @@
+% 05-turing-instability
+\chapter{Two equations: diffusion-driven instability}\label{ch:turing}
+
+We now come to the heart of these notes. In \cref{ch:one-equation} we saw that a
+single reaction--diffusion equation cannot turn a stable constant state into an
+unstable one: diffusion only adds damping. With two species the situation changes
+completely. Our plan is the same as for the heat equation in \cref{ch:diffusion}:
+linearize, expand in cosines, and observe that the linearized PDE splits into
+infinitely many \emph{independent} linear ODE systems of size $2\times2$, one for
+each cosine mode. The question ``can diffusion destabilize?'' then becomes a
+question about $2\times 2$ matrices, which we answer completely.
+
+\section{The setting}\label{sec:turing-setting}
+
+We consider two chemical species with concentrations $u(x,t)$ and $v(x,t)$ on the
+interval $(0,L)$:
+\begin{equation}\label{eq:rd-system}
+\begin{aligned}
+  u_t &= d_u\, u_{xx} + f(u,v), & x\in(0,L),\ t>0,\\
+  v_t &= d_v\, v_{xx} + g(u,v), & x\in(0,L),\ t>0,\\
+  u_x &= v_x = 0, & x\in\{0,L\},\ t>0,\\
+  u(x,0) &= u_0(x),\quad v(x,0)=v_0(x), & x\in(0,L).
+\end{aligned}
+\end{equation}
+Here $d_u,d_v>0$ are the diffusion coefficients, collected in the diagonal matrix
+$D=\diag(d_u,d_v)$, and $f,g$ are smooth functions describing the reactions
+(production, degradation, interaction). The Neumann condition says that nothing
+enters or leaves through the ends of the interval (\cref{eq:neumann}).
+
+Ignoring space altogether gives the \emph{kinetic system}
+\begin{equation}\label{eq:kinetic-system}
+  u' = f(u,v),\qquad v' = g(u,v),
+\end{equation}
+which describes a well-stirred reactor. Let $(\ub,\vb)$ be a steady state of
+\eqref{eq:kinetic-system}, i.e.\ $f(\ub,\vb)=g(\ub,\vb)=0$. The constant functions
+$u\equiv\ub$, $v\equiv\vb$ are then also a solution of \eqref{eq:rd-system}: they do
+not depend on $t$, their second derivatives vanish, and they satisfy the Neumann
+condition. We call $(\ub,\vb)$ a \emph{constant steady state} of the
+reaction--diffusion system. It exists for \emph{every} choice of $d_u,d_v$, so we may
+ask how its stability depends on diffusion.
+
+The Jacobian matrix of the kinetics at $(\ub,\vb)$ will appear everywhere:
+\begin{equation}\label{eq:jacobian-A}
+  A = \begin{pmatrix} f_u & f_v\\ g_u & g_v\end{pmatrix},
+  \qquad\text{all derivatives evaluated at } (\ub,\vb).
+\end{equation}
+By \cref{thm:linearized-stability,lem:trace-det}, the steady state is
+asymptotically stable for the kinetic system \eqref{eq:kinetic-system} if
+\begin{equation*}
+  \tr A = f_u+g_v < 0 \qquad\text{and}\qquad \det A = f_ug_v-f_vg_u>0 .
+\end{equation*}
+
+\begin{example}\label{ex:turing-schnakenberg-setup}
+For the Schnakenberg kinetics \eqref{eq:schnakenberg} with the standard parameters
+$a=0.1$, $b=0.9$ we found in \cref{ex:schnakenberg} the steady state
+$(\ub,\vb)=(1,0.9)$ and
+\begin{equation*}
+  A=\begin{pmatrix}0.8 & 1\\ -1.8 & -1\end{pmatrix},\qquad \tr A=-0.2,\qquad \det A=1 .
+\end{equation*}
+So in a well-stirred reactor this state is stable. We will follow this example
+through the whole chapter.
+\end{example}
+
+\section{Linearization}\label{sec:turing-linearization}
+
+We perturb the constant steady state, $u=\ub+w_1$, $v=\vb+w_2$, and write
+$\bw=(w_1,w_2)^{\top}$. Since $f(\ub,\vb)=0$, Taylor's formula gives
+\begin{equation*}
+  f(\ub+w_1,\vb+w_2) = f_u w_1 + f_v w_2 + \mathcal{O}(\abs{\bw}^2),
+\end{equation*}
+and similarly for $g$. Substituting into \eqref{eq:rd-system} and dropping the
+quadratic remainder, we obtain the \emph{linearized problem}
+\begin{equation}\label{eq:linearized-system}
+\begin{aligned}
+  \bw_t &= D\,\bw_{xx} + A\,\bw, && x\in(0,L),\ t>0,\\
+  \bw_x &= 0, && x\in\{0,L\},\ t>0 .
+\end{aligned}
+\end{equation}
+Written out, $\partial_t w_1 = d_u\,\partial_{xx}w_1 + f_u w_1 + f_v w_2$ and
+$\partial_t w_2 = d_v\,\partial_{xx}w_2 + g_u w_1 + g_v w_2$. Note that diffusion
+acts on each species separately, while the reactions couple them.
+
+Dropping the remainder is exactly what we do for ODEs, where the principle of
+linearized stability (\cref{thm:linearized-stability}) justifies it. For PDEs the
+justification is harder; we discuss it in \cref{ch:outlook}. In this chapter we
+study the linearized problem only. We measure the size of $\bw$ by
+\begin{equation*}
+  \norm{\bw(t)}^2 = \norm{w_1(t)}^2+\norm{w_2(t)}^2
+  = \int_0^L \abs{\bw(x,t)}^2\dd x .
+\end{equation*}
+
+\begin{definition}\label{def:linear-stability-rd}
+The constant steady state $(\ub,\vb)$ is \emph{linearly stable} if every solution
+of \eqref{eq:linearized-system} (with smooth initial data satisfying the boundary
+condition) satisfies $\norm{\bw(t)}\to0$ as $t\to\infty$. It is \emph{linearly
+unstable} if \eqref{eq:linearized-system} has a solution with
+$\norm{\bw(t)}\to\infty$ as $t\to\infty$.
+\end{definition}
+
+If $\bw$ does not depend on $x$, then $\bw_{xx}=0$ and \eqref{eq:linearized-system}
+reduces to $\bw'=A\bw$, the linearization of the kinetic system. Perturbations that
+are constant in space therefore see only the kinetics. This leads to Turing's
+definition.
+
+\begin{definition}[Turing instability]\label{def:ddi}
+The constant steady state $(\ub,\vb)$ exhibits \emph{diffusion-driven instability
+(DDI)}, also called \emph{Turing instability}, if
+\begin{enumerate}[label=(\roman*)]
+  \item it is asymptotically stable for the kinetic system, i.e.\ $\tr A<0$ and
+        $\det A>0$, and
+  \item it is linearly unstable for the reaction--diffusion system
+        \eqref{eq:rd-system}.
+\end{enumerate}
+\end{definition}
+
+In words: the state is stable against spatially homogeneous perturbations, but
+some spatially heterogeneous perturbation grows. The instability must be caused by
+diffusion, the very process that, on its own, makes everything uniform
+(\cref{thm:heat-decay}). That this can happen at all is the surprise of Turing's
+paper \cite{Turing1952}.
+
+\section{Normal modes}\label{sec:turing-modes}
+
+For the heat equation, $u(x,t)=e^{-d\lambda_k t}\cos(k\pi x/L)$ solves the problem
+because $\cos(k\pi x/L)$ is an eigenfunction of the second derivative with Neumann
+boundary conditions: $\varphi_k''=-\lambda_k\varphi_k$, $\varphi_k'(0)=\varphi_k'(L)=0$,
+with $\lambda_k=(k\pi/L)^2$ (\cref{prop:neumann-eigen}). For a system we let the
+cosine profile carry a \emph{vector} amplitude. It is convenient to introduce the
+\emph{mode matrices}
+\begin{equation*}
+  A_k = A-\lambda_k D
+  = \begin{pmatrix} f_u-\lambda_k d_u & f_v\\ g_u & g_v-\lambda_k d_v\end{pmatrix},
+  \qquad k=0,1,2,\dots
+\end{equation*}
+Note that $A_0=A$.
+
+\begin{proposition}[Normal modes]\label{prop:normal-modes}
+Let $k\ge0$, let $\mu\in\C$ be an eigenvalue of $A_k$ and let $\bxi\in\C^2\setminus\{0\}$
+be a corresponding eigenvector. Then
+\begin{equation*}
+  \bw(x,t) = e^{\mu t}\cos\Big(\frac{k\pi x}{L}\Big)\,\bxi
+\end{equation*}
+is a (complex-valued) solution of \eqref{eq:linearized-system}.
+\end{proposition}
+
+\begin{proof}
+Write $\varphi_k(x)=\cos(k\pi x/L)$. Then $\bw_t=\mu\bw$ and
+$\bw_{xx}=e^{\mu t}\varphi_k''\bxi=-\lambda_k\bw$. Hence
+\begin{equation*}
+  D\bw_{xx}+A\bw = e^{\mu t}\varphi_k\,(A-\lambda_kD)\bxi
+  = e^{\mu t}\varphi_k\,\mu\bxi = \bw_t .
+\end{equation*}
+The boundary condition holds because $\varphi_k'(0)=\varphi_k'(L)=0$.
+\end{proof}
+
+So each mode $k$ comes with its own growth rates, namely the eigenvalues of the
+$2\times2$ matrix $A_k$. Diffusion enters only through the term $-\lambda_kD$: the
+shorter the wavelength (the larger $k$), the stronger the damping. The next theorem
+shows that these special solutions are not just examples: every solution is a
+superposition of them.
+
+\section{Modal decomposition}\label{sec:turing-decomposition}
+
+We expand a solution in cosines, componentwise, using the coefficients
+\eqref{eq:cosine-coefficients}:
+\begin{equation*}
+  \hatbw_0(t) = \frac1L\int_0^L \bw(x,t)\dd x,\qquad
+  \hatbw_k(t) = \frac2L\int_0^L \bw(x,t)\cos\Big(\frac{k\pi x}{L}\Big)\dd x
+  \quad (k\ge1).
+\end{equation*}
+Each $\hatbw_k(t)$ is a vector in $\R^2$.
+
+\begin{theorem}[Modal decomposition]\label{thm:modal-decomposition}
+Let $\bw$ be a smooth solution of \eqref{eq:linearized-system}. Then for every
+$k\ge0$ the cosine coefficient $\hatbw_k(t)$ solves the linear ODE system
+\begin{equation}\label{eq:mode-ode}
+  \hatbw_k'(t) = A_k\,\hatbw_k(t),\qquad\text{hence}\qquad
+  \hatbw_k(t) = e^{tA_k}\,\hatbw_k(0).
+\end{equation}
+Consequently
+\begin{equation}\label{eq:turing-series}
+  \bw(x,t) = \sum_{k=0}^\infty e^{tA_k}\,\hatbw_k(0)\,\cos\Big(\frac{k\pi x}{L}\Big),
+\end{equation}
+where $\hatbw_k(0)$ are the cosine coefficients of the initial perturbation.
+\end{theorem}
+
+\begin{proof}
+Let $k\ge1$ and $\varphi_k(x)=\cos(k\pi x/L)$. Since $\bw$ is smooth we may
+differentiate under the integral sign and use the equation:
+\begin{equation*}
+  \hatbw_k'(t) = \frac2L\int_0^L \bw_t\,\varphi_k\dd x
+  = D\,\frac2L\int_0^L \bw_{xx}\,\varphi_k\dd x + A\,\frac2L\int_0^L\bw\,\varphi_k\dd x .
+\end{equation*}
+The last term is $A\hatbw_k$. For the first term we integrate by parts twice,
+exactly as in \cref{lem:coefficient-uxx}:
+\begin{equation*}
+  \int_0^L \bw_{xx}\varphi_k\dd x
+  = \big[\bw_x\varphi_k\big]_0^L - \big[\bw\,\varphi_k'\big]_0^L
+    + \int_0^L \bw\,\varphi_k''\dd x
+  = -\lambda_k\int_0^L\bw\,\varphi_k\dd x .
+\end{equation*}
+Both boundary terms vanish: the first because $\bw_x=0$ at $x=0,L$, the second
+because $\varphi_k'(x)=-\frac{k\pi}{L}\sin(k\pi x/L)$ vanishes at $x=0,L$. Hence
+$\hatbw_k' = -\lambda_kD\hatbw_k + A\hatbw_k = A_k\hatbw_k$. For $k=0$ the same
+computation with $\varphi_0\equiv1$ gives $\int_0^L\bw_{xx}\dd x=[\bw_x]_0^L=0$, so
+$\hatbw_0'=A\hatbw_0=A_0\hatbw_0$. The solution formula for linear ODE systems gives
+$\hatbw_k(t)=e^{tA_k}\hatbw_k(0)$, and \eqref{eq:turing-series} is the cosine series
+of $\bw(\cdot,t)$ (\cref{thm:cosine-series}).
+\end{proof}
+
+\begin{keyidea}
+The linearized reaction--diffusion system is equivalent to infinitely many
+\emph{decoupled} $2\times2$ linear ODE systems
+\begin{equation*}
+  \hatbw_k' = (A-\lambda_kD)\,\hatbw_k,\qquad k=0,1,2,\dots,
+\end{equation*}
+one for each cosine mode. Mode $k$ feels diffusion only through $-\lambda_kD$.
+\end{keyidea}
+
+By Parseval's identity (\cref{eq:parseval}), applied to each component,
+\begin{equation}\label{eq:turing-parseval}
+  \norm{\bw(t)}^2 = L\,\abs{\hatbw_0(t)}^2 + \frac L2\sum_{k=1}^\infty \abs{\hatbw_k(t)}^2 .
+\end{equation}
+So $\bw$ decays if and only if all the coefficients decay, and the decay must be
+uniform in $k$. This is the content of the following criterion.
+
+\begin{theorem}[Spectral criterion]\label{thm:spectral-criterion}
+\leavevmode
+\begin{enumerate}[label=(\roman*)]
+  \item If for some $k\ge0$ the matrix $A_k$ has an eigenvalue $\mu$ with
+        $\re\mu>0$, then $(\ub,\vb)$ is linearly unstable.
+  \item If for every $k\ge0$ both eigenvalues of $A_k$ have negative real parts,
+        then $(\ub,\vb)$ is linearly stable. More precisely, there are constants
+        $C\ge1$ and $\gamma>0$ such that every solution of
+        \eqref{eq:linearized-system} satisfies
+        \begin{equation*}
+          \norm{\bw(t)}\le C e^{-\gamma t}\norm{\bw(0)}\qquad\text{for all } t\ge0 .
+        \end{equation*}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Let $\mu=\alpha+i\beta$ with $\alpha>0$, and let $\bxi$ be an eigenvector of
+$A_k$. By \cref{prop:normal-modes}, $e^{\mu t}\varphi_k\bxi$ is a solution. Since
+the problem is linear with real coefficients, its real part
+\begin{equation*}
+  \bw(x,t) = e^{\alpha t}\varphi_k(x)\,\big(\cos(\beta t)\,\re\bxi-\sin(\beta t)\,\im\bxi\big)
+\end{equation*}
+is a real solution. If $\beta=0$ we may take $\bxi$ real, and then
+$\norm{\bw(t)}=e^{\alpha t}\norm{\varphi_k}\abs{\bxi}\to\infty$. If $\beta\neq0$,
+the vectors $\re\bxi$ and $\im\bxi$ are linearly independent (otherwise $\bxi$
+would be a complex multiple of a real vector, and $A_k$, being real, would have a
+real eigenvalue with that eigenvector). Hence
+$c=\min_{s\in\R}\abs{\cos(s)\re\bxi-\sin(s)\im\bxi}>0$, and
+$\norm{\bw(t)}\ge c\,e^{\alpha t}\norm{\varphi_k}\to\infty$.
+
+(ii) \emph{Large $k$.} Let $d_{\min}=\min\{d_u,d_v\}$ and let $\norm{A}$ denote the
+operator norm of $A$. For any vector $\mathbf{y}\in\R^2$ we have
+$\mathbf{y}\cdot D\mathbf{y}\ge d_{\min}\abs{\mathbf{y}}^2$ and
+$\mathbf{y}\cdot A\mathbf{y}\le\norm{A}\abs{\mathbf{y}}^2$. By \eqref{eq:mode-ode},
+\begin{equation*}
+  \frac{\mathrm d}{\mathrm dt}\abs{\hatbw_k}^2
+  = 2\,\hatbw_k\cdot A\hatbw_k - 2\lambda_k\,\hatbw_k\cdot D\hatbw_k
+  \le 2\big(\norm{A}-\lambda_kd_{\min}\big)\abs{\hatbw_k}^2 .
+\end{equation*}
+Since $\lambda_k\to\infty$, there is $K$ such that $\lambda_kd_{\min}\ge\norm{A}+1$ for
+all $k\ge K$. For these $k$ we get $\frac{\mathrm d}{\mathrm dt}\abs{\hatbw_k}^2\le
+-2\abs{\hatbw_k}^2$, hence $\abs{\hatbw_k(t)}\le e^{-t}\abs{\hatbw_k(0)}$.
+
+\emph{Small $k$.} For each of the finitely many $k<K$ the matrix $A_k$ has
+eigenvalues with negative real parts, so by \cref{thm:linear-ode-decay} there are
+$C_k\ge1$, $\gamma_k>0$ with $\abs{e^{tA_k}\mathbf{y}}\le C_ke^{-\gamma_kt}\abs{\mathbf{y}}$.
+
+\emph{Conclusion.} Put $C=\max\{C_0,\dots,C_{K-1}\}$ and
+$\gamma=\min\{1,\gamma_0,\dots,\gamma_{K-1}\}$. Then
+$\abs{\hatbw_k(t)}\le Ce^{-\gamma t}\abs{\hatbw_k(0)}$ for \emph{all} $k\ge0$, and
+\eqref{eq:turing-parseval} gives $\norm{\bw(t)}\le Ce^{-\gamma t}\norm{\bw(0)}$.
+\end{proof}
+
+The two parts do not cover the borderline case in which some $A_k$ has an
+eigenvalue on the imaginary axis and none in the right half-plane. This happens
+only for exceptional parameter values (exactly at a bifurcation), and we exclude it.
+
+\begin{remark}[General domains]\label{rem:general-domain}
+Nothing in this section used that we work on an interval, except the explicit form
+of the eigenpairs $(\lambda_k,\cos(k\pi x/L))$. On a bounded domain
+$\Omega\subset\R^n$ one replaces them by the Neumann eigenpairs of $-\Delta$ from
+\cref{thm:neumann-eigen-general}, and the same proofs go through. In the language
+of operator theory the result says that the spectrum of the linearized operator
+$\mathcal L\bw = D\Delta\bw + A\bw$ is
+\begin{equation*}
+  \sigma(\mathcal L) = \bigcup_{k} \sigma(A-\lambda_kD),
+\end{equation*}
+the union of the eigenvalues of all mode matrices. This is the form in which the
+result usually appears in the literature; see \cite{Perthame2015,Murray2003}.
+\end{remark}
+
+\section{When does diffusion destabilize?}\label{sec:turing-criterion}
+
+From now on we assume that the kinetics are stable,
+\begin{equation*}
+  \tr A<0 \qquad\text{and}\qquad \det A>0,
+\end{equation*}
+and ask for which $k$ the matrix $A_k$ can have an eigenvalue with positive real
+part. Mode $k=0$ is harmless, since $A_0=A$. For $k\ge1$ we use the trace and the
+determinant (\cref{lem:trace-det}). The trace is
+\begin{equation*}
+  \tr A_k = \tr A - \lambda_k(d_u+d_v) < \tr A < 0 .
+\end{equation*}
+\emph{Diffusion always makes the trace more negative.} The determinant is
+\begin{equation*}
+  \det A_k = (f_u-\lambda_kd_u)(g_v-\lambda_kd_v) - f_vg_u = h(\lambda_k),
+\end{equation*}
+where we have introduced the quadratic polynomial
+\begin{equation}\label{eq:h-def}
+  h(\lambda) = \det(A-\lambda D) = d_ud_v\,\lambda^2 - (d_vf_u+d_ug_v)\,\lambda + \det A .
+\end{equation}
+By \cref{lem:trace-det}, a real $2\times 2$ matrix with negative trace is stable if
+its determinant is positive, and has one positive and one negative real eigenvalue
+if its determinant is negative. This gives a complete answer.
+
+\begin{theorem}[Criterion for diffusion-driven instability]\label{thm:ddi-criterion}
+Assume $\tr A<0$ and $\det A>0$.
+\begin{enumerate}[label=(\alph*)]
+  \item If $h(\lambda_k)>0$ for all $k\ge1$, then $(\ub,\vb)$ is linearly stable.
+  \item If $h(\lambda_k)<0$ for some $k\ge1$, then $(\ub,\vb)$ is linearly unstable,
+        i.e.\ it exhibits diffusion-driven instability. The unstable eigenvalue
+        $\mu$ of $A_k$ is real and positive, and the corresponding growing solution
+        $e^{\mu t}\cos(k\pi x/L)\,\bxi$ has a real eigenvector $\bxi$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) $A_0=A$ is stable by assumption, and for $k\ge1$ we have $\tr A_k<0$ and
+$\det A_k=h(\lambda_k)>0$, so $A_k$ is stable by \cref{lem:trace-det}. Part (ii) of
+\cref{thm:spectral-criterion} applies. (b) If $\det A_k<0$, the eigenvalues of $A_k$
+are real with product $\det A_k<0$, so one of them is positive. A real eigenvalue of
+a real matrix has a real eigenvector. Part (i) of \cref{thm:spectral-criterion}
+applies.
+\end{proof}
+
+\begin{keyidea}
+Diffusion can destabilize only through the determinant. The trace of every mode
+matrix stays negative, so at a Turing instability a \emph{real} eigenvalue becomes
+positive: the unstable mode does not oscillate but grows in amplitude while keeping
+its spatial shape $\cos(k\pi x/L)$.
+\end{keyidea}
+
+\subsection{Conditions that do not depend on the domain}
+
+The polynomial $h$ is an upward parabola with $h(0)=\det A>0$. It takes negative
+values for some $\lambda>0$ if and only if its minimum point
+$\lambda_{\min}=(d_vf_u+d_ug_v)/(2d_ud_v)$ is positive and the minimum value
+$h(\lambda_{\min}) = \det A - (d_vf_u+d_ug_v)^2/(4d_ud_v)$ is negative. (If
+$d_vf_u+d_ug_v\le0$, all three terms of $h(\lambda)$ are nonnegative for
+$\lambda>0$ and the last one is positive.) Together with the stability of the
+kinetics we obtain the four \emph{Turing conditions}:
+\begin{equation}\label{eq:turing-conditions}
+\begin{aligned}
+  &\text{(T1)}\quad f_u+g_v<0, &\qquad
+  &\text{(T2)}\quad f_ug_v-f_vg_u>0,\\
+  &\text{(T3)}\quad d_vf_u+d_ug_v>0, &\qquad
+  &\text{(T4)}\quad (d_vf_u+d_ug_v)^2>4d_ud_v\,(f_ug_v-f_vg_u).
+\end{aligned}
+\end{equation}
+Under (T1)--(T4), $h(\lambda)<0$ exactly on the open interval
+$(\lambda_-,\lambda_+)$, where
+\begin{equation}\label{eq:band}
+  \lambda_\pm = \frac{(d_vf_u+d_ug_v)\pm\sqrt{(d_vf_u+d_ug_v)^2-4d_ud_v\det A}}{2d_ud_v}
+  \qquad (0<\lambda_-<\lambda_+).
+\end{equation}
+We call it the \emph{band of unstable modes}; see \cref{fig:ch05-band}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{ch05-band}
+  \caption{The function $h(\lambda)=\det(A-\lambda D)$ for the Schnakenberg kinetics
+  with $a=0.1$, $b=0.9$, $d_u=1$ and three values of $\delta=d_v/d_u$. For $\delta<\delta_c$
+  the parabola stays positive; at $\delta=\delta_c$ it touches zero; for
+  $\delta>\delta_c$ it is negative on the band $(\lambda_-,\lambda_+)$ (shaded for
+  $\delta=20$).}
+  \label{fig:ch05-band}
+\end{figure}
+
+Whether the instability is actually seen depends on the domain, because only the
+discrete values $\lambda_k=(k\pi/L)^2$ are available.
+
+\begin{corollary}[Role of the domain size]\label{cor:domain-size}
+Assume (T1)--(T4). Then $(\ub,\vb)$ exhibits diffusion-driven instability on
+$(0,L)$ if and only if there is an integer $k\ge1$ with
+\begin{equation*}
+  \sqrt{\lambda_-} < \frac{k\pi}{L} < \sqrt{\lambda_+}
+\end{equation*}
+(ignoring the borderline case where some $\lambda_k$ equals $\lambda_\pm$). In particular:
+\begin{enumerate}[label=(\alph*)]
+  \item if $L<\pi/\sqrt{\lambda_+}$, there is no instability: the domain is too small;
+  \item if $L\big(\sqrt{\lambda_+}-\sqrt{\lambda_-}\big)>\pi$, there is always an
+        instability.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+The first statement is \cref{thm:ddi-criterion} combined with the description of
+the set where $h<0$. For (a): $k\ge1$ gives $k\pi/L\ge\pi/L>\sqrt{\lambda_+}$. For
+(b): the open interval $\big(L\sqrt{\lambda_-}/\pi,\,L\sqrt{\lambda_+}/\pi\big)$ has
+length larger than $1$, so it contains an integer $k$, and $k\ge1$ because the left
+endpoint is positive.
+\end{proof}
+
+The unstable mode $k$ has wavelength $2L/k=2\pi/q_k$ (\cref{rem:wavenumber}). The
+band of unstable wavelengths, $\big(2\pi/\sqrt{\lambda_+},\,2\pi/\sqrt{\lambda_-}\big)$,
+does not depend on $L$. Thus the \emph{length scale of the pattern is intrinsic}: it
+is set by the kinetics and the diffusion coefficients. The domain only decides which
+of the admissible wavelengths fit into it. On a large domain many modes are
+unstable (\cref{exer:turing-number-of-modes}).
+
+\subsection{Activators, inhibitors and the diffusion ratio}
+
+The Turing conditions have a clear qualitative meaning.
+
+\begin{corollary}\label{cor:turing-consequences}
+Assume (T1)--(T4). Then:
+\begin{enumerate}[label=(\alph*)]
+  \item $f_u$ and $g_v$ have opposite signs. After renaming the species if
+        necessary we may assume $f_u>0>g_v$.
+  \item If $f_u>0>g_v$, then $f_vg_u<0$.
+  \item If $f_u>0>g_v$, then
+        \begin{equation*}
+          \delta = \frac{d_v}{d_u} > -\frac{g_v}{f_u} > 1 .
+        \end{equation*}
+        In particular $d_u\neq d_v$: \emph{with equal diffusion coefficients there is
+        no diffusion-driven instability.}
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) If $f_u\le0$ and $g_v\le0$, then $d_vf_u+d_ug_v\le0$, contradicting (T3). If
+$f_u\ge0$ and $g_v\ge0$, then $f_u+g_v\ge0$, contradicting (T1). (b) By (T2),
+$f_vg_u<f_ug_v<0$. (c) Dividing (T3) by $d_uf_u>0$ gives $\delta>-g_v/f_u$, and (T1)
+says $f_u<-g_v$, i.e.\ $-g_v/f_u>1$.
+\end{proof}
+
+Let us interpret this with $f_u>0>g_v$. The species $u$ enhances its own production
+($f_u>0$); it is called the \emph{activator}. The species $v$ limits itself
+($g_v<0$). By (c), $v$ must diffuse \emph{faster} than $u$. This is the mechanism of
+\emph{local activation and long-range inhibition} \cite{GiererMeinhardt1972}: a small
+local excess of $u$ grows by self-enhancement, while the fast-spreading $v$
+suppresses growth in the surroundings. Part (b) allows two different interaction
+structures:
+\begin{itemize}
+  \item \emph{activator--inhibitor} kinetics: $f_v<0<g_u$ (the inhibitor $v$ is
+        produced by $u$ and suppresses $u$), as in Gierer--Meinhardt
+        (\cref{ex:gierer-meinhardt});
+  \item \emph{substrate-depletion} kinetics: $f_v>0>g_u$ (the substrate $v$ helps
+        to produce $u$ and is consumed by $u$), as in Schnakenberg
+        (\cref{ex:schnakenberg}).
+\end{itemize}
+
+\begin{remark}[In phase or out of phase]\label{rem:turing-phase}
+The two cases produce different patterns. Let $\mu>0$ be the unstable eigenvalue of
+$A_k$ with real eigenvector $\bxi=(\xi_1,\xi_2)$. The second row of
+$(A_k-\mu)\bxi=0$ reads $g_u\xi_1 + (g_v-\lambda_kd_v-\mu)\xi_2=0$, so
+\begin{equation*}
+  \xi_2 = \frac{g_u}{\mu+\lambda_kd_v-g_v}\,\xi_1,
+  \qquad \mu+\lambda_kd_v-g_v>0 .
+\end{equation*}
+Hence $\xi_1,\xi_2$ have the sign of $g_u$. For activator--inhibitor kinetics the
+peaks of $u$ and $v$ coincide (\emph{in phase}); for substrate depletion the peaks of
+$u$ sit at the troughs of $v$ (\emph{out of phase}). Simulations in
+\cref{ch:examples} show both cases (\cref{fig:ch06-phase-relation}).
+\end{remark}
+
+Conditions (T3) and (T4) involve only the ratio $\delta=d_v/d_u$ (divide them by $d_u$
+and $d_u^2$, respectively). They can be combined into a single threshold.
+
+\begin{theorem}[Critical diffusion ratio]\label{thm:critical-ratio}
+Assume (T1), (T2) and $f_u>0$. Then (T3) and (T4) hold if and only if
+\begin{equation*}
+  \delta > \delta_c = \frac{\big(\sqrt{\det A}+\sqrt{-f_vg_u}\,\big)^2}{f_u^2}.
+\end{equation*}
+At $\delta=\delta_c$ the polynomial $h$ has a double zero at
+$\lambda_c=\sqrt{\det A/(d_ud_v)}$.
+\end{theorem}
+
+\begin{proof}
+By \cref{cor:turing-consequences}(b), $-f_vg_u>0$, so $\delta_c$ is well defined.
+Dividing (T4) by $d_u^2$ and expanding, (T4) is equivalent to
+\begin{equation*}
+  P(\delta) := f_u^2\delta^2 - 2\big(2\det A - f_ug_v\big)\delta + g_v^2 > 0 .
+\end{equation*}
+The quadratic $P$ has the roots
+\begin{equation*}
+  \delta_\pm = \frac{(2\det A-f_ug_v)\pm2\sqrt{\det A\,(\det A-f_ug_v)}}{f_u^2}
+  = \frac{\big(\sqrt{\det A}\pm\sqrt{-f_vg_u}\,\big)^2}{f_u^2},
+\end{equation*}
+where we used $\det A-f_ug_v=-f_vg_u$. Thus $\delta_+=\delta_c$, the roots are
+distinct, and $P(\delta)>0$ if and only if $\delta<\delta_-$ or $\delta>\delta_c$. By
+Vieta's formula $\delta_-\delta_c=g_v^2/f_u^2$, so the geometric mean of the roots is
+$-g_v/f_u$ (recall $g_v<0$), and therefore $\delta_-<-g_v/f_u<\delta_c$. Since (T3)
+is equivalent to $\delta>-g_v/f_u$, we conclude that (T3) and (T4) together are
+equivalent to $\delta>\delta_c$.
+
+At $\delta=\delta_c$ the minimum value of $h$ is zero, so
+$h(\lambda)=d_ud_v(\lambda-\lambda_c)^2$ for some $\lambda_c>0$. Comparing the
+constant terms gives $d_ud_v\lambda_c^2=\det A$.
+\end{proof}
+
+\subsection{Turing's theorem}
+
+Finally, we recover the classical statement: for stable kinetics with an activator,
+a sufficiently slowly diffusing activator always produces an instability.
+
+\begin{theorem}\label{thm:turing-small-du}
+Assume $\tr A<0$, $\det A>0$ and $f_u>0$. Fix $d_v>0$ and $L>0$. Then there is
+$d^*>0$ such that for every $d_u\in(0,d^*)$ the constant steady state $(\ub,\vb)$
+exhibits diffusion-driven instability.
+\end{theorem}
+
+\begin{proof}
+Note first that $g_v<-f_u<0$ by (T1). Since $\lambda_k\to\infty$ and $d_vf_u>0$, we
+can choose $k\ge1$ with $\lambda_kd_vf_u>\det A$; put $\eta=\lambda_kd_vf_u-\det A>0$.
+Rearranging \eqref{eq:h-def},
+\begin{equation*}
+  h(\lambda_k) = -\eta + d_u\big(\lambda_k^2d_v - \lambda_kg_v\big),
+\end{equation*}
+and the bracket is positive and independent of $d_u$. With
+$d^*=\eta/(\lambda_k^2d_v-\lambda_kg_v)$ we get $h(\lambda_k)<0$ for all
+$d_u\in(0,d^*)$, and \cref{thm:ddi-criterion}(b) applies.
+\end{proof}
+
+The theorem says nothing about \emph{nonlinear} instability or about what the
+solution does after the perturbation has grown. Both questions are taken up in
+\cref{ch:outlook}.
+
+\section{The dispersion relation}\label{sec:turing-dispersion}
+
+It is instructive to forget for a moment that $\lambda$ takes only the discrete
+values $\lambda_k$, and to plot the largest real part of the eigenvalues of
+$A-\lambda D$ as a function of $\lambda\ge0$:
+\begin{equation*}
+  \lambda\;\mapsto\;\mu_{\max}(\lambda)=\max\{\re\mu:\ \mu \text{ eigenvalue of } A-\lambda D\}.
+\end{equation*}
+This curve is called the \emph{dispersion relation}. Each mode $k$ is a point on it,
+at $\lambda=\lambda_k$; the mode grows if the point lies above the axis.
+\Cref{fig:ch05-dispersion} shows the dispersion relation for our running example.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch05-dispersion}
+  \caption{Dispersion relation for the Schnakenberg kinetics with $a=0.1$, $b=0.9$,
+  $d_u=1$. (a) For three values of $\delta=d_v/d_u$. For small $\lambda$ the
+  eigenvalues of $A-\lambda D$ are complex, with real part
+  $\tfrac12\tr(A-\lambda D)$; the kinks mark the values of $\lambda$ where they
+  become real. (b) For $\delta=20$ and $L=40$: the modes $\lambda_k=(k\pi/L)^2$ on
+  the curve. Exactly the modes $k=4,\dots,10$ are unstable, and $k=6$ grows fastest.}
+  \label{fig:ch05-dispersion}
+\end{figure}
+
+As $\delta$ increases through $\delta_c$, the curve first touches the axis at the
+single point $\lambda_c$ and then rises above it on the band $(\lambda_-,\lambda_+)$.
+In the language of bifurcation theory, $\delta$ is the bifurcation parameter.
+
+\begin{remark}[Turing bifurcation]\label{rem:turing-bifurcation}
+At the threshold $\delta=\delta_c$ a single \emph{real} eigenvalue crosses zero, and
+it does so at a nonzero wavenumber $q_c=\sqrt{\lambda_c}$. Compare this with a Hopf
+bifurcation of an ODE, where a pair of complex eigenvalues crosses the imaginary
+axis and oscillations appear. For two species a Hopf-type instability caused by
+diffusion is impossible, because the trace of every $A_k$ is negative. With three or
+more species it can happen; see \cref{ch:outlook}.
+\end{remark}
+
+\begin{example}[Schnakenberg, continued]\label{ex:schnakenberg-turing}
+We return to \cref{ex:turing-schnakenberg-setup}: $f_u=0.8$, $f_v=1$, $g_u=-1.8$,
+$g_v=-1$, $\tr A=-0.2$, $\det A=1$. Conditions (T1), (T2) hold and $f_u>0$, so
+\cref{thm:critical-ratio} gives the critical ratio
+\begin{equation*}
+  \delta_c = \frac{(1+\sqrt{1.8})^2}{0.64}\approx 8.57 .
+\end{equation*}
+Take $d_u=1$, $d_v=20$, so $\delta=20>\delta_c$. Then $h(\lambda)=20\lambda^2-15\lambda+1$
+and \eqref{eq:band} gives
+\begin{equation*}
+  \lambda_\pm = \frac{15\pm\sqrt{145}}{40},\qquad
+  (\lambda_-,\lambda_+)\approx(0.074,\,0.676),\qquad
+  (\sqrt{\lambda_-},\sqrt{\lambda_+})\approx(0.272,\,0.822).
+\end{equation*}
+By \cref{cor:domain-size}, there is no instability on intervals shorter than
+$\pi/\sqrt{\lambda_+}\approx 3.82$. On $(0,40)$ the unstable modes are the integers
+$k$ with $0.272<k\pi/40<0.822$, i.e.\ $3.46<k<10.47$: exactly $k=4,\dots,10$. The
+largest growth rate, $\mu\approx0.262$, belongs to $k=6$ (\cref{fig:ch05-dispersion}(b)).
+So we expect the perturbation to develop, at first, a profile close to
+$\cos(6\pi x/40)$, with three peaks of $u$. Since $g_u<0$ (substrate depletion), the
+peaks of $v$ sit at the troughs of $u$ (\cref{rem:turing-phase}).
+\Cref{fig:ch06-1d-evolution} shows a simulation of the full nonlinear system.
+\end{example}
+
+\section{Exercises}\label{sec:turing-exercises}
+
+\begin{exercise}\label{exer:turing-equal-diffusion}
+Suppose $d_u=d_v=d$. Show directly, without the Turing conditions, that the
+eigenvalues of $A_k$ are $\mu-d\lambda_k$, where $\mu$ runs through the eigenvalues
+of $A$. Conclude that there is no diffusion-driven instability, and that the same
+holds for systems of $n$ species with $D=d\,I$.
+\end{exercise}
+
+\begin{exercise}\label{exer:turing-number-of-modes}
+Assume (T1)--(T4) and let $N(L)$ be the number of unstable modes on $(0,L)$. Show
+that $N(L)$ is finite and that
+\begin{equation*}
+  \lim_{L\to\infty}\frac{N(L)}{L} = \frac{\sqrt{\lambda_+}-\sqrt{\lambda_-}}{\pi}.
+\end{equation*}
+\end{exercise}
+
+\begin{exercise}\label{exer:turing-gm}
+Consider the Gierer--Meinhardt kinetics \eqref{eq:gierer-meinhardt} with the standard
+parameters $a=0$, $b=0.5$ (\cref{ex:gierer-meinhardt}).
+\begin{enumerate}[label=(\alph*)]
+  \item Verify (T1), (T2) and show that $\delta_c=(\sqrt{0.5}+1)^2/0.25\approx 11.66$.
+  \item For $d_u=1$, $d_v=30$ compute the band $(\lambda_-,\lambda_+)$, the shortest
+        interval length that allows an instability, and the unstable modes on $(0,40)$.
+  \item Is the pattern in phase or out of phase?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}\label{exer:turing-lengyel-epstein}
+For the Lengyel--Epstein kinetics \eqref{eq:lengyel-epstein} with $a=10$ show that
+$(\ub,\vb)=(2,5)$, that the kinetics are stable if and only if $b>3.5$, and that
+\begin{equation*}
+  \delta_c = \frac{25}{49}\big(\sqrt2+1.6\big)^2\,b\approx 4.64\,b .
+\end{equation*}
+\end{exercise}
+
+\begin{exercise}[Only two numbers matter]\label{exer:turing-scaling}
+Let $\ell>0$ and set $\tilde x=x/\ell$. Show that $(u,v)$ solves \eqref{eq:rd-system}
+on $(0,L)$ if and only if $\tilde u(\tilde x,t)=u(\ell\tilde x,t)$,
+$\tilde v(\tilde x,t)=v(\ell\tilde x,t)$ solve the same system on $(0,L/\ell)$ with
+diffusion coefficients $d_u/\ell^2$ and $d_v/\ell^2$. Deduce that, for given kinetics,
+the linear stability of $(\ub,\vb)$ depends only on $\delta=d_v/d_u$ and on $L^2/d_u$.
+Reformulate \cref{thm:turing-small-du} as a statement about large domains.
+\end{exercise}
+
+\begin{exercise}[$\ast$]\label{exer:turing-explicit-roots}
+Instead of the trace--determinant argument one can compute the eigenvalues of
+$A_k$ explicitly:
+\begin{equation*}
+  \mu_{1,2} = -q_k\pm\sqrt{q_k^2-h(\lambda_k)},\qquad
+  q_k=\tfrac12\big(\lambda_k(d_u+d_v)-\tr A\big).
+\end{equation*}
+Verify this formula, and use it to give a second proof of \cref{thm:ddi-criterion}.
+Show in addition that $\re\mu_2<0$ for every $k$, and that $\max\{\re\mu: \mu\in\sigma(A_k),\ k\ge0\}$
+is attained. Why is the last statement useful?
+\end{exercise}

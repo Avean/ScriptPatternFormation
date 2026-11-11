@@ -1,14 +1,30 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[11pt,a4paper,oneside]{report}
+\input{preamble}
 
-\title{ScriptPatternFormation}
+\title{\textbf{Pattern Formation in Reaction--Diffusion Systems}\\[6pt]
+  \large An introduction to Turing's diffusion-driven instability\\[2pt]
+  \normalsize Lecture notes}
 \author{Szymon Cygan}
 \date{November 2026}
 
 \begin{document}
 
 \maketitle
+\tableofcontents
 
-\section{Introduction}
+\include{chapters/01-introduction}
+\include{chapters/02-ode-toolbox}
+\include{chapters/03-diffusion}
+\include{chapters/04-one-equation}
+\include{chapters/05-turing-instability}
+\include{chapters/06-examples-simulations}
+\include{chapters/07-outlook}
+
+\appendix
+\include{chapters/A-fourier}
+\include{chapters/B-linear-algebra}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
 
 \end{document}

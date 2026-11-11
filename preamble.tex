@@ -1,0 +1,85 @@
+% ============================================================
+%  preamble.tex -- shared packages, layout, environments, macros
+%  Do not add packages in chapter files; add them here.
+% ============================================================
+
+% ---------- Encoding, fonts, layout ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.08}
+
+% ---------- Mathematics ----------
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+
+% ---------- Graphics, tables, lists ----------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+
+% ---------- Boxes ----------
+\usepackage[most]{tcolorbox}
+\definecolor{keycolor}{RGB}{31,78,121}
+\definecolor{keyback}{RGB}{238,243,249}
+\newtcolorbox{keyidea}[1][Key idea]{%
+  enhanced, breakable,
+  colback=keyback, colframe=keycolor,
+  boxrule=0.6pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries\small, title={#1}}
+
+% ---------- References ----------
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=keycolor,citecolor=keycolor,urlcolor=keycolor]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+% ---------- Theorem-like environments (one shared counter per chapter) ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}{Exercise}[chapter]
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{exercise}{Exercise}{Exercises}
+\crefname{keyidea}{Key idea}{Key ideas}
+
+% Equations numbered by chapter
+\numberwithin{equation}{chapter}
+
+% ---------- Notation (see STYLE.md for the full notation table) ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\dd}{\,\mathrm{d}}              % \int_0^L u\dd x
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+\newcommand{\ip}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\Ltwo}{L^2(0,L)}               % only as a name for "square-integrable"
+\newcommand{\ub}{\bar u}                   % constant steady state, first component
+\newcommand{\vb}{\bar v}                   % constant steady state, second component
+\newcommand{\bw}{\mathbf{w}}               % vector-valued perturbation (w_1,w_2)^T
+\newcommand{\bxi}{\boldsymbol{\xi}}        % eigenvector in C^2
+\newcommand{\hatbw}{\hat{\mathbf{w}}}      % Fourier coefficient of \bw
+\newcommand{\eps}{\varepsilon}

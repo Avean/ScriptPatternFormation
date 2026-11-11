@@ -1,0 +1,17 @@
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.lof
+*.lot
+main.pdf
+build/
+# Python
+__pycache__/
+*.pyc
