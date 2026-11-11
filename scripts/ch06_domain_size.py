@@ -36,7 +36,7 @@ def main():
           f"fastest lambda = {lmax:.4f}, mu = {-res.fun:.4f}, "
           f"wavelength 2 pi/sqrt(lambda) = {2 * np.pi / np.sqrt(lmax):.2f}")
 
-    fig = plt.figure(figsize=(6.2, 2.9))
+    fig = plt.figure(figsize=(6.2, 2.35))
     gs = fig.add_gridspec(4, 2, width_ratios=[1.0, 1.35], wspace=0.28, hspace=0.25)
 
     # ---------------------------------------------------------- (a) (L, k) plane

@@ -31,7 +31,7 @@ def gm_delta_c(a, b):
 
 def main():
     ps.apply()
-    fig, axes = plt.subplots(1, 2, figsize=ps.FULL)
+    fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.15))
 
     # ------------------------------------------------ (a) Schnakenberg
     ax = axes[0]

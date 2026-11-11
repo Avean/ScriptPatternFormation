@@ -81,6 +81,7 @@ def main():
     print(f"U0 = {U0:.6f}, U(L) = {U[-1]:.6f}, max U' = {V.max():.4f}, "
           f"top eigenvalue of linearization = {mu:.5f}")
 
+    # FULL width, slightly reduced height (2.3 in instead of 2.6 in) to save space.
     fig, axes = plt.subplots(1, 2, figsize=(ps.FULL[0], 2.3),
                              gridspec_kw={"width_ratios": [1.15, 1.0]})
 

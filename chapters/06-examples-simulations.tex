@@ -277,9 +277,10 @@ then drift slowly to $x\approx6.65$, $19.95$, $33.35$, the maxima of $-\cos(6\pi
 and at $t=600$ it changes by less than $10^{-7}$ in ten time units. This run thus
 confirms the linear prediction: the final pattern has the shape of the fastest
 mode $k=6$. But this is not the whole story. We repeated the run with $50$ different
-random seeds: the final pattern was of mode $6$ in $31$ runs, of mode $7$ (peaks at
-$x\approx5.75$, $17.15$, $28.55$, $39.95$) in $18$ runs, and of mode $5$ once. Both
-mode-$6$ and mode-$7$ patterns are stable stationary solutions. The explanation is
+random seeds: the final pattern was of mode $6$ in $30$ runs, of mode $7$ (three and
+a half wavelengths, peaks at $x\approx5.75$, $17.15$, $28.55$, $39.95$) in $19$ runs, and
+of mode $5$ once. Both kinds of patterns are stationary solutions, and both attract
+nearby solutions in the simulations. The explanation is
 that $\mu_6-\mu_7=0.011$: during the roughly $35$ time units of linear growth, mode $6$
 gains only a factor $e^{0.011\cdot35}\approx1.5$ over mode $7$, which the random initial
 amplitudes can easily outweigh.
@@ -297,9 +298,9 @@ kinetics ($g_u<0$) have $u$ and $v$ out of phase, and those of activator--inhibi
 kinetics ($g_u>0$) in phase. \Cref{fig:ch06-phase-relation} shows that this sign
 relation persists in the final nonlinear patterns. For the Gierer--Meinhardt example
 we take $a=0$, $b=0.5$, $d_u=1$, $d_v=30$ on $(0,20)$, where the modes $k=2,3,4$ are
-unstable and $k=2$ is the fastest. The quotient $u^2/v$ requires $v>0$; the exact
-solution keeps $v$ positive, since $v_t\ge d_vv_{xx}-v$, and so does the IMEX scheme
-(\cref{exer:examples-imex}). In the run shown, $v\ge2.75$ throughout.
+unstable and $k=2$ is the fastest. The quotient $u^2/v$ requires $v>0$. One can show
+that the exact solution keeps $v$ positive; for the IMEX scheme this is
+\cref{exer:examples-imex}. In the run shown, $v$ stays above $2.7$.
 
 \begin{figure}[t]
   \centering
@@ -320,11 +321,11 @@ lattice points in a wedge (\cref{fig:ch06-domain-size}(a)). For $L<\pi/\sqrt{\la
 constant state. For $L=10$ the modes $k=1,2$ are unstable and the final pattern is of
 mode $2$, a single peak in the middle. For $L=80$ the modes $k=7,\dots,20$ are unstable,
 $k=12$ and $k=13$ grow almost equally fast ($\mu\approx0.262$ and $0.261$), and our run
-ends with mode $12$. In all cases with a pattern, the peaks have about the same
-height and spacing, close to the wavelength $2\pi/\sqrt{\lambda^*}\approx12.9$ of the
+ends with mode $12$. For $L=40$ and $L=80$ the peaks have the same height and the same
+spacing $13.3$, close to the wavelength $2\pi/\sqrt{\lambda^*}\approx12.9$ of the
 fastest-growing wavenumber of the dispersion relation ($\lambda^*\approx0.237$). The
-length scale is intrinsic, as predicted in \cref{sec:turing-criterion}; the domain
-only decides how many peaks fit.
+length scale is intrinsic, as predicted after \cref{cor:domain-size}; the domain only
+decides how many peaks fit.
 
 \begin{figure}[t]
   \centering
@@ -351,7 +352,7 @@ $\cos(m\pi x/L)\cos(n\pi y/L)$ with eigenvalues $(\pi/L)^2(m^2+n^2)$
 the band. For the Schnakenberg standard example on $(0,80)^2$ this holds for $320$
 pairs $(m,n)$, the lattice points in a quarter annulus. Many of them grow at nearly
 the same rate, and some at exactly the same rate: $(m,n)$ and $(n,m)$, or
-$(1,7)$ and $(5,5)$, since $1^2+7^2=5^2+5^2$. Linear theory fixes the wavelength, but
+$(1,12)$ and $(8,9)$, since $1^2+12^2=8^2+9^2$. Linear theory fixes the wavelength, but
 not the geometry: a single mode $\cos(m\pi x/L)$ is a pattern of stripes, while a sum
 of modes with different directions produces spots.
 
@@ -369,11 +370,12 @@ of modes with different directions produces spots.
 \Cref{fig:ch06-2d-patterns} shows two simulations, with $128\times128$ cells and the
 IMEX scheme with $\Delta t=0.05$. For $b=0.9$ we obtain about fifty spots of $u$, at
 the minima of $v$ (out of phase, as in one dimension). For $b=1.5$ we obtain stripes.
-We found this value by a small search: one run each for $a=0.1$, $\delta=20$ and
-$b=0.8$, $0.9$, $1.1$, $1.3$, $1.4$, $1.5$ gave spots for $b\le1.1$, a mixture for
-$b=1.3$, and stripes for $b=1.4$ and $1.5$. (Three Gierer--Meinhardt runs gave spots;
-Lengyel--Epstein kinetics \eqref{eq:lengyel-epstein} with $a=10$, $b=4$ gave stripes for
-$\delta=25$ and spots for $\delta=40$.) In both families the stripes appeared closer to
+We found this value by a small search (fewer than twenty single runs): with $a=0.1$
+and $\delta=20$, the Schnakenberg kinetics gave spots for $b=0.8$, $0.9$, $1.1$, a
+mixture of spots and stripes for $b=1.3$, and stripes for $b=1.4$ and $1.5$. Three
+Gierer--Meinhardt runs gave spots; the Lengyel--Epstein kinetics
+\eqref{eq:lengyel-epstein} with $a=10$, $b=4$ gave stripes for $\delta=25$ and spots
+for $\delta=40$. In both families the stripes appeared closer to
 the threshold $\delta_c$ than the spots, but a handful of runs is not a theorem. Also,
 at $t=2000$ the stripes are still slowly rearranging, while the spots have almost
 settled. Which pattern is selected in two dimensions, and why, is a genuinely
@@ -384,7 +386,7 @@ nonlinear question beyond these notes; see \cref{ch:outlook} and
 
 \begin{exercise}\label{exer:examples-step-restriction}
 Run the listing of \cref{sec:numerics}, then replace the factor $0.9$ in \texttt{dt}
-by $1.02$ and set \texttt{T = 5.0}. Plot $v$ at the end and explain what you see
+by $1.02$ and set \texttt{T = 0.2}. Plot $v$ at the end and explain what you see
 using the multiplier $m_{N-1}$ from the proof of \cref{prop:examples-step-restriction}.
 Why does the trouble start in $v$ and not in $u$?
 \end{exercise}
@@ -392,9 +394,9 @@ Why does the trouble start in $v$ and not in $u$?
 \begin{exercise}\label{exer:examples-imex}
 Consider the IMEX scheme of \cref{sec:numerics}.
 \begin{enumerate}[label=(\alph*)]
-  \item Let $c>0$ and $r\in\R^N$ with $r_j\ge0$ for all $j$. Show that the solution of
-        $(I-c\Delta_h)w=r$ satisfies $w_j\ge0$ for all $j$. \emph{Hint:} look at an
-        index $j$ where $w_j$ is minimal.
+  \item Let $c>0$ and $r\in\R^N$. Show that $I-c\Delta_h$ is invertible and that the
+        solution of $(I-c\Delta_h)w=r$ satisfies $\min_jw_j\ge\min_jr_j$.
+        \emph{Hint:} look at an index $j$ where $w_j$ is minimal.
   \item For the Gierer--Meinhardt kinetics, show that $v^n_j>0$ for all $j$ implies
         $v^{n+1}_j>0$ for all $j$, provided $\Delta t<1$.
 \end{enumerate}
@@ -427,7 +429,7 @@ $d_v=\delta_c(1+\eps)$ with $\delta_c\approx8.57$. Let $\lambda_c=\delta_c^{-1/2
         $\mu_1$ numerically for $\eps=0.01$, $0.02$, $0.05$, $0.1$. How does $\mu_1$
         depend on $\eps$?
   \item Simulate until the solution is stationary and plot the final amplitude
-        $\max\abs{u-\ub}$ against $\eps$. Show that it behaves like $C\sqrt\eps$.
+        $\max\abs{u-\ub}$ against $\eps$. Check that it behaves approximately like $C\sqrt\eps$.
   \item Repeat with the Gierer--Meinhardt kinetics ($a=0$, $b=0.5$,
         $\delta_c\approx11.66$, $\lambda_c=(0.5/\delta_c)^{1/2}$). What is different?
         Relate your observations to \cref{rem:turing-bifurcation} and

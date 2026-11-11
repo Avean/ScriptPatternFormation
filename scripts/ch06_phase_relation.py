@@ -31,7 +31,7 @@ CASES = [
 
 def main():
     ps.apply()
-    fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.1))
+    fig, axes = plt.subplots(1, 2, figsize=(6.2, 1.65))
     for ax, (title, (f, g, (ub, vb)), jac, dv, L) in zip(axes, CASES):
         lm, lp = band(jac, 1.0, dv)
         k = np.arange(0, 15)

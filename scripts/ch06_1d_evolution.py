@@ -103,7 +103,7 @@ def main():
     print(f"  peaks of v at x = {np.round(x[(vp[1:-1] > vp[:-2]) & (vp[1:-1] > vp[2:])], 2)}")
 
     # ---- figure
-    fig, axes = plt.subplots(2, 2, figsize=(6.2, 4.7))
+    fig, axes = plt.subplots(2, 2, figsize=(6.2, 3.8))
 
     ax = axes[0, 0]
     tmax = 150.0
@@ -173,7 +173,7 @@ def main():
         uf, _ = imex_1d(f, g, a0, b0, DU, DV, L, DT, 600.0)
         k, _ = dominant_mode(uf, ub)
         counts[k] = counts.get(k, 0) + 1
-    print("final dominant mode over 50 seeds (dt = DT):", dict(sorted(counts.items())))
+    print(f"final dominant mode over 50 seeds (dt = {DT}):", dict(sorted(counts.items())))
 
 
 if __name__ == "__main__":

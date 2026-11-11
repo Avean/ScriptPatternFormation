@@ -70,8 +70,7 @@ $\mu_k\le f'(\ub)$,
 $\norm{\varphi(t)}=\sqrt L\,e^{f'(\ub)t}\to\infty$.
 \end{proof}
 
-As in \cref{ch:turing} we exclude the borderline case $f'(\ub)=0$. By analogy with
-\cref{def:ddi}, \emph{diffusion-driven instability (DDI)} would mean $f'(\ub)<0$
+We exclude the borderline case $f'(\ub)=0$. By analogy with \cref{def:ddi}, \emph{diffusion-driven instability (DDI)} would mean $f'(\ub)<0$
 together with linear instability for \eqref{eq:scalar-rd}.
 
 \begin{corollary}\label{cor:no-ddi-scalar}
@@ -158,6 +157,18 @@ with $Q>0$. For constant $a\equiv f'(\ub)$, part (c) is the estimate of
 lemma reproves \cref{prop:scalar-constant} and \cref{cor:no-ddi-scalar} without
 Fourier series.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ch04-phase-plane}
+  \caption{Stationary problem $U''+f(U)=0$, $U'(0)=U'(L)=0$, for
+  $f(u)=u(1-u)(u-\frac12)$.
+  (a) Level curves of $\frac12U'^2+F(U)$, with saddles (filled dots), center (open
+  dot) and saddle connections (dashed); the highlighted orbit piece leaves the axis
+  $U'=0$ at $x=0$ and returns at $x=L=8$. (b) The corresponding stationary solution;
+  its linearization has a growing mode with rate $\approx0.081$ (numerically).}
+  \label{fig:ch04-phase-plane}
+\end{figure}
+
 \section{Nonconstant stationary solutions are unstable}\label{sec:one-nonconstant}
 
 A \emph{stationary solution} of \eqref{eq:scalar-rd} is a function $U(x)$ with
@@ -174,18 +185,6 @@ $\theta=\frac12$, $d=1$. The orbit through $(U_0,0)$, $0<U_0<\frac12$, reaches
 $(1-U_0,0)$ in half a period, which (numerically) increases from $2\pi$ for small
 orbits to $\infty$ near the saddle connections. So for every $L>2\pi$ there is an
 increasing nonconstant stationary solution.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{ch04-phase-plane}
-  \caption{Stationary problem $U''+f(U)=0$, $U'(0)=U'(L)=0$, for
-  $f(u)=u(1-u)(u-\frac12)$.
-  (a) Level curves of $\frac12U'^2+F(U)$, with saddles (filled dots), center (open
-  dot) and saddle connections (dashed); the highlighted orbit piece leaves the axis
-  $U'=0$ at $x=0$ and returns at $x=L=8$. (b) The corresponding stationary solution;
-  its linearization has a growing mode with rate $\approx0.081$ (numerically).}
-  \label{fig:ch04-phase-plane}
-\end{figure}
 
 Linearizing \eqref{eq:scalar-rd} at a stationary solution $U$, $u=U+\varphi$, gives
 \begin{equation}\label{eq:one-linearized-U}
