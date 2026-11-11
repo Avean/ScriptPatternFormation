@@ -121,7 +121,9 @@ a uniform state.
 \end{keyidea}
 
 (Q1) is answered in \cref{ch:one-equation,ch:turing}: one equation is never
-enough; for two, the answer is the Turing conditions \eqref{eq:turing-conditions}.
+enough; for two, the answer on a given interval is that $h(\lambda_k)<0$ for some
+mode $k\ge1$ (\cref{thm:ddi-criterion}), and independently of the domain it is
+given by the Turing conditions \eqref{eq:turing-conditions}.
 (Q2) is answered in \cref{ch:turing} (\cref{cor:domain-size}) and illustrated in
 \cref{ch:examples}. (Q3) is nonlinear and answered only in part, by simulations in
 \cref{ch:examples} and a survey in \cref{ch:outlook}.
@@ -134,7 +136,7 @@ Lengyel--Epstein kinetics). \Cref{ch:diffusion} treats diffusion alone and solve
 the diffusion equation with the Neumann eigenfunctions $\cos(k\pi x/L)$.
 \Cref{ch:one-equation} shows that one reaction--diffusion equation cannot exhibit
 diffusion-driven instability and that its nonconstant stationary solutions are
-unstable. \Cref{ch:turing} is the core: the exact criterion for diffusion-driven
+linearly unstable. \Cref{ch:turing} is the core: the exact criterion for diffusion-driven
 instability with two species, the critical diffusion ratio, and the role of the
 domain size. \Cref{ch:examples} maps the parameter regions where the running
 examples form patterns (Turing spaces) and simulates the nonlinear equations.
@@ -147,9 +149,10 @@ knowledge of partial differential equations. We always work on an interval with
 homogeneous Neumann (zero-flux) boundary conditions, natural for a closed system.
 The eigenfunctions of the second derivative are then explicit cosines, so Fourier
 cosine series replace the spectral theory of the Laplace operator on a general
-domain; the results remain true on bounded domains in $\R^n$
-(\cref{rem:general-domain}). Key-idea boxes summarize the central take-aways,
-exercises marked ($\ast$) are harder, and all figures are made by short Python
+domain. The linear theory of \cref{ch:turing} carries over to bounded domains
+in $\R^n$ (\cref{rem:general-domain}); not every result does
+(\cref{rem:higher-dim}). Key-idea boxes summarize the central take-aways,
+exercises marked ($\ast$) are harder, and all plots are made by short Python
 scripts in \texttt{scripts/}, ready to be run and modified.
 
 \section{Exercises}\label{sec:intro-exercises}
@@ -164,11 +167,11 @@ pattern?
 \end{exercise}
 
 \begin{exercise}[Why not one species?]\label{exer:intro-one-species}
-Let $u_t=d\,u_{xx}+f(u)$ on $(0,L)$, $u_x=0$ at $x=0,L$, and let $f(\ub)=0$,
-$f'(\ub)<0$. Show that $w(x,t)=e^{\mu t}\cos(k\pi x/L)$ solves the linearized
+Let $u_t=d\,u_{xx}+f(u)$ on $(0,L)$, $u_x=0$ at $x=0,L$, and let $f(\ub)=0$.
+Show that $w(x,t)=e^{\mu t}\cos(k\pi x/L)$ solves the linearized
 equation $w_t=d\,w_{xx}+f'(\ub)\,w$ with the same boundary condition if and only if
 $\mu=f'(\ub)-d\,(k\pi/L)^2$. Why does this suggest that one species cannot produce a
-Turing instability? (See \cref{cor:no-ddi-scalar,thm:nonconstant-unstable}.)
+Turing instability? (See \cref{cor:no-ddi-scalar}.)
 \end{exercise}
 
 \begin{exercise}[Reading an interaction network]\label{exer:intro-signs}

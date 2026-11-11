@@ -106,8 +106,9 @@ definition.
 The constant steady state $(\ub,\vb)$ exhibits \emph{diffusion-driven instability
 (DDI)}, also called \emph{Turing instability}, if
 \begin{enumerate}[label=(\roman*)]
-  \item it is asymptotically stable for the kinetic system, i.e.\ $\tr A<0$ and
-        $\det A>0$, and
+  \item $\tr A<0$ and $\det A>0$, so that $(\ub,\vb)$ is asymptotically stable
+        for the kinetic system (\cref{thm:linearized-stability,lem:trace-det}),
+        and
   \item it is linearly unstable for the reaction--diffusion system
         \eqref{eq:rd-system}.
 \end{enumerate}
@@ -205,7 +206,8 @@ $\hatbw_k' = -\lambda_kD\hatbw_k + A\hatbw_k = A_k\hatbw_k$. For $k=0$ the same
 computation with $\varphi_0\equiv1$ gives $\int_0^L\bw_{xx}\dd x=[\bw_x]_0^L=0$, so
 $\hatbw_0'=A\hatbw_0=A_0\hatbw_0$. The solution formula for linear ODE systems gives
 $\hatbw_k(t)=e^{tA_k}\hatbw_k(0)$, and \eqref{eq:turing-series} is the cosine series
-of $\bw(\cdot,t)$ (\cref{thm:cosine-series}).
+of $\bw(\cdot,t)$, which converges uniformly in $x$ because $\bw(\cdot,t)$ is
+continuously differentiable (\cref{thm:cosine-series}(c)).
 \end{proof}
 
 \begin{keyidea}
@@ -243,19 +245,15 @@ uniform in $k$. This is the content of the following criterion.
 (i) Let $\mu=\alpha+i\beta$ with $\alpha>0$, and let $\bxi$ be an eigenvector of
 $A_k$. By \cref{prop:normal-modes}, $e^{\mu t}\varphi_k\bxi$ is a solution. Since
 the problem is linear with real coefficients, its real part
-\begin{equation*}
-  \bw(x,t) = e^{\alpha t}\varphi_k(x)\,\big(\cos(\beta t)\,\re\bxi-\sin(\beta t)\,\im\bxi\big)
-\end{equation*}
-is a real solution. If $\beta=0$ we may take $\bxi$ real, and then
-$\norm{\bw(t)}=e^{\alpha t}\norm{\varphi_k}\abs{\bxi}\to\infty$. If $\beta\neq0$,
-the vectors $\re\bxi$ and $\im\bxi$ are linearly independent (otherwise $\bxi$
-would be a complex multiple of a real vector, and $A_k$, being real, would have a
-real eigenvalue with that eigenvector). Hence
-$c=\min_{s\in\R}\abs{\cos(s)\re\bxi-\sin(s)\im\bxi}>0$, and
-$\norm{\bw(t)}\ge c\,e^{\alpha t}\norm{\varphi_k}\to\infty$.
+$\bw(x,t)=\varphi_k(x)\,\mathbf{x}(t)$ with
+$\mathbf{x}(t)=e^{\alpha t}\big(\cos(\beta t)\,\re\bxi-\sin(\beta t)\,\im\bxi\big)$
+is a real solution, and $\norm{\bw(t)}=\norm{\varphi_k}\abs{\mathbf{x}(t)}$. As in
+the proof of \cref{prop:2x2-exponential-bound}(b), $\abs{\mathbf{x}(t)}\ge c\,e^{\alpha t}$
+for some $c>0$ (if $\beta\ne0$, because $\re\bxi$ and $\im\bxi$ are linearly
+independent). Hence $\norm{\bw(t)}\to\infty$.
 
 (ii) \emph{Large $k$.} Let $d_{\min}=\min\{d_u,d_v\}$ and let $\norm{A}$ denote the
-operator norm of $A$. For any vector $\mathbf{y}\in\R^2$ we have
+operator norm of $A$ (\cref{sec:linalg-norms}). For any vector $\mathbf{y}\in\R^2$ we have
 $\mathbf{y}\cdot D\mathbf{y}\ge d_{\min}\abs{\mathbf{y}}^2$ and
 $\mathbf{y}\cdot A\mathbf{y}\le\norm{A}\abs{\mathbf{y}}^2$. By \eqref{eq:mode-ode},
 \begin{equation*}
