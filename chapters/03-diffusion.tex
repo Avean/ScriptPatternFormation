@@ -129,9 +129,8 @@ multiply $w_t=d\,w_{xx}$ by $w$, integrate, and integrate by parts:
 \end{equation}
 The boundary term vanishes because $w_x=u_x=0$ at $x=0,L$. So $\norm{u(t)-M}$ never
 increases. (For the difference $w=u_1-u_2$ of two smooth solutions with the same
-initial datum, the same computation shows that $\norm{w(t)}$ is nonincreasing; as it
-vanishes at $t=0$, it vanishes for all $t$. So \eqref{eq:heat-problem} has at most
-one smooth solution.)
+initial datum, the same computation shows that $\norm{w(t)}$ is nonincreasing, and
+it vanishes at $t=0$; so \eqref{eq:heat-problem} has at most one smooth solution.)
 To obtain a rate, we compare $\norm{u_x}$ with $\norm{u-M}$: a function with mean
 value zero cannot be large unless its derivative is large.
 
@@ -142,21 +141,17 @@ possible.
 \end{lemma}
 
 \begin{proof}
-We use Fourier series, which are motivated in \cref{sec:diffusion-separation} and
-treated in \cref{app:fourier}; here is all we need. A square-integrable function $g$
-on $(0,L)$ has the \emph{cosine coefficients} $\hat g_0=\frac1L\int_0^Lg\dd x$,
+We use Fourier series (motivated in \cref{sec:diffusion-separation}, treated in
+\cref{app:fourier}). A square-integrable $g$ on $(0,L)$ has the \emph{cosine
+coefficients} $\hat g_0=\frac1L\int_0^Lg\dd x$,
 $\hat g_k=\frac2L\int_0^Lg(x)\cos(k\pi x/L)\dd x$ and the \emph{sine coefficients}
-$b_k=\frac2L\int_0^Lg(x)\sin(k\pi x/L)\dd x$ ($k\ge1$). It is the sum of its
+$b_k=\frac2L\int_0^Lg(x)\sin(k\pi x/L)\dd x$ ($k\ge1$), and it is the sum of its
 cosine series $\sum_{k\ge0}\hat g_k\cos(k\pi x/L)$ and of its sine series
-$\sum_{k\ge1}b_k\sin(k\pi x/L)$, and since the functions $\cos(k\pi x/L)$, resp.\
-$\sin(k\pi x/L)$, are mutually orthogonal, Pythagoras' theorem holds in the form of
-\emph{Parseval's identity} (\cref{thm:cosine-series}):
-\begin{equation*}
-  \norm{g}^2 = L\,\hat g_0^2+\frac L2\sum_{k=1}^\infty\hat g_k^2
-  = \frac L2\sum_{k=1}^\infty b_k^2 .
-\end{equation*}
-Let now $\hat u_k$ be the cosine coefficients of $u$ and $b_k$ the sine coefficients
-of $u'$. Integrating by parts,
+$\sum_{k\ge1}b_k\sin(k\pi x/L)$. Since these functions are mutually orthogonal,
+Pythagoras' theorem takes the form of \emph{Parseval's identity}
+$\norm{g}^2=L\hat g_0^2+\frac L2\sum_{k\ge1}\hat g_k^2=\frac L2\sum_{k\ge1}b_k^2$
+(\cref{thm:cosine-series}). Let $\hat u_k$ be the cosine coefficients of $u$ and
+$b_k$ the sine coefficients of $u'$. Integrating by parts,
 \begin{equation}\label{eq:diffusion-sine-coefficients}
   b_k = \frac2L\Big[u(x)\sin\frac{k\pi x}{L}\Big]_0^L
         - \frac{k\pi}{L}\,\frac2L\int_0^L u(x)\cos\frac{k\pi x}{L}\dd x
@@ -366,16 +361,14 @@ noise disappears almost instantly, while the step is smoothed out much more slow
 Diffusion alone homogenizes, and stable kinetics alone return to their steady state.
 The question for the rest of these notes is: \emph{can the combination be
 destabilizing?} For one species, \eqref{eq:diffusion-reaction} with the Neumann
-condition, each zero $\ub$ of $f$ is a constant steady state. Linearizing
-about $\ub$ and expanding in cosines as in \cref{thm:heat-modes}, mode $k$ obeys a
-scalar ODE with rate $f'(\ub)-d\lambda_k$: the rate of the kinetics plus diffusive
-damping. So diffusion seems only to stabilize; \cref{ch:one-equation} makes this
-precise, also beyond linearization. For two species we obtain the system
-$u_t=d_u\,u_{xx}+f(u,v)$, $v_t=d_v\,v_{xx}+g(u,v)$ of \cref{ch:turing} (see
-\eqref{eq:rd-system}). Each species diffuses on its own, the reactions couple them,
-and each cosine mode of the linearized problem is a $2\times2$ linear ODE system.
-Now the answer can be yes: this is \emph{diffusion-driven instability (DDI)}, or
-\emph{Turing instability} \cite{Turing1952}.
+condition, each zero $\ub$ of $f$ is a constant steady state. Linearizing about
+$\ub$ and expanding in cosines as in \cref{thm:heat-modes}, mode $k$ obeys a scalar
+ODE with rate $f'(\ub)-d\lambda_k$, so diffusion seems only to stabilize;
+\cref{ch:one-equation} makes this precise. For two species, $u_t=d_u\,u_{xx}+f(u,v)$,
+$v_t=d_v\,v_{xx}+g(u,v)$ (\cref{ch:turing}), each cosine mode of the linearized
+problem is a $2\times2$ linear ODE system, and the answer can be yes:
+\emph{diffusion-driven instability (DDI)}, or \emph{Turing instability}
+\cite{Turing1952}.
 
 \section{Beyond the interval}\label{sec:diffusion-general}
 
@@ -415,9 +408,8 @@ On $\Omega=(0,L_1)\times(0,L_2)$ the products
 \end{equation*}
 satisfy $-\Delta\varphi_{k,l}=\lambda_{k,l}\varphi_{k,l}$ and
 $\partial_\nu\varphi_{k,l}=0$ (on the sides $x=0,L_1$, $\partial_\nu=\mp\partial_x$
-produces the factor $\sin(k\pi x/L_1)=0$; similarly for $y=0,L_2$). Using cosine
-series in each variable one shows that, normalized, they form an orthonormal basis,
-although the rectangle has corners. The modes $\varphi_{k,0}$ and $\varphi_{0,l}$
+produces the factor $\sin(k\pi x/L_1)=0$; similarly for $y=0,L_2$), and, normalized,
+they form an orthonormal basis (by cosine series in each variable). The modes $\varphi_{k,0}$ and $\varphi_{0,l}$
 depend on one variable only: they are \emph{stripes}. For $k,l\ge1$ the sign of
 $\varphi_{k,l}$ alternates like a checkerboard, and the maxima form a lattice of
 \emph{spots}. Several modes can share an eigenvalue: on a square, $L_1=L_2=L$, the
@@ -450,9 +442,8 @@ $\frac{\mathrm d}{\mathrm dt}\int_0^Lu\dd x$ and interpret it.
 \begin{exercise}[Periodic conditions]\label{exer:diffusion-periodic}
 Show that the eigenvalues of $-\varphi''=\lambda\varphi$ on $(0,L)$ with
 $\varphi(0)=\varphi(L)$, $\varphi'(0)=\varphi'(L)$ are $(2k\pi/L)^2$,
-$k=0,1,2,\dots$, with the constants as eigenfunctions for $k=0$ and the nonzero
-combinations of $\cos(2k\pi x/L)$, $\sin(2k\pi x/L)$ for $k\ge1$. Show that the
-heat equation with periodic conditions conserves mass.
+$k=0,1,2,\dots$; the eigenfunctions are the constants for $k=0$ and the
+combinations of $\cos(2k\pi x/L)$, $\sin(2k\pi x/L)$ for $k\ge1$. Is mass conserved?
 \end{exercise}
 
 \begin{exercise}\label{exer:diffusion-cos2}
